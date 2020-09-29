@@ -39,9 +39,10 @@ typedef struct {
 // potential_t Map[N_ANGLES][N_DISTANCES];
 
 typedef struct {
-  Potential *path;          /* Array of radii between start and end angles */
   Angle theta_start;
   Angle theta_end;
+  Angle gamma;        // angle of radial line intersecting the path at a perpendicular
+  Radius r0;        // distance along radial line to point of intersection
 } Polar_Path;
 
 /* ----------------------------------------------------------------------
@@ -121,6 +122,7 @@ Potential trench_potential(Radius d);
  */
 void apply_attr_poten(Potential_Map *pmap, Radius goal_r, Angle goal_theta);
 
+
 /* 
  * Given a map and the polar coordinates of a goal point, apply 
  * an attractive potential to the entire map.
@@ -133,14 +135,76 @@ void apply_attr_poten(Potential_Map *pmap, Radius goal_r, Angle goal_theta);
 void apply_repulsive_poten(Potential_Map *pmap, Radius* lidar_data);
 
 
-/* An arctan wrapper function, handling zero division 
+/*
+ * Given 2 points in cartesian coordinates, finds the slope
+ * between them
+ * NOTE: assumed that x1 != x2 and y1 != y2
+ */
+double find_slope(Radius x1, Radius y1, Radius x2, Radius y2);
+
+
+/*
+ * An arctan wrapper function, handling zero division 
  * and out-of-range angles
  * Args:
  *    x_val - x value of the point we're taking arctan of
  *    y_val - y value of the point we're taking arctan of
  *    num_angles - the number of angles on the relevant potential map
+ * Returns:
+ *    Angle of the given point, scaled to the given number of angles
  */
 Angle inverse_tangent(Radius x_val, Radius y_val, uint16_t num_angles);
+
+
+/*
+ * Given cartesian endpoints of the desired path, calculates
+ * info necessary to define that path in polar and stores in in
+ * a struct
+ * Args:
+ *    x1  -  x-coordinate of starting point
+ *    y1  -  y-coordinate of starting point
+ *    x2  -  x-coordinate of goal
+ *    y2  -  y-coordinate of goal
+ *    num_angles  -  total angles for this polar potential map (ie 360, 720)
+ * Returns:
+ *     Polar_Path struct (passed by value)
+ */
+Polar_Path create_polar_path(Radius x1, Radius y1, Radius x2, Radius y2, uint16_t num_angles);
+
+
+/*
+ * Given the cartesian endpoints of the path, finds the angle gamma of
+ * the radial line perpendicular to the path
+ * Args:
+ *     x1  -  x-coordinate of starting point
+ *     y1  -  y-coordinate of starting point
+ *     x2  -  x-coordinate of goal
+ *     y2  -  y-coordinate of goal
+ *     num_angles  -  total angles for this polar potential map (ie 360, 720)
+ * Returns:
+ *    Angle gamma of the radial line
+ */
+Angle radial_line(Radius x1, Radius y1, Radius x2, Radius y2, uint16_t num_angles);
+
+
+/*
+ * Given the cartestian endpoints of the path, find the point at
+ * which the path intersects the radial line. This is done by
+ * setting up a system of linear equations and solving.
+ * NOTE: assume that neither line is horizontal or vertical
+ *       (slopes will not be 0 or infinity, so divide freely)
+ *
+ */
+Radius find_intersection(Radius x1, Radius y1, Radius x2, Radius y2);
+
+/*
+ * Given a the polar representation of the path and the potential map,
+ * calculate and apply the trench potential, starting right on the 
+ * path and extending outward
+ *
+ *
+ */
+void apply_trench_poten(Polar_Path pol_path, Potential_Map *pmap);
 
 
 /* 

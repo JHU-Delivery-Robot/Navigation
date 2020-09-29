@@ -106,7 +106,11 @@ void apply_repulsive_poten(Potential_Map *pmap, Radius* lidar_data) {
 }
 
 
-// radius datatype used because distance values will basically be the same (cart/polar)
+double find_slope(Radius x1, Radius y1, Radius x2, Radius y2) {
+  return (y2-y1)/(double)(x2-x1);
+}
+
+
 Angle inverse_tangent(Radius x_val, Radius y_val, uint16_t num_angles) {
   if (x_val == 0) {
     if (y_val >= 0) {
@@ -122,33 +126,49 @@ Angle inverse_tangent(Radius x_val, Radius y_val, uint16_t num_angles) {
   return (Angle)theta_deg*((double)num_angles/360);
 }
 
+
 Angle radial_line(Radius x1, Radius y1, Radius x2, Radius y2, uint16_t num_angles) {
-  if (x2 == x1) {
-    if (x1 >= 0) {
-      return 0;
-    }
-    return num_angles / 2 - 1 ;
-  }
-  else if (y2 == y1) {
-    if (y1 >= 0) {
-      return num_angles / 4 - 1;
-    }
-    return num_angles * 3 / 4 - 1;
-  }
-  double slope = (y2 - y1)/(double)(x2-x1);
+  double slope = find_slope(x1, y1, x2, y2);
   return inverse_tangent(slope, -1, num_angles);
-  
 }
 
-// want to check for horizontal/vertical lines only once!!
 
-Polar_Path * create_polar_path(Radius x1, Radius y1, Radius x2, Radius y2, uint16_t num_angles) {
-  Angle theta1 = inverse_tangent(x1, y1, num_angles);
-  Angle theta2 = inverse_tangent(x2, y2, num_angles);
-  Polar_Path* pol_path = malloc(sizeof(Polar_Path));
-  pol_path->theta_start = theta1;
-  pol_path->theta_end = theta2;
-  pol_path->path = malloc(sizeof(Radius) * theta2 - theta1 + 1);
-  
+Polar_Path create_polar_path(Radius x1, Radius y1, Radius x2, Radius y2, uint16_t num_angles) {
+  Polar_Path pol_path;
+  pol_path.theta_start = inverse_tangent(x1, y1, num_angles);
+  pol_path.theta_end = inverse_tangent(x2, y2, num_angles);
+  if (x1 == x2) { // vertical line
+    if (x1 >= 0) {
+      pol_path.gamma = 0;
+    }
+    else {
+      pol_path.gamma = num_angles / 2 - 1;  // pi
+    }
+    pol_path.r0 = abs(x1);
+    return pol_path;
+  }
+  else if (y1 == y2) { // horizontal line
+    if (y1 >= 0) {
+      pol_path.gamma = num_angles / 4 - 1;  // pi/2
+    }
+    else {
+      pol_path.gamma = num_angles * 3 / 4 - 1; // 3pi/2
+    }
+    pol_path.r0 = abs(y1);
+    return pol_path;
+  }
+  pol_path.gamma = radial_line(x1, y1, x2, y2, num_angles);
+  pol_path.r0 = find_intersection(x1, y1, x2, y2);
+  return pol_path;
 }
 
+
+void apply_trench_poten(Polar_Path pol_path, Potential_Map *pmap) {
+  for(int i = 0; i < Q_STAR_TRENCH; i++) {
+    Potential poten = trench_potential(i);
+    for(Angle a = pol_path.theta_start; a <= pol_path.theta_end; a++) {
+      // calculate radius at each angle, then use radius-angle
+      // pair to find correct spot in potential map, and add potential
+    }
+  }
+}
