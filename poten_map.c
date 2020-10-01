@@ -127,9 +127,9 @@ Angle inverse_tangent(Radius x_val, Radius y_val, uint16_t num_angles) {
 }
 
 
-Angle radial_line(Radius x1, Radius y1, Radius x2, Radius y2, uint16_t num_angles) {
+double radial_line(Radius x1, Radius y1, Radius x2, Radius y2, uint16_t num_angles) {
   double slope = find_slope(x1, y1, x2, y2);
-  return inverse_tangent(slope, -1, num_angles);
+  return atan(-1/slope);
 }
 
 
@@ -137,22 +137,24 @@ Polar_Path create_polar_path(Radius x1, Radius y1, Radius x2, Radius y2, uint16_
   Polar_Path pol_path;
   pol_path.theta_start = inverse_tangent(x1, y1, num_angles);
   pol_path.theta_end = inverse_tangent(x2, y2, num_angles);
+  pol_path.r_start = sqrt(pow(x1, 2) + pow(y1, 2));
+  pol_path.r_end = sqrt(pow(x2, 2) + pow(y2, 2));
   if (x1 == x2) { // vertical line
     if (x1 >= 0) {
       pol_path.gamma = 0;
     }
     else {
-      pol_path.gamma = num_angles / 2 - 1;  // pi
+      pol_path.gamma = PI;
     }
     pol_path.r0 = abs(x1);
     return pol_path;
   }
   else if (y1 == y2) { // horizontal line
     if (y1 >= 0) {
-      pol_path.gamma = num_angles / 4 - 1;  // pi/2
+      pol_path.gamma = PI / 2;
     }
     else {
-      pol_path.gamma = num_angles * 3 / 4 - 1; // 3pi/2
+      pol_path.gamma = 3 * PI / 2; // 3pi/2
     }
     pol_path.r0 = abs(y1);
     return pol_path;
@@ -163,12 +165,54 @@ Polar_Path create_polar_path(Radius x1, Radius y1, Radius x2, Radius y2, uint16_
 }
 
 
-void apply_trench_poten(Polar_Path pol_path, Potential_Map *pmap) {
+Radius find_intersection(Radius x1, Radius y1, Radius x2, Radius y2) {
+  Radius intersection;
+  if((x1==0&&y1==0)||(x2==0&&y2==0)){
+    return 0;
+  }
+  else {
+    double m = find_slope(x1, y1, x2, y2);
+    Radius xradial = (m*x1-y1)/(m+1/m);
+    Radius yradial = -xradial/m;
+    intersection = sqrt(pow(xradial,2) + pow(yradial,2));
+    return intersection;
+  }
+}
+    
+
+void apply_trench_poten(Polar_Path pol_path, Potential_Map *pmap, uint16_t num_angles) {
   for(int i = 0; i < Q_STAR_TRENCH; i++) {
     Potential poten = trench_potential(i);
+    if (pol_path.r0 + i == 0) { // means the path is radial!!
+      // sec func won't work; r0 = 0 and secant(pi/2) is undefined
+    }
+    if (pol_path.r0 - i == 0) { // same as above
+      // note: if subraction makes r0 negative, may need to flip angle
+    }
     for(Angle a = pol_path.theta_start; a <= pol_path.theta_end; a++) {
       // calculate radius at each angle, then use radius-angle
       // pair to find correct spot in potential map, and add potential
+      double angle_rads = degreesToRadians(a*((double)360/num_angles));
+      // r1 and r2 will be the same when i is 0
+      Radius r1 = (pol_path.r0 + i)*(1/cos(angle_rads - pol_path.gamma));
+      Radius r2 = (pol_path.r0 - i)*(1/cos(angle_rads - pol_path.gamma));
+      Potential * poten_map = pmap->map;
+      poten_map[a * n_distances + r1] += poten;
+      poten_map[a * n_distances + r2] += poten; // need to makre sure that rs are positive!
     }
   }
 }
+
+  // there are 3 special cases
+  // 1: path is radial but does not cross origin
+  //    r0 will still be 0 - can check that thetas are same
+  //    then can start at rstart and incriment/decriment to rend
+  // 2: path is radial and crosses origin
+  //    r0 will be 0 - must check that thetas are opposites
+  //    then can start at each r on respective thetas and go to 0
+  // 3: path is nonradial, but a parallel is radial, does not cross origin
+  //    r0 will become 0 - check for i != 0 and something for no origin cross
+  //    need to find the angle of this radial line, rstart, rend
+  // 4: path is nonraidal, parallel is radial, crosses origin
+  //    r0 will become 0 - check for i != 0 and something for origin cross
+  //    radial angle will be perpendicular to gamma, but need rs

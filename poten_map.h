@@ -41,7 +41,9 @@ typedef struct {
 typedef struct {
   Angle theta_start;
   Angle theta_end;
-  Angle gamma;        // angle of radial line intersecting the path at a perpendicular
+  Radius r_start;
+  Radius r_end;
+  double gamma;        // angle of radial line intersecting the path at a perpendicular
   Radius r0;        // distance along radial line to point of intersection
 } Polar_Path;
 
@@ -182,9 +184,9 @@ Polar_Path create_polar_path(Radius x1, Radius y1, Radius x2, Radius y2, uint16_
  *     y2  -  y-coordinate of goal
  *     num_angles  -  total angles for this polar potential map (ie 360, 720)
  * Returns:
- *    Angle gamma of the radial line
+ *    Angle gamma of the radial line (in radians)
  */
-Angle radial_line(Radius x1, Radius y1, Radius x2, Radius y2, uint16_t num_angles);
+double radial_line(Radius x1, Radius y1, Radius x2, Radius y2, uint16_t num_angles);
 
 
 /*
