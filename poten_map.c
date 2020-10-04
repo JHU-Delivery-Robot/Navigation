@@ -48,6 +48,7 @@ void destroy_potential_map(Potential_Map *pmap) {
 #define radiansToDegrees(angleRadians) (angleRadians * 180.0 / PI)
 
 double euclidean_dist_squared(Radius r1, Angle theta1, Radius r2, Angle theta2) {
+  //link to the source: https://socratic.org/questions/what-is-the-formula-for-the-distance-between-two-polar-coordinates
   double radiantheta1 = degreesToRadians(theta1);
   double radiantheta2 = degreesToRadians(theta2);
   double distance_square = r1 * r1 + r2 * r2 - 2*r1*r2*cos(radiantheta2 - radiantheta1);
