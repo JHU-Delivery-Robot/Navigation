@@ -240,8 +240,8 @@ void apply_trench_poten(Polar_Path * path, Potential_Map *pmap, uint16_t num_ang
     else {
       cur_r0 = path->r0.radius - i;
     }
-    
-    if (cur_r0 == 0) { // radial line!!
+    // RADIAL PATH
+    if (cur_r0 == 0) {
       // Case 1: original path, does not cross origin
       if (path->start.angle == path->goal.angle) {
 	Radius small = (path->start.radius <= path->goal.radius) ? path->start.radius : path->goal.radius;
@@ -263,8 +263,7 @@ void apply_trench_poten(Polar_Path * path, Potential_Map *pmap, uint16_t num_ang
       
       // Case 3: radial line is a parallel path!
       else if (i != 0) {
-	// cur_r0 is the origin!!
-	// can visualize that path makes a transformation to the origin
+	// path makes a simple translation - r0 goes to origin!
 	Cart_dist new_start_x = path->start.x - path->r0.x;
 	Cart_dist new_start_y = path->start.y - path->r0.y;
 	Cart_dist new_goal_x = path->goal.x - path->r0.x;
@@ -272,7 +271,6 @@ void apply_trench_poten(Polar_Path * path, Potential_Map *pmap, uint16_t num_ang
 	// good to do a whole new arctan, instead of perpendicular to gamma?
 	Angle angle_start = arctan(new_start_x, new_start_y, num_angles);
 	Angle angle_end = arctan(new_goal_x, new_goal_y, num_angles);
-	// is this a better way to calculate dist btw r0 and an endpoint? no, not guaranteed to happen
 	// Case 3.1 radial parallel does not cross origin
 	if (angle_start == angle_end) {
 	  Radius small = (r0_to_start <= r0_to_end) ? (Radius)r0_to_start : (Radius)r0_to_end;
@@ -294,14 +292,14 @@ void apply_trench_poten(Polar_Path * path, Potential_Map *pmap, uint16_t num_ang
       return;
     }
   
-    // assuming we need to calculate a new angle range (consider initial path ?)
-    // also assuming that path crosses cur_r0 (no negative distances yet)
+    // FOR NON_RADIAL PATHS
     Angle cur_theta_start;
     Angle cur_theta_end;
-    if (i == 0) {
+    // Case 1: this is the original path (not a parallel)
+    if (i == 0) { 
       cur_theta_start = path->start.angle;
       cur_theta_end = path->goal.angle;
-    }
+    } // Case 2: this is a parallel, need to recalculate angle range
     else {
       double gamma_start_ang = atan(r0_to_start/(double)cur_r0); // r0 != 0 (radial^^), -PI/2,PI/2
       double gamma_end_ang = atan(r0_to_end/(double)cur_r0); // both inputs should be + so arctan is +
@@ -333,51 +331,3 @@ void apply_trench_poten(Polar_Path * path, Potential_Map *pmap, uint16_t num_ang
   }
 }
 
-  // there are 4 special cases
-  // 1: path is radial but does not cross origin
-  //    r0 will still be 0 - can check that thetas are same
-  //    then can start at rstart and incriment/decriment to rend
-  // 2: path is radial and crosses origin
-  //    r0 will be 0 - must check that thetas are opposites
-  //    then can start at each r on respective thetas and go to 0
-  // 3: path is nonradial, but a parallel is radial, does not cross origin
-  //    r0 will become 0 - check for i != 0 and something for no origin cross
-  //    need to find the angle of this radial line, rstart, rend
-  //      angle will be perpendicular to gamma ? but on which side?
-  //      
-  // 4: path is nonraidal, parallel is radial, crosses origin
-  //    r0 will become 0 - check for i != 0 and something for origin cross
-  //    radial angle will be perpendicular to gamma, but need rs
-  //      angle will be perpendicular to gamma
-  //      radii will be the distance from r0 to each original endpoint
-
-// Info we have coming into applying tranch potential:
-//   polar and cartesian coordinates of path endpoints
-//   gamma, which is angle purpendicular
-//   polar coordinates of intersection point (cartesian? or can find using rsin0, rcos0)
-
-// Brainstorming:
-// We will need to calculate a new angle range for each parallel line!
-// I think this means that the two sides of the trench can't be done
-//   simultaneously anymore (since each line has a different angle range)
-// How will we do this?
-//   Find angles between parallel line radii and gamma
-//     Will use inverse tangent
-//     Means we need tangent! will use ~r0 and distance between ~r0 and parallel endpoint
-//     dist between ~r0 and || endpoint is same as dist from r0 to orig endpoint
-//     note: if parallel segment is on one side of gamma line, dist btw ~r0 and || endp
-//           will have to be negative to create the triangle
-
-
-// How to deal with the radial parallel lines
-//  Can still check for ~r == 0, then not recalculate angles
-//  then follow steps above ?
-
-// Final trench potential algorithm
-// 1) Begin at one edge of Q* (r0 - Q*), then add until r0 + Q*
-//    note: if r0 - Q* (~r0) becomes negative, need to flip everything?
-// 2) Calculate trench potential at that ~r0
-// 3) If ~r0 == 0, it's a radial line!! Find correct angle and radii to traverse
-//    to fill in potential for that line (described above)
-// 4) Find new angle range (described above)
-// 5) iterate through angle range, calculate radii on line, update potential map!
