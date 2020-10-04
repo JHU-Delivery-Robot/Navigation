@@ -19,13 +19,14 @@
  * ---------------------------------------------------------------------- */
 
 /* These might change later */
-#define N_ANGLES 720
+#define N_ANGLES 360
 #define N_DISTANCES 500
 #define Q_STAR_REPULSIVE 20
 #define Q_STAR_TRENCH 10
 
-typedef uint32_t Radius;
-typedef uint32_t Angle;
+typedef uint32_t Radius; 
+typedef int16_t Angle;
+typedef int16_t Cart_dist; // used for cartesian coordinates!
 
 /* Number that represents potential at particular location in map */
 typedef uint16_t Potential;     /* Maybe we want to use floats instead? */
@@ -39,13 +40,20 @@ typedef struct {
 // potential_t Map[N_ANGLES][N_DISTANCES];
 
 typedef struct {
-  Angle theta_start;
-  Angle theta_end;
-  Radius r_start;
-  Radius r_end;
-  double gamma;        // angle of radial line intersecting the path at a perpendicular
-  Radius r0;        // distance along radial line to point of intersection
+  Cart_dist x;
+  Cart_dist y;
+  Radius radius;
+  Angle angle;
+} Point;
+
+typedef struct {
+  Point start;
+  Point goal;
+  Point r0;
+  double gamma; // radial line purpendicular to path in radians
 } Polar_Path;
+
+
 
 /* ----------------------------------------------------------------------
  *   Function prototypes
@@ -113,6 +121,18 @@ Potential repulsive_potential(Radius r, Radius obstacle_r);
 Potential trench_potential(Radius d);
 
 
+/*
+ * Wrapper around accessing potential map to handle out-of-boungs
+ * angle values
+ * Args:
+ *    pmap  - pointer to Potential_Map struct
+ *    a     - angle of the location to edit potential for
+ *    r     - radius of the location to edit potential for
+ *    poten - potential value to add to the map
+ */
+void edit_potential_map(Potential_Map *pmap, Angle a, Radius r, Potential poten);
+
+
 /* 
  * Given a map and the polar coordinates of a goal point, apply 
  * an attractive potential to the entire map.
@@ -142,7 +162,7 @@ void apply_repulsive_poten(Potential_Map *pmap, Radius* lidar_data);
  * between them
  * NOTE: assumed that x1 != x2 and y1 != y2
  */
-double find_slope(Radius x1, Radius y1, Radius x2, Radius y2);
+double find_slope(Cart_dist x1, Cart_dist y1, Cart_dist x2, Cart_dist y2);
 
 
 /*
@@ -155,7 +175,7 @@ double find_slope(Radius x1, Radius y1, Radius x2, Radius y2);
  * Returns:
  *    Angle of the given point, scaled to the given number of angles
  */
-Angle inverse_tangent(Radius x_val, Radius y_val, uint16_t num_angles);
+Angle arctan(Cart_dist x_val, Cart_dist y_val, uint16_t num_angles);
 
 
 /*
@@ -163,20 +183,19 @@ Angle inverse_tangent(Radius x_val, Radius y_val, uint16_t num_angles);
  * info necessary to define that path in polar and stores in in
  * a struct
  * Args:
- *    x1  -  x-coordinate of starting point
- *    y1  -  y-coordinate of starting point
- *    x2  -  x-coordinate of goal
- *    y2  -  y-coordinate of goal
+ *    start_point  -  Point where path begins
+ *    goal_point  -  Point where path ends
  *    num_angles  -  total angles for this polar potential map (ie 360, 720)
  * Returns:
- *     Polar_Path struct (passed by value)
+ *     pointer to Polar_Path struct
  */
-Polar_Path create_polar_path(Radius x1, Radius y1, Radius x2, Radius y2, uint16_t num_angles);
+Polar_Path * create_polar_path(Point start_point, Point goal_point, uint16_t num_angles);
 
 
 /*
  * Given the cartesian endpoints of the path, finds the angle gamma of
  * the radial line perpendicular to the path
+ * Can assume that slope of path is defined (not 0 or inf)
  * Args:
  *     x1  -  x-coordinate of starting point
  *     y1  -  y-coordinate of starting point
@@ -186,7 +205,7 @@ Polar_Path create_polar_path(Radius x1, Radius y1, Radius x2, Radius y2, uint16_
  * Returns:
  *    Angle gamma of the radial line (in radians)
  */
-double radial_line(Radius x1, Radius y1, Radius x2, Radius y2, uint16_t num_angles);
+double radial_line(Cart_dist x1, Cart_dist y1, Cart_dist x2, Cart_dist y2);
 
 
 /*
@@ -197,16 +216,20 @@ double radial_line(Radius x1, Radius y1, Radius x2, Radius y2, uint16_t num_angl
  *       (slopes will not be 0 or infinity, so divide freely)
  *
  */
-Radius find_intersection(Radius x1, Radius y1, Radius x2, Radius y2);
+Radius find_intersection(Cart_dist x1, Cart_dist y1, Cart_dist x2, Cart_dist y2);
 
 /*
  * Given a the polar representation of the path and the potential map,
- * calculate and apply the trench potential, starting right on the 
- * path and extending outward
- *
+ * calculate and apply the trench potential
+ * Trench potential applies to points directly on the path, as well as those
+ * within distance Q_STAR_TRENCH perpendicular to the path
+ * Args:
+ *    path  -  pointer to Polar_Path struct containing necessary info
+ *    pmap  -  pointer to Potential_Map where potentials will be added
+ *    num_angles - total angles this polar potential map (ie 360, 720)
  *
  */
-void apply_trench_poten(Polar_Path pol_path, Potential_Map *pmap);
+void apply_trench_poten(Polar_Path * path, Potential_Map *pmap, uint16_t num_angles);
 
 
 /* 
