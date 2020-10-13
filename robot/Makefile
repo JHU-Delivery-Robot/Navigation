@@ -25,7 +25,7 @@ BUILDIR := build
 SRCDIR  := .
 
 # add all object dependencies here without the .o extension
-MAIN_DEPS := main poten_map
+MAIN_DEPS := main fastmath poten_map
 
 # force deafult gaol to be the correct one
 .DEFAULT_GOAL := all
