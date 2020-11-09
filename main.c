@@ -1,42 +1,37 @@
-#include "poten_map.h"
-#include <math.h>
-#include <stdlib.h>
+#include "gradient_funcs.h"
+
+// no literal map (2D array representing grid), but we're constantly fed
+// robot's location and goal points
+// (either receive all goal points at once, or one at a time as the robot moves)
 
 int main() {
 
   // given: start and goal in cartesian, array of lidar data
   // not sure how all these values will be acquired, just variables for now
-  Cart_dist x1 = 1;
-  Cart_dist y1 = 2;
-  Cart_dist x2 = 3;
-  Cart_dist y2 = 4;
-  
-  Radius lidar_data[N_ANGLES];
+  Coord x1 = 1;
+  Coord y1 = 2;
+  Coord x2 = 3;
+  Coord y2 = 4;
+
+  // GIVEN - assumed to be in meters
+  uint16_t * lidar_data = malloc(sizeof(uint16_t) * N_ANGLES);
   for(int i = 0; i < N_ANGLES; i++) {
     lidar_data[i] = 20;
   }
 
-  // create potential map (all initialized to 0)
-    Potential_Map * pmap = allocate_default_potential_map(); 
+ 
 
-  
   // turn endpoints in Points
-  Point start = {x1, y1, sqrt(x1*x1 + y1*y1), arctan(x1, y1, pmap->n_angles)}; 
-  Point goal = {x2, y2, sqrt(x2*x2 + y2*y2), arctan(x2, y2, pmap->n_angles)};
+  Vector cur_position = {x1, y1};
+  Vector goal = {x2, y2};
+  
+  // gradient will be a 2D vector!
+  Vector attr_gradient = attr_poten_gradient(cur_position, goal);
+  Vector rep_gradient = rep_poten_gradient(lidar_data);
+
   
 
-  // calculate and apply attractive potential
-  apply_attr_poten(pmap, goal.radius, goal.angle);
-
-  // calculate and apply repulsive potential
-  apply_repulsive_poten(pmap, lidar_data); 
-
-  Polar_Path * pol_path = create_polar_path(start, goal, pmap->n_angles);
-
-  apply_trench_poten(pol_path, pmap, pmap->n_angles);
-
-  free(pol_path);
-  destroy_potential_map(pmap);
+  free(lidar_data);
   
   return 0;
 }
