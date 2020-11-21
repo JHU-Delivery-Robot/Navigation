@@ -1,4 +1,4 @@
-#include "gradient_funcs.h"
+#include "poten_map.h"
 #include <math.h>
 
 #define degreesToRadians(angleDegrees) (angleDegrees * PI / 180.0)
