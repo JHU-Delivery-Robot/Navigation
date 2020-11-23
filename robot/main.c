@@ -1,4 +1,5 @@
 #include "poten_map.h"
+#include "obstacle_map.h"
 
 // no literal map (2D array representing grid), but we're constantly fed
 // robot's location and goal points

@@ -16,6 +16,10 @@
 #include <math.h> 
 #include <stdlib.h>
 #include "obstacle_map.h"
+
+//From stb_image library at https://github.com/nothings/stb
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
 //included math.h and stdio.h 
 
 /* ----------------------------------------------------------------------
@@ -25,38 +29,67 @@
 /* Physical length of pixel */
 #define PIXEL_PHYSICAL_LENGTH 2   /* Two centimeters? */
 
-typedef unint8_t Obst_Map_Px;     /* Single pixel in obstacle map */
-typedef uint32_t Pixel_Dimen;
-/* A length in our physical world with real units (could be meters, 
- * cm, etc --- we need to decide).  Do we want to use a double for this? */
-typedef uint32_t Physical_Dimen;
+/* ----------------------------------------------------------------------
+ *   Helper Functions/Typedefs
+ * ---------------------------------------------------------------------- */
 
-/* Structure for storing obstacle map and relevant information */
+enum allocation_type {
+    NO_ALLOCATION, SELF_ALLOCATED, STB_ALLOCATED
+};
+
+/* Structure for image input */
 typedef struct {
-  Obst_Map_Px *map;             /* bitmap data */
-  Pixel_Dimen width;            /* width of bitmap array (map width in pixels) */
-  Pixel_Dimen height;           /* height of bitmap array (map height in pixels) */
-} Obst_Map;
-
+	size_t size;
+	int channels;
+	uint8_t *pix;             /* bitmap data */
+	int width;            /* width of bitmap array (map width in pixels) */
+	int height;           /* height of bitmap array (map height in pixels) */
+	enum allocation_type allocation_;
+} Image;
 
 /* ----------------------------------------------------------------------
- *   Function prototypes
+ *   Function Implementations
  * ---------------------------------------------------------------------- */
 
 //not sure if necessary, included from the potential map code
 #define degreesToRadians(angleDegrees) (angleDegrees * PI / 180.0)     
 #define radiansToDegrees(angleRadians) (angleRadians * 180.0 / PI)
 
-/*
- * Allocates an Obst_Map and fills it with data from bitmap stored at pathname
- * Args: 
- *   pathname  -  Pathname of bitmap file
- * Returns:
- *   ptr to freshly allocated Obst_Map containing data in loaded bitmap 
- *      (you must free this pointer when you are done with the map)
- */
-Obst_Map *allocate_default_obst_map(const char *pathname) {
+Obst_Map *load_obstacle_map(const char *pathname) {
+	Image *im = malloc(sizeof(Image));
+
+	if((im->pix = stbi_load(pathname, &im->width, &im->height, &im->channels, 0)) != NULL) {
+		im->size = im->width * im->height * im->channels;
+		im->allocation_ = STB_ALLOCATED;
+	} else {
+		free(im);
+		return NULL;
+	}
+
 	Obst_Map *omap = malloc(sizeof(Obst_Map));
+
+	unsigned map_size = im->width * im->height;
+
+	omap->map = malloc(im->width * im->height * sizeof(Obst_Map_Px));
+
+	if (im->channels > 1) {
+		for(unsigned im_count = 0, map_count = 0; im_count < im->size && map_count < map_size; im_count += im->channels, map_count++) {
+			*(omap->map + map_count) = (uint8_t)(*(im->pix + im_count) == 255 && *(im->pix + im_count + 1) == 255 && *(im->pix + im_count + 2) == 255 ? 1 : 0);
+		}
+	} else if (im->channels == 1) {
+		for(unsigned im_count = 0, map_count = 0; im_count < im->size && map_count < map_size; im_count += im->channels, map_count++) {
+			*(omap->map + map_count) = (uint8_t)(*(im->pix + im_count) == 255 ? 1 : 0);
+		}
+	} else {
+		free_obst_map(omap);
+		free(im->pix);
+		free(im);
+		return NULL;
+	}
+
+	free(im->pix);
+	free(im);
+
 	return omap;
 }
 
@@ -64,47 +97,28 @@ void free_obst_map(Obst_Map *omap) {
 	free(omap->map);
 	free(omap);
 }
-/*
- * Computes distance to nearest obstacle from a given point in a given 
- * direction.
- * Args: 
- *   x      - x coordinate of point to start searching from
- *   y      - y coordinate of point to start searching from
- *   angle  - direction to search for obstacles in
- * Returns: 
- *   double float (for some semblance of precision) of distance 
- *     in pixel units from given point to nearest obstacle
- *
- */
-double dist_to_obstacle(Pixel_Dimen x1, Pixel_Dimen y1, double angle) {
+
+double dist_to_obstacle(Pixel_Dimen x, Pixel_Dimen y, double angle) {
 	//look into bubble rebound algorithm? quad tree?
 	//figure out how to get info from lidar, ask Ben, using a scanner for now
 	//need second set of points? included here; not sure about angle
 	//returns -1.0d0
 	
-
+	return -1.0;
 }
 
+double dist_to_obstacle_limited(Pixel_Dimen x, Pixel_Dimen y, double angle, Pixel_Dimen limit) {
+	double distance = dist_to_obstacle(x, y, angle);
+	if (distance <= limit) {
+		return distance;
+	}
+	return -1.0;
+}
 
-/*
- * Computes distance to nearest obstacle within a specified distance 
- * from a given point in a given direction.
- * Args: 
- *   x      - x coordinate of point to start searching from
- *   y      - y coordinate of point to start searching from
- *   angle  - direction to search for obstacles in
- *   limit  - distance, in pixel units, to stop searching at
- * Returns: 
- *   double float (for some semblance of precision) of distance 
- *     in pixel units from given point to nearest obstacle IF
- *     obstacle was found within limit.  OTHERWISE, returns -1.0d0 
- *     to indicate that no obstacle was found within limit.
- *
- */
-double dist_to_obstacle_limited(Pixel_Dimen x, Pixel_Dimen y, double angle, Pixel_Dimen limit);
+Physical_Dimen pixel_to_phys_dimen(Pixel_Dimen length) {
+	return length * PIXEL_PHYSICAL_LENGTH;
+}
 
-
-/* Functions to convert between pixel lengths and corresponding physical 
- * lengths and vice versa.  Should we inline these? */
-Physical_Dimen pixel_to_phys_dimen(Pixel_Dimen length);
-Pixel_Dimen phys_to_pixel_dimen(Physical_Dimen length);
+Pixel_Dimen phys_to_pixel_dimen(Physical_Dimen length) {
+	return length / PIXEL_PHYSICAL_LENGTH;
+}
