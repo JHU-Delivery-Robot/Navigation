@@ -13,7 +13,6 @@ Vector attr_poten_gradient(Vector cur_position, Vector goal) {
 
 // so we do need to convert the lidar point to cartesian! 
 Vector rep_poten_gradient(uint16_t * lidar) {
-  // constant should encompass both constants (one in repulsive, one in distance gradient)
   #define CONSTANT 1
   Coord gradient_x = 0;
   Coord gradient_y = 0;
