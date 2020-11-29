@@ -11,6 +11,9 @@
  * things like function names and types to things that make more sense.
  */
 
+#ifndef OBSTACLE_MAP_H
+#define OBSTACLE_MAP_H
+
 #include <stddef.h>
 #include <stdint.h>
 #include "stb_image.h"
@@ -19,24 +22,17 @@
  *   Defines, typedefs
  * ---------------------------------------------------------------------- */
 
-enum allocation_type {
-    NO_ALLOCATION, SELF_ALLOCATED, STB_ALLOCATED
-};
-
 typedef uint8_t Obst_Map_Px;     /* Single pixel in obstacle map */
-typedef int Pixel_Dimen;
+typedef unsigned Pixel_Dimen;
 /* A length in our physical world with real units (could be meters, 
  * cm, etc --- we need to decide).  Do we want to use a double for this? */
-typedef int Physical_Dimen;
+typedef unsigned Physical_Dimen;
 
 /* Structure for storing obstacle map and relevant information */
 typedef struct {
-	size_t size;
-	int channels;
-	Obst_Map_Px *map;             /* bitmap data */
+	Obst_Map_Px *map;     /* bitmap data */
 	Pixel_Dimen width;            /* width of bitmap array (map width in pixels) */
-	Pixel_Dimen height;           /* height of bitmap array (map height in pixels) */
-	enum allocation_type allocation_;
+	Physical_Dimen height;           /* height of bitmap array (map height in pixels) */
 } Obst_Map;
 
 
@@ -97,3 +93,5 @@ double dist_to_obstacle_limited(Pixel_Dimen x, Pixel_Dimen y, double angle, Pixe
  * lengths and vice versa.  Should we inline these? */
 Physical_Dimen pixel_to_phys_dimen(Pixel_Dimen length);
 Pixel_Dimen phys_to_pixel_dimen(Physical_Dimen length);
+
+#endif

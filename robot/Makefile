@@ -25,9 +25,9 @@ BUILDIR := build
 SRCDIR  := .
 
 # add all object dependencies here without the .o extension
-MAIN_DEPS := main fastmath poten_map
+MAIN_DEPS := main fastmath poten_map obstacle_map
 
-# force deafult gaol to be the correct one
+# force deafult goal to be the correct one
 .DEFAULT_GOAL := all
 
 
@@ -35,12 +35,12 @@ all: main
 
 # magic compilation rule
 main: $(addprefix $(BUILDIR)/,$(addsuffix .o,$(MAIN_DEPS))) | $(BUILDIR)
-	$(LD) $(LDFLAGS) -o $@ $^
+	$(LD) -o $@ $^ $(LDFLAGS)
 
 # object build targets (with the dep Makefiles listed as deps so that the files
 # are rebuilt if the dependency files go missing for any reason
 $(BUILDIR)/%.o: $(SRCDIR)/%.c $(BUILDIR)/%.mk | $(BUILDIR)
-	$(COMPILE.CC) -o $@ -c $<
+	$(COMPILE.CC) -o $@ -c $< $(LDFLAGS)
 
 # phony targets
 clean:

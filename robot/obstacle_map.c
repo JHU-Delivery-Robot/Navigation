@@ -18,35 +18,77 @@
 #include "obstacle_map.h"
 
 //From stb_image library at https://github.com/nothings/stb
+#define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 //included math.h and stdio.h 
 
-/*
- * Defines, typedefs
- */
+/* ----------------------------------------------------------------------
+ *   Defines, typedefs
+ * ---------------------------------------------------------------------- */
 
 /* Physical length of pixel */
 #define PIXEL_PHYSICAL_LENGTH 2   /* Two centimeters? */
 
-/* 
- * Helper Functions
- */
+/* ----------------------------------------------------------------------
+ *   Helper Functions/Typedefs
+ * ---------------------------------------------------------------------- */
 
-/*
- * Function Implementations
- */
+enum allocation_type {
+    NO_ALLOCATION, SELF_ALLOCATED, STB_ALLOCATED
+};
+
+/* Structure for image input */
+typedef struct {
+	size_t size;
+	int channels;
+	uint8_t *pix;             /* bitmap data */
+	int width;            /* width of bitmap array (map width in pixels) */
+	int height;           /* height of bitmap array (map height in pixels) */
+	enum allocation_type allocation_;
+} Image;
+
+/* ----------------------------------------------------------------------
+ *   Function Implementations
+ * ---------------------------------------------------------------------- */
 
 //not sure if necessary, included from the potential map code
 #define degreesToRadians(angleDegrees) (angleDegrees * PI / 180.0)     
 #define radiansToDegrees(angleRadians) (angleRadians * 180.0 / PI)
 
 Obst_Map *load_obstacle_map(const char *pathname) {
+	Image *im = malloc(sizeof(Image));
+
+	if((im->pix = stbi_load(pathname, &im->width, &im->height, &im->channels, 0)) != NULL) {
+		im->size = im->width * im->height * im->channels;
+		im->allocation_ = STB_ALLOCATED;
+	} else {
+		free(im);
+		return NULL;
+	}
+
 	Obst_Map *omap = malloc(sizeof(Obst_Map));
 
-	if((omap->map = stbi_load(pathname, &omap->width, &omap->height, &omap->channels, 0)) != NULL) {
-		omap->size = omap->width * omap->height * omap->channels;
-		omap->allocation_ = STB_ALLOCATED;
+	unsigned map_size = im->width * im->height;
+
+	omap->map = malloc(im->width * im->height * sizeof(Obst_Map_Px));
+
+	if (im->channels > 1) {
+		for(unsigned im_count = 0, map_count = 0; im_count < im->size && map_count < map_size; im_count += im->channels, map_count++) {
+			*(omap->map + map_count) = (uint8_t)(*(im->pix + im_count) == 255 && *(im->pix + im_count + 1) == 255 && *(im->pix + im_count + 2) == 255 ? 1 : 0);
+		}
+	} else if (im->channels == 1) {
+		for(unsigned im_count = 0, map_count = 0; im_count < im->size && map_count < map_size; im_count += im->channels, map_count++) {
+			*(omap->map + map_count) = (uint8_t)(*(im->pix + im_count) == 255 ? 1 : 0);
+		}
+	} else {
+		free_obst_map(omap);
+		free(im->pix);
+		free(im);
+		return NULL;
 	}
+
+	free(im->pix);
+	free(im);
 
 	return omap;
 }
@@ -56,7 +98,7 @@ void free_obst_map(Obst_Map *omap) {
 	free(omap);
 }
 
-double dist_to_obstacle(Pixel_Dimen x1, Pixel_Dimen y1, double angle) {
+double dist_to_obstacle(Pixel_Dimen x, Pixel_Dimen y, double angle) {
 	//look into bubble rebound algorithm? quad tree?
 	//figure out how to get info from lidar, ask Ben, using a scanner for now
 	//need second set of points? included here; not sure about angle
@@ -66,6 +108,10 @@ double dist_to_obstacle(Pixel_Dimen x1, Pixel_Dimen y1, double angle) {
 }
 
 double dist_to_obstacle_limited(Pixel_Dimen x, Pixel_Dimen y, double angle, Pixel_Dimen limit) {
+	double distance = dist_to_obstacle(x, y, angle);
+	if (distance <= limit) {
+		return distance;
+	}
 	return -1.0;
 }
 
