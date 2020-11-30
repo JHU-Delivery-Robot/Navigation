@@ -4,7 +4,7 @@
 
 # compiler config
 CC          := gcc
-CFLAGS      := -std=c99 -pedantic -Wall -Wextra
+CFLAGS      := -std=c11 -pedantic -Wall -Wextra
 DEBUG_FLAGS := -g -Og
 # some GCC magic flags to autogen deps. In order:
 # -MT $@ : set name of target in the dep makefile to be the original target
