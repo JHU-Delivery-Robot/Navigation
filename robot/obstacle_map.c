@@ -121,19 +121,19 @@ void walk_along_line_of_sight_non_peculiar(double angle, double* x, double* y) {
 //need second set of points? included here; not sure about angle
 //returns -1.0d0
 double dist_to_obstacle(Pixel_Dimen x, Pixel_Dimen y, double angle) {
-	if (angle % 45.0 == 0.0) {
-		walk_along_line_of_sight_non_peculiar(double angle, double* x, double* y);
+	double X = 0, Y = 0;
+
+	if (ceilf(angle) == angle && (int)(angle) % 45 == 0) {
+		walk_along_line_of_sight_non_peculiar(angle, &X, &Y);
 	} else {
-		rad_angle = angle * PI / 180.0;
+		double rad_angle = angle * PI / 180.0;
 
 		double slope = tan(angle);
 
-		double x = 0, y = 0;
-
 		if (fabs(slope) < 1.0) {
-			walk_along_line_of_sight_more_horizontal(slope, &x, &y);
-		} else if {
-			walk_along_line_of_sight_more_vertical(slope, &x, &y);
+			walk_along_line_of_sight_more_horizontal(slope, &X, &Y);
+		} else {
+			walk_along_line_of_sight_more_vertical(slope, &X, &Y);
 		}
 	}
 
