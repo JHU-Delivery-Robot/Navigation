@@ -104,8 +104,14 @@ void walk_along_line_of_sight_more_horizontal(double slope, double* x, double* y
 	*y = 2;
 }
 
-//Everywhere you want to modify the value of x or y, use *x or *y instead
+//Everywhere you want to modify the value of x or y, use *x or *y instead (Rishi)
 void walk_along_line_of_sight_more_vertical(double slope, double* x, double* y) {
+	*x = 6;
+	*y = 2;
+}
+
+//Everywhere you want to modify the value of x or y, use *x or *y instead (Jared)
+void walk_along_line_of_sight_non_peculiar(double angle, double* x, double* y) {
 	*x = 6;
 	*y = 2;
 }
@@ -115,15 +121,20 @@ void walk_along_line_of_sight_more_vertical(double slope, double* x, double* y) 
 //need second set of points? included here; not sure about angle
 //returns -1.0d0
 double dist_to_obstacle(Pixel_Dimen x, Pixel_Dimen y, double angle) {
-	rad_angle = angle * PI / 180.0;
-	double slope = tan(angle);
-
-	double x = 0, y = 0;
-
-	if (fabs(slope) < 1.0) {
-		walk_along_line_of_sight_more_horizontal(slope, &x, &y);
+	if (angle % 45.0 == 0.0) {
+		walk_along_line_of_sight_non_peculiar(double angle, double* x, double* y);
 	} else {
-		walk_along_line_of_sight_more_vertical(slope, &x, &y);
+		rad_angle = angle * PI / 180.0;
+
+		double slope = tan(angle);
+
+		double x = 0, y = 0;
+
+		if (fabs(slope) < 1.0) {
+			walk_along_line_of_sight_more_horizontal(slope, &x, &y);
+		} else if {
+			walk_along_line_of_sight_more_vertical(slope, &x, &y);
+		}
 	}
 
 	//Access x and y normally. These are the coordinates now.
