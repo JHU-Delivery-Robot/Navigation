@@ -98,11 +98,35 @@ void free_obst_map(Obst_Map *omap) {
 	free(omap);
 }
 
+//Everywhere you want to modify the value of x or y, use *x or *y instead
+void walk_along_line_of_sight_more_horizontal(double slope, double* x, double* y) {
+	*x = 6;
+	*y = 2;
+}
+
+//Everywhere you want to modify the value of x or y, use *x or *y instead
+void walk_along_line_of_sight_more_vertical(double slope, double* x, double* y) {
+	*x = 6;
+	*y = 2;
+}
+
+//look into bubble rebound algorithm? quad tree?
+//figure out how to get info from lidar, ask Ben, using a scanner for now
+//need second set of points? included here; not sure about angle
+//returns -1.0d0
 double dist_to_obstacle(Pixel_Dimen x, Pixel_Dimen y, double angle) {
-	//look into bubble rebound algorithm? quad tree?
-	//figure out how to get info from lidar, ask Ben, using a scanner for now
-	//need second set of points? included here; not sure about angle
-	//returns -1.0d0
+	rad_angle = angle * PI / 180.0;
+	double slope = tan(angle);
+
+	double x = 0, y = 0;
+
+	if (fabs(slope) < 1.0) {
+		walk_along_line_of_sight_more_horizontal(slope, &x, &y);
+	} else {
+		walk_along_line_of_sight_more_vertical(slope, &x, &y);
+	}
+
+	//Access x and y normally. These are the coordinates now.
 	
 	return -1.0;
 }
