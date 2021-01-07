@@ -22,6 +22,8 @@
  *   Defines, typedefs
  * ---------------------------------------------------------------------- */
 
+#define PI 3.14159265358979323
+
 typedef uint8_t Obst_Map_Px;     /* Single pixel in obstacle map */
 typedef unsigned Pixel_Dimen;
 /* A length in our physical world with real units (could be meters, 
