@@ -1,0 +1,45 @@
+Actual Program Use:
+
+Take an image (however many channels) and convert it using some algorithm into a "bit" map with 1 for white and 0 for black
+
+How to test the Program Functionality:
+
+Take an image (however many channels) and convert it using the same algorithm into a black and white (just to clarify, not greyscale)
+
+
+
+The algorithm:
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+BITMAP VERSION:
+
+                                                                                                                                                    white = 1   0 = black
+if (im->channels > 1) {                                                                                                                                     |   |
+	for(unsigned im_count = 0, map_count = 0; im_count < im->size && map_count < map_size; im_count += im->channels, map_count++) {                     ˇ   ˇ
+		*(omap->map + map_count) = (uint8_t)(*(im->pix + im_count) == 255 && *(im->pix + im_count + 1) == 255 && *(im->pix + im_count + 2) == 255 ? 1 : 0);
+	}
+} else if (im->channels == 1) {
+	for(unsigned im_count = 0, map_count = 0; im_count < im->size && map_count < map_size; im_count += im->channels, map_count++) {
+		*(omap->map + map_count) = (uint8_t)(*(im->pix + im_count) == 255 ? 1 : 0);
+	}                                                                           ^   ^
+}                                                                                   |   |
+                                                                            white = 1   0 = black
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+IMAGE COPY VERSION:
+
+                                                                                                                                                   white = 255   0 = black
+if (im->channels > 1) {                                                                                                                                     |    |
+	for(unsigned im_count = 0, im2_count = 0; im_count < im->size && im2_count < im2->size; im_count += im->channels, im2_count += im2->channels) {     ˇ    ˇ
+		*(im2->pix + im2_count) = (uint8_t)(*(im->pix + im_count) == 255 && *(im->pix + im_count + 1) == 255 && *(im->pix + im_count + 2) == 255 ? 255 : 0);
+	}
+} else if (im->channels == 1) {
+	for(unsigned im_count = 0, im2_count = 0; im_count < im->size && im2_count < im2->size; im_count += im->channels, im2_count += im2->channels) {
+		*(im2->pix + im2_count) = (uint8_t)(*(im->pix + im_count) == 255 ? 255 : 0);
+	}                                                                           ^    ^
+}                                                                                   |    |
+                                                                           white = 255   0 = black
