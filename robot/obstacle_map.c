@@ -98,7 +98,7 @@ void free_obst_map(Obst_Map *omap) {
 	free(omap);
 }
 
-//Everywhere you want to modify the value of x or y, use *x or *y instead
+//Everywhere you want to modify the value of x or y, use *x or *y instead (Shayan)
 void walk_along_line_of_sight_more_horizontal(double slope, double* x, double* y) {
 	*x = 6;
 	*y = 2;
