@@ -72,7 +72,7 @@ void free_obst_map(Obst_Map *omap);
  *   double float (for some semblance of precision) of distance 
  *     in pixel units from given point to nearest obstacle
  */
-double dist_to_obstacle(Pixel_Dimen x, Pixel_Dimen y, double angle);
+double dist_to_obstacle(Obst_Map* map, Pixel_Dimen x, Pixel_Dimen y, double angle);
 
 /*
  * Computes distance to nearest obstacle within a specified distance 
@@ -88,7 +88,7 @@ double dist_to_obstacle(Pixel_Dimen x, Pixel_Dimen y, double angle);
  *     obstacle was found within limit.  OTHERWISE, returns -1.0d0 
  *     to indicate that no obstacle was found within limit.
  */
-double dist_to_obstacle_limited(Pixel_Dimen x, Pixel_Dimen y, double angle, Pixel_Dimen limit);
+double dist_to_obstacle_limited(Obst_Map* map, Pixel_Dimen x, Pixel_Dimen y, double angle, Pixel_Dimen limit);
 
 
 /* Functions to convert between pixel lengths and corresponding physical 
