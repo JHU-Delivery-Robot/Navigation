@@ -104,19 +104,17 @@ int spatial_transform(int x_robot, int y_robot, int x, int y) {
 
 //Everywhere you want to modify the value of x or y, use *x or *y instead (Shayan)
 void walk_along_line_of_sight_more_horizontal(Obst_Map* omap, double angle, double slope, int x_robot, int y_robot, int* x, int* y) {
-	//*x = 6;
-	//*y = 2;
 	int max = INT_MAX; //just to keep loop running until object is found
-	for (int i = 0; i < max; i++) {
-		int g = slope * i;
-		if (/*check if obstacle in (x,y)*/) {
-			*x = i;
-			*y = g;
+	for (int X = 0; X < max; X = (angle > PI / 2 && angle < 3 * PI / 2) ? X - 1 : X + 1) {
+		int Y = floor(slope * ((double)X));
+		if (omap->map[spatial_transform(x_robot, y_robot, X, Y)] == 1) {
+			*x = X;
+			*y = Y;
 			break;
 		}
-		else if (/*check if obstacle in (x-1,y)*/) {
-			*x = i-1;
-			*y = g;
+		else if (omap->map[spatial_transform(x_robot, y_robot, X - 1, Y)] == 1) {
+			*x = X - 1;
+			*y = Y;
 			break;
 		}
 	}
