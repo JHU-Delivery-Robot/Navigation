@@ -98,12 +98,12 @@ void free_obst_map(Obst_Map *omap) {
 	free(omap);
 }
 
-int spatial_transform(int x, int y) {
+int spatial_transform(int x_robot, int y_robot, int x, int y) {
 	return 0;
 }
 
 //Everywhere you want to modify the value of x or y, use *x or *y instead (Shayan)
-void walk_along_line_of_sight_more_horizontal(Obst_Map* omap, double angle, double slope, int* x, int* y) {
+void walk_along_line_of_sight_more_horizontal(Obst_Map* omap, double angle, double slope, int x_robot, int y_robot, int* x, int* y) {
 	//*x = 6;
 	//*y = 2;
 	int max = INT_MAX; //just to keep loop running until object is found
@@ -123,22 +123,22 @@ void walk_along_line_of_sight_more_horizontal(Obst_Map* omap, double angle, doub
 }
 
 //Everywhere you want to modify the value of x or y, use *x or *y instead (Rishi)
-void walk_along_line_of_sight_more_vertical(Obst_Map* omap, double angle, double slope, int* x, int* y) {
+void walk_along_line_of_sight_more_vertical(Obst_Map* omap, double angle, double slope, int x_robot, int y_robot, int* x, int* y) {
 	int X = 0;
-	for (int Y = 0.0; ; Y = (angle > 0 && angle < 180) ? Y + 1 : Y - 1) {
-		X = (int)(((double)Y) / slope);
-		if (omap->map[spatial_transform(X, Y)] == 1) {
+	for (int Y = 0; /*Upper Limit of Y is unknown for now*/; Y = (angle > 0 && angle < 180) ? Y + 1 : Y - 1) {
+		X = floor(((double)Y) / slope);
+		if (omap->map[spatial_transform(x_robot, y_robot, X, Y)] == 1) {
 			*x = X;
-			*y = (int)Y;
-		} else if (omap->map[spatial_transform(X, Y - 1)] == 1) {
+			*y = Y;
+		} else if (omap->map[spatial_transform(x_robot, y_robot, X, Y - 1)] == 1) {
 			*x = X;
-			*y = (int)Y - 1;
+			*y = Y - 1;
 		}
 	}
 }
 
 //Everywhere you want to modify the value of x or y, use *x or *y instead (Jared)
-void walk_along_line_of_sight_non_peculiar(Obst_Map* omap, double angle, int* x, int* y) {
+void walk_along_line_of_sight_non_peculiar(Obst_Map* omap, double angle, int x_robot, int y_robot, int* x, int* y) {
 	*x = 6;
 	*y = 2;
 }
@@ -151,16 +151,16 @@ double dist_to_obstacle(Obst_Map* omap, Pixel_Dimen x, Pixel_Dimen y, double ang
 	int X = 0, Y = 0;
 
 	if (ceilf(angle) == angle && (int)(angle) % 45 == 0) {
-		walk_along_line_of_sight_non_peculiar(omap, angle, &X, &Y);
+		walk_along_line_of_sight_non_peculiar(omap, angle, x, y, &X, &Y);
 	} else {
 		double rad_angle = degreesToRadians(angle);
 
 		double slope = tan(angle);
 
 		if (fabs(slope) < 1.0) {
-			walk_along_line_of_sight_more_horizontal(omap, angle, slope, &X, &Y);
+			walk_along_line_of_sight_more_horizontal(omap, angle, slope, x, y, &X, &Y);
 		} else {
-			walk_along_line_of_sight_more_vertical(omap, angle, slope, &X, &Y);
+			walk_along_line_of_sight_more_vertical(omap, angle, slope, x, y, &X, &Y);
 		}
 	}
 
