@@ -103,7 +103,7 @@ int spatial_transform(int x, int y) {
 }
 
 //Everywhere you want to modify the value of x or y, use *x or *y instead (Shayan)
-void walk_along_line_of_sight_more_horizontal(double slope, int* x, int* y) {
+void walk_along_line_of_sight_more_horizontal(Obst_Map* omap, double angle, double slope, int* x, int* y) {
 	//*x = 6;
 	//*y = 2;
 	int max = INT_MAX; //just to keep loop running until object is found
@@ -158,7 +158,7 @@ double dist_to_obstacle(Obst_Map* omap, Pixel_Dimen x, Pixel_Dimen y, double ang
 		double slope = tan(angle);
 
 		if (fabs(slope) < 1.0) {
-			walk_along_line_of_sight_more_horizontal(slope, &X, &Y);
+			walk_along_line_of_sight_more_horizontal(omap, angle, slope, &X, &Y);
 		} else {
 			walk_along_line_of_sight_more_vertical(omap, angle, slope, &X, &Y);
 		}
