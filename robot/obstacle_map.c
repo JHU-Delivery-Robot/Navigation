@@ -137,8 +137,25 @@ void walk_along_line_of_sight_more_vertical(Obst_Map* omap, double angle, double
 
 //Everywhere you want to modify the value of x or y, use *x or *y instead (Jared)
 void walk_along_line_of_sight_non_peculiar(Obst_Map* omap, double angle, int x_robot, int y_robot, int* x, int* y) {
-	*x = 6;
-	*y = 2;
+	for (int X = 0, int Y = 0; /*limits?*/;) {
+	//iterating x values
+	if ((angle > 0.0 && angle < PI / 2.0) || (angle > 3.0 * PI / 2.0 && angle < 2.0 * PI))  //quadrants I,IV
+	{
+		X++;
+	} else if (angle > PI / 2.0 && angle < 3.0 * PI / 2.0) //quadrants II,III
+	{
+		X--;
+	}
+
+	//iterating y values 
+	if (angle > 0.0 && angle < PI) //quadrants I,II
+	{
+		Y++;
+	} else if (angle > PI && angle < 2.0 * PI) //III,IV
+	{
+		Y--;
+	}
+}
 }
 
 //look into bubble rebound algorithm? quad tree?
