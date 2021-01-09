@@ -138,7 +138,7 @@ void walk_along_line_of_sight_more_vertical(Obst_Map* omap, double angle, double
 }
 
 //Everywhere you want to modify the value of x or y, use *x or *y instead (Jared)
-void walk_along_line_of_sight_non_peculiar(double angle, int* x, int* y) {
+void walk_along_line_of_sight_non_peculiar(Obst_Map* omap, double angle, int* x, int* y) {
 	*x = 6;
 	*y = 2;
 }
@@ -151,7 +151,7 @@ double dist_to_obstacle(Obst_Map* omap, Pixel_Dimen x, Pixel_Dimen y, double ang
 	int X = 0, Y = 0;
 
 	if (ceilf(angle) == angle && (int)(angle) % 45 == 0) {
-		walk_along_line_of_sight_non_peculiar(angle, &X, &Y);
+		walk_along_line_of_sight_non_peculiar(omap, angle, &X, &Y);
 	} else {
 		double rad_angle = degreesToRadians(angle);
 
