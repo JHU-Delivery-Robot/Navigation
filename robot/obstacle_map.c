@@ -98,6 +98,16 @@ void free_obst_map(Obst_Map *omap) {
 	free(omap);
 }
 
+int spatial_transform_2(Obst_Map* omap, int x_robot, int y_robot, int x, int y) {
+	int x_1 = x + x_robot;
+	int y_1 = y + y_robot;
+
+	int x_2 = x_1;
+	int y_2 = omap->height - 1 - y_1;
+
+	return y_2 * omap->width + x_2;
+}
+
 int spatial_transform(int x_robot, int y_robot, int x, int y) {
 	return 0;
 }
@@ -137,25 +147,25 @@ void walk_along_line_of_sight_more_vertical(Obst_Map* omap, double angle, double
 
 //Everywhere you want to modify the value of x or y, use *x or *y instead (Jared)
 void walk_along_line_of_sight_non_peculiar(Obst_Map* omap, double angle, int x_robot, int y_robot, int* x, int* y) {
-	for (int X = 0, int Y = 0; /*limits?*/;) {
-	//iterating x values
-	if ((angle > 0.0 && angle < PI / 2.0) || (angle > 3.0 * PI / 2.0 && angle < 2.0 * PI))  //quadrants I,IV
-	{
-		X++;
-	} else if (angle > PI / 2.0 && angle < 3.0 * PI / 2.0) //quadrants II,III
-	{
-		X--;
-	}
+	for (int X = 0, Y = 0; /*limits?*/;) {
+		//iterating x values
+		if ((angle > 0.0 && angle < PI / 2.0) || (angle > 3.0 * PI / 2.0 && angle < 2.0 * PI))  //quadrants I,IV
+		{
+			X++;
+		} else if (angle > PI / 2.0 && angle < 3.0 * PI / 2.0) //quadrants II,III
+		{
+			X--;
+		}
 
-	//iterating y values 
-	if (angle > 0.0 && angle < PI) //quadrants I,II
-	{
-		Y++;
-	} else if (angle > PI && angle < 2.0 * PI) //III,IV
-	{
-		Y--;
+		//iterating y values 
+		if (angle > 0.0 && angle < PI) //quadrants I,II
+		{
+			Y++;
+		} else if (angle > PI && angle < 2.0 * PI) //III,IV
+		{
+			Y--;
+		}
 	}
-}
 }
 
 //look into bubble rebound algorithm? quad tree?
