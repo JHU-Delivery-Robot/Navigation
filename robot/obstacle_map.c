@@ -1,26 +1,26 @@
-/* 
- * JHU Deliverbot Navigation Group 
- * Navigation simulation system 
- * Obstacle map management --- header file 
+/*
+ * JHU Deliverbot Navigation Group
+ * Navigation simulation system
+ * Obstacle map management --- header file
  *
  * @avnoks (GitHub)  23 Sep 2020
  *
  */
 
-/* A NOTICE (23 Sep 2020): We're at an early stage.  Feel free to change 
+/* A NOTICE (23 Sep 2020): We're at an early stage.  Feel free to change
  * things like function names and types to things that make more sense.
  */
 
 #include <stddef.h>
 #include <stdint.h>
-#include <math.h> 
+#include <math.h>
 #include <stdlib.h>
 #include "obstacle_map.h"
 
 //From stb_image library at https://github.com/nothings/stb
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
-//included math.h and stdio.h 
+//included math.h and stdio.h
 
 /* ----------------------------------------------------------------------
  *   Defines, typedefs
@@ -52,7 +52,7 @@ typedef struct {
  * ---------------------------------------------------------------------- */
 
 //not sure if necessary, included from the potential map code
-#define degreesToRadians(angleDegrees) (angleDegrees * PI / 180.0)     
+#define degreesToRadians(angleDegrees) (angleDegrees * PI / 180.0)
 #define radiansToDegrees(angleRadians) (angleRadians * 180.0 / PI)
 
 Obst_Map *load_obstacle_map(const char *pathname) {
@@ -98,6 +98,10 @@ void free_obst_map(Obst_Map *omap) {
 	free(omap);
 }
 
+int spatial_transform(int x, int y) {
+	return 0;
+}
+
 //Everywhere you want to modify the value of x or y, use *x or *y instead (Shayan)
 void walk_along_line_of_sight_more_horizontal(double slope, double* x, double* y) {
 	//*x = 6;
@@ -106,12 +110,12 @@ void walk_along_line_of_sight_more_horizontal(double slope, double* x, double* y
 	for (int i = 0; i < max; i++) {
 		int g = slope * i;
 		if (/*check if obstacle in (x,y)*/) {
-			*x = i; 
+			*x = i;
 			*y = g;
 			break;
 		}
 		else if (/*check if obstacle in (x-1,y)*/) {
-			*x = i-1; 
+			*x = i-1;
 			*y = g;
 			break;
 		}
@@ -119,13 +123,22 @@ void walk_along_line_of_sight_more_horizontal(double slope, double* x, double* y
 }
 
 //Everywhere you want to modify the value of x or y, use *x or *y instead (Rishi)
-void walk_along_line_of_sight_more_vertical(double slope, double* x, double* y) {
-	*x = 6;
-	*y = 2;
+void walk_along_line_of_sight_more_vertical(Obst_Map* omap, double angle, double slope, int* x, int* y) {
+	int X = 0;
+	for (int Y = 0.0; ; Y = (angle > 0 && angle < 180) ? Y + 1 : Y - 1) {
+		X = (int)(((double)Y) / slope);
+		if (omap->map[spatial_transform(X, Y)] == 1) {
+			*x = X;
+			*y = (int)Y;
+		} else if (omap->map[spatial_transform(X, Y - 1)] == 1) {
+			*x = X;
+			*y = (int)Y - 1;
+		}
+	}
 }
 
 //Everywhere you want to modify the value of x or y, use *x or *y instead (Jared)
-void walk_along_line_of_sight_non_peculiar(double angle, double* x, double* y) {
+void walk_along_line_of_sight_non_peculiar(double angle, int* x, int* y) {
 	*x = 6;
 	*y = 2;
 }
@@ -134,30 +147,30 @@ void walk_along_line_of_sight_non_peculiar(double angle, double* x, double* y) {
 //figure out how to get info from lidar, ask Ben, using a scanner for now
 //need second set of points? included here; not sure about angle
 //returns -1.0d0
-double dist_to_obstacle(Pixel_Dimen x, Pixel_Dimen y, double angle) {
-	double X = 0, Y = 0;
+double dist_to_obstacle(Obst_Map* omap, Pixel_Dimen x, Pixel_Dimen y, double angle) {
+	int X = 0, Y = 0;
 
 	if (ceilf(angle) == angle && (int)(angle) % 45 == 0) {
 		walk_along_line_of_sight_non_peculiar(angle, &X, &Y);
 	} else {
-		double rad_angle = angle * PI / 180.0;
+		double rad_angle = degreesToRadians(angle);
 
 		double slope = tan(angle);
 
 		if (fabs(slope) < 1.0) {
 			walk_along_line_of_sight_more_horizontal(slope, &X, &Y);
 		} else {
-			walk_along_line_of_sight_more_vertical(slope, &X, &Y);
+			walk_along_line_of_sight_more_vertical(omap, angle, slope, &X, &Y);
 		}
 	}
 
 	//Access x and y normally. These are the coordinates now.
-	
+
 	return -1.0;
 }
 
-double dist_to_obstacle_limited(Pixel_Dimen x, Pixel_Dimen y, double angle, Pixel_Dimen limit) {
-	double distance = dist_to_obstacle(x, y, angle);
+double dist_to_obstacle_limited(Obst_Map* omap, Pixel_Dimen x, Pixel_Dimen y, double angle, Pixel_Dimen limit) {
+	double distance = dist_to_obstacle(omap, x, y, angle);
 	if (distance <= limit) {
 		return distance;
 	}
