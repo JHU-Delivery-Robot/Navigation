@@ -125,7 +125,7 @@ void walk_along_line_of_sight_more_horizontal(Obst_Map* omap, double angle, doub
 //Everywhere you want to modify the value of x or y, use *x or *y instead (Rishi)
 void walk_along_line_of_sight_more_vertical(Obst_Map* omap, double angle, double slope, int x_robot, int y_robot, int* x, int* y) {
 	int X = 0;
-	for (int Y = 0; /*Upper Limit of Y is unknown for now*/; Y = (angle > 0 && angle < 180) ? Y + 1 : Y - 1) {
+	for (int Y = 0; /*Upper Limit of Y is unknown for now*/; Y = (angle > 0 && angle < PI) ? Y + 1 : Y - 1) {
 		X = floor(((double)Y) / slope);
 		if (omap->map[spatial_transform(x_robot, y_robot, X, Y)] == 1) {
 			*x = X;
@@ -153,8 +153,6 @@ double dist_to_obstacle(Obst_Map* omap, Pixel_Dimen x, Pixel_Dimen y, double ang
 	if (ceilf(angle) == angle && (int)(angle) % 45 == 0) {
 		walk_along_line_of_sight_non_peculiar(omap, angle, x, y, &X, &Y);
 	} else {
-		double rad_angle = degreesToRadians(angle);
-
 		double slope = tan(angle);
 
 		if (fabs(slope) < 1.0) {
