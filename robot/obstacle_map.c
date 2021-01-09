@@ -100,8 +100,22 @@ void free_obst_map(Obst_Map *omap) {
 
 //Everywhere you want to modify the value of x or y, use *x or *y instead (Shayan)
 void walk_along_line_of_sight_more_horizontal(double slope, double* x, double* y) {
-	*x = 6;
-	*y = 2;
+	//*x = 6;
+	//*y = 2;
+	int max = INT_MAX; //just to keep loop running until object is found
+	for (int i = 0; i < max; i++) {
+		int g = slope * i;
+		if (/*check if obstacle in (x,y)*/) {
+			*x = i; 
+			*y = g;
+			break;
+		}
+		else if (/*check if obstacle in (x-1,y)*/) {
+			*x = i-1; 
+			*y = g;
+			break;
+		}
+	}
 }
 
 //Everywhere you want to modify the value of x or y, use *x or *y instead (Rishi)
