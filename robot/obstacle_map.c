@@ -103,13 +103,13 @@ int spatial_transform(int x, int y) {
 }
 
 //Everywhere you want to modify the value of x or y, use *x or *y instead (Shayan)
-void walk_along_line_of_sight_more_horizontal(double slope, double* x, double* y) {
+void walk_along_line_of_sight_more_horizontal(double slope, int* x, int* y) {
 	*x = 6;
 	*y = 2;
 }
 
 //Everywhere you want to modify the value of x or y, use *x or *y instead (Rishi)
-void walk_along_line_of_sight_more_vertical(Obst_Map* omap, double angle, double slope, double* x, double* y) {
+void walk_along_line_of_sight_more_vertical(Obst_Map* omap, double angle, double slope, int* x, int* y) {
 	int X = 0;
 	for (int Y = 0.0; ; Y = (angle > 0 && angle < 180) ? Y + 1 : Y - 1) {
 		X = (int)(((double)Y) / slope);
@@ -124,7 +124,7 @@ void walk_along_line_of_sight_more_vertical(Obst_Map* omap, double angle, double
 }
 
 //Everywhere you want to modify the value of x or y, use *x or *y instead (Jared)
-void walk_along_line_of_sight_non_peculiar(double angle, double* x, double* y) {
+void walk_along_line_of_sight_non_peculiar(double angle, int* x, int* y) {
 	*x = 6;
 	*y = 2;
 }
@@ -134,7 +134,7 @@ void walk_along_line_of_sight_non_peculiar(double angle, double* x, double* y) {
 //need second set of points? included here; not sure about angle
 //returns -1.0d0
 double dist_to_obstacle(Obst_Map* omap, Pixel_Dimen x, Pixel_Dimen y, double angle) {
-	double X = 0, Y = 0;
+	int X = 0, Y = 0;
 
 	if (ceilf(angle) == angle && (int)(angle) % 45 == 0) {
 		walk_along_line_of_sight_non_peculiar(angle, &X, &Y);
