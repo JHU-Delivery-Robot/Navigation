@@ -18,7 +18,7 @@
 #define SIGMA_DELTA 0.1         /* Std dev of noise in distance b/w two rotations */
 
 #ifndef ROBOT
-#include "robot.h"
+#include "robot.hpp"
 #endif
 
 /* 
