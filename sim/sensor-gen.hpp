@@ -16,56 +16,85 @@
 #define SENSOR_GEN
 /* Need to include obstacle map header file */ //#include ""
 
-typedef struct {
-
-  double std_dev;
-  double lambda;
-  double max_reading;
-
-  double w_exp;
-  double w_hit;
-  double w_max;
-  double w_rand;
-
-} Sensor_stats;
 typedef unsigned Length;
 typedef unsigned Angle;
 
-/* 
- * Sample sensor reading from distribution described by statistics.
- * Arguments: 
- *   stats  -  statistics describing probability distribution of sensor readings
- *   dist   -  true distance to obstacle
- * Returns: 
- *   double float sampled from distribution
- */
-Length beam_model(Sensor_stats stats, Length dist);
+class BeamModel {
+public:
+	double std_dev;
+	double lambda;
+	double max_reading;
 
-/* 
- * Generate Lidar readings and write to array.
- * Arguments
- *   readings - pointer to array to write Lidar readings to
- *   stats    - sensor statistics for Lidar unit
- *   map      - obstacle map
- *   x        - x coordinate of lidar in obstacle map
- *   y        - y coordinate of lidar in obstacle map
- * Returns squat
- */
-void lidar(Length *readings, Sensor_stats stats, Obst_Map map, Length x, Length y);
+	double w_exp;
+	double w_hit;
+	double w_max;
+	double w_rand;
 
-/* 
- * Generate ultrasound reading
- * Arguments
- *   readings - pointer to array to write Lidar readings to
- *   stats    - sensor statistics for ultrasound unit
- *   map      - obstacle map
- *   x        - x coordinate of sensor in obstacle map
- *   y        - y coordinate of sensor in obstacle map
- *   heading  - angle in which the sensor is pointed
- */
-Length ultrasound_sensor(Sensor_stats stats, Obst_Map map, Length x, Length y, Angle heading);
+	/* 
+	 * Sample sensor reading from distribution described by statistics.
+	 * Arguments:
+	 *   dist   -  true distance to obstacle
+	 * Returns: 
+	 *   double float sampled from distribution
+	 */
+	Length sample(Length dist);
+};
+
+class Lidar {
+private:
+	BeamModel beam;
+
+public:
+	/* 
+	 * Generate Lidar readings and write to array. (Use BeamModel in lieu of sensor statistics)
+	 * Arguments
+	 *   readings - pointer to array to write Lidar readings to
+	 *   map      - obstacle map reference
+	 *   x        - x coordinate of lidar in obstacle map
+	 *   y        - y coordinate of lidar in obstacle map
+	 * Returns squat
+	 */
+	void generate(Length *readings, Obst_Map& map, Length x, Length y);
+};
+
+class UltrasoundSensor {
+private:
+	BeamModel beam;
+
+public:
+	/* 
+	 * Generate ultrasound reading. (Use BeamModel in lieu of sensor statistics)
+	 * Arguments
+	 *   readings - pointer to array to write Lidar readings to
+	 *   map      - obstacle map reference
+	 *   x        - x coordinate of sensor in obstacle map
+	 *   y        - y coordinate of sensor in obstacle map
+	 *   heading  - angle in which the sensor is pointed
+	 */
+	Length generate(Length *readings, Obst_Map& map, Length x, Length y);
+};
+
+class IRSensor {
+private:
+	BeamModel beam;
+
+public:
+	/* 
+	 * Generate ultrasound reading. (Use BeamModel in lieu of sensor statistics)
+	 * Arguments
+	 *   map      - obstacle map reference
+	 *   x        - x coordinate of sensor in obstacle map
+	 *   y        - y coordinate of sensor in obstacle map
+	 *   heading  - angle in which the sensor is pointed
+	 */
+	Length IR_sensor(Obst_Map& map, Length x, Length y, Angle heading);
+};
+
+//void lidar(Length *readings, Sensor_stats stats, Obst_Map map, Length x, Length y);
+
+//Length ultrasound_sensor(Sensor_stats stats, Obst_Map map, Length x, Length y, Angle heading);
 
 /* Implement this last.  :| */
-Length IR_sensor(Sensor_stats stats, Length x, Length y, Angle heading);
+//Length IR_sensor(Sensor_stats stats, Length x, Length y, Angle heading);
 
 #endif
