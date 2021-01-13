@@ -11,7 +11,7 @@
  * things like function names and types to things that make more sense.
  */
 
-#include "motion.h"
+#include "motion.hpp"
 
 /* 
  * Update robot's position with noise using odometry motion model
