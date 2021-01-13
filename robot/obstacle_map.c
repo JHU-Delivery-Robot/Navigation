@@ -13,7 +13,7 @@
 
 #include <stddef.h>
 #include <stdint.h>
-#include <math.h> 
+#include <math.h>
 #include <stdlib.h>
 #include "obstacle_map.h"
 
@@ -98,6 +98,11 @@ void free_obst_map(Obst_Map *omap) {
 	free(omap);
 }
 
+int spatial_transform(int x_robot, int y_robot, int x, int y) {
+	return 0;
+}
+
+//THIS IS NOT IN USE, JUST EXPERIMENTAL
 int spatial_transform_2(Obst_Map* omap, int x_robot, int y_robot, int x, int y) {
 	int x_1 = x + x_robot;
 	int y_1 = y + y_robot;
@@ -106,10 +111,6 @@ int spatial_transform_2(Obst_Map* omap, int x_robot, int y_robot, int x, int y) 
 	int y_2 = omap->height - 1 - y_1;
 
 	return y_2 * omap->width + x_2;
-}
-
-int spatial_transform(int x_robot, int y_robot, int x, int y) {
-	return 0;
 }
 
 //Everywhere you want to modify the value of x or y, use *x or *y instead (Shayan)
