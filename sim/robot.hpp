@@ -16,7 +16,8 @@
 
 #define ROBOT
 
-typedef struct {
+class Robot {
+public:
   /* X,Y,Z coordinates of robot */
   double x;
   double y;
@@ -25,5 +26,4 @@ typedef struct {
   double rx;
   double ry;
   double rz;
-
-} Robot;
+};
