@@ -25,9 +25,9 @@
 
 #define PI 3.14159265358979323
 
-/*typedef uint8_t Obst_Map_Px;
+typedef uint8_t Obst_Map_Px;
 typedef unsigned Pixel_Dimen;
-typedef unsigned Physical_Dimen;*/
+typedef unsigned Physical_Dimen;
 
 /* ----------------------------------------------------------------------
  *   Function and Class prototypes
@@ -37,13 +37,11 @@ typedef unsigned Physical_Dimen;*/
 class ObstMap {
 private:
 
-	std::vector<uint8_t> map;
-	unsigned width;
-	unsigned height;
+	std::vector<Obst_Map_Px> map;
+	Pixel_Dimen width;
+	Pixel_Dimen height;
 
-	unsigned at(int x_robot, int y_robot, int x, int y);
-
-	unsigned at(unsigned index);
+	Pixel_Dimen CoordsToBitmapIndex(Pixel_Dimen x, Pixel_Dimen y);
 
 public:
 
@@ -57,10 +55,6 @@ public:
 	 */
 	ObstMap(std::string pathname);
 
-	unsigned getHeight();
-	
-	unsigned getWidth();
-
 	/*
 	 * Computes distance to nearest obstacle from a given point in a given 
 	 * direction.
@@ -72,7 +66,7 @@ public:
 	 *   double float (for some semblance of precision) of distance 
 	 *     in pixel units from given point to nearest obstacle
 	 */
-	double distToObstacle(int x0, int y0, double angle);
+	double distToObstacle(Pixel_Dimen x0, Pixel_Dimen y0, double angle);
 
 	/*
 	 * Computes distance to nearest obstacle within a specified distance 
@@ -88,12 +82,12 @@ public:
 	 *     obstacle was found within limit.  OTHERWISE, returns -1.0d0 
 	 *     to indicate that no obstacle was found within limit.
 	 */
-	double distToObstacleLimited(int x0, int y0, double angle, double limit);
+	double distToObstacleLimited(Pixel_Dimen x0, Pixel_Dimen y0, double angle, double limit);
 
 	/* Functions to convert between pixel lengths and corresponding physical 
  	* lengths and vice versa.  Should we inline these? */
-	unsigned pixelToPhysDimen(unsigned length);
-	unsigned physToPixelDimen(unsigned length);
+	Physical_Dimen pixelToPhysDimen(Pixel_Dimen length);
+	Pixel_Dimen physToPixelDimen(Physical_Dimen length);
 };
 
 #endif
