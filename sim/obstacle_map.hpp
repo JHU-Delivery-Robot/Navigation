@@ -16,15 +16,12 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <string>
+#include <vector>
 
 /* ----------------------------------------------------------------------
  *   Defines, typedefs
  * ---------------------------------------------------------------------- */
-
-namespace std {
-	class string;
-	class vector;
-};
 
 #define PI 3.14159265358979323
 
@@ -37,14 +34,16 @@ typedef unsigned Physical_Dimen;*/
  * ---------------------------------------------------------------------- */
 
 /* Class for storing obstacle map and relevant information */
-class Obst_Map {
+class ObstMap {
 private:
 
 	std::vector<uint8_t> map;
 	unsigned width;
 	unsigned height;
 
-	unsigned spatial_transform(unsigned x_robot, unsigned y_robot, int x, int y);
+	unsigned at(int x_robot, int y_robot, int x, int y);
+
+	unsigned at(unsigned index);
 
 public:
 
@@ -56,11 +55,11 @@ public:
 	 *   ptr to freshly allocated Obst_Map containing data in loaded bitmap 
 	 *      (you must free this pointer when you are done with the map)
 	 */
-	Obst_Map(std::string pathname);
+	ObstMap(std::string pathname);
 
-	unsigned get_height();
+	unsigned getHeight();
 	
-	unsigned get_weight();
+	unsigned getWidth();
 
 	/*
 	 * Computes distance to nearest obstacle from a given point in a given 
@@ -73,7 +72,7 @@ public:
 	 *   double float (for some semblance of precision) of distance 
 	 *     in pixel units from given point to nearest obstacle
 	 */
-	double dist_to_obstacle(unsigned x, unsigned y, double angle);
+	double distToObstacle(int x0, int y0, double angle);
 
 	/*
 	 * Computes distance to nearest obstacle within a specified distance 
@@ -89,12 +88,12 @@ public:
 	 *     obstacle was found within limit.  OTHERWISE, returns -1.0d0 
 	 *     to indicate that no obstacle was found within limit.
 	 */
-	double dist_to_obstacle_limited(unsigned x, unsigned y, double angle, unsigned limit);
+	double distToObstacleLimited(int x0, int y0, double angle, double limit);
 
 	/* Functions to convert between pixel lengths and corresponding physical 
  	* lengths and vice versa.  Should we inline these? */
-	unsigned pixel_to_phys_dimen(unsigned length);
-	unsigned phys_to_pixel_dimen(unsigned length);
+	unsigned pixelToPhysDimen(unsigned length);
+	unsigned physToPixelDimen(unsigned length);
 };
 
 #endif
