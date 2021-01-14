@@ -92,70 +92,59 @@ ObstMap::ObstMap(string pathname) {
 	free(im);
 }
 
-unsigned ObstMap::getHeight() {
-	return height;
+Pixel_Dimen ObstMap::CoordsToBitmapIndex(Pixel_Dimen x, Pixel_Dimen y) {
+	Pixel_Dimen x_2 = x;
+	Pixel_Dimen y_2 = height - 1 - y;
+
+	return y_2 * width + x_2;
 }
 
-unsigned ObstMap::getWidth() {
-	return width;
-}
-
-unsigned ObstMap::at(int x_robot, int y_robot, int x, int y) {
-	return 0;
-}
-
-unsigned ObstMap::at(unsigned index) {
-	return 0;
-}
-
-double ObstMap::distToObstacle(int x0, int y0, double angle) {
-	int x = x0, y = y0;
-
-	double dx = cos(angle);
-	int sx = 0;
-	if (dx > 0.0) {
-		sx = 1;
-	} else if (dx < 0.0) {
-		sx = -1;
-	} else {
-		sx = 0;
+double ObstMap::distToObstacle(Pixel_Dimen x0, Pixel_Dimen y0, double angle) {
+	if (map.at(CoordsToBitmapIndex(x0, y0)) == 1) {
+		return -2.0;
 	}
 
-	double dy = sin(angle);
-	int sy = 0;
-	if (dy > 0.0) {
-		sy = 1;
-	} else if (dy < 0.0) {
-		sy = -1;
-	} else {
-		sy = 0;
-	}
+	Pixel_Dimen x = x0, y = y0;
 
-	double err = dx + dy;
+	double dx = fabs(cos(angle));
+	int sx = (angle >= 0 && angle <= PI / 2) || (angle >= 3 * PI / 2 && angle <= 2 * PI) ? 1 : -1;
+	double dy = fabs(sin(angle));
+	int sy = angle >= 0 && angle <= PI ? 1 : -1; 
+	double err = (dx > dy ? dx : -dy) / 2.0, e2;
 
-	for (double e2 = 2.0 * err; ; e2 = 2.0 * err) {
-		if (fabs(e2) >= fabs(dy)) {
-			err += dy;
-			y += sy;
+	while (x < width && y < height) {
+		if (map.at(CoordsToBitmapIndex(x, y)) == 1) {
+			return sqrt((x - x0) * (x - x0) + (y - y0) * (y - y0));
 		}
 
-		if (fabs(e2) >= fabs(dx)) {
-			err += dx;
+		if (x == 0 || y == 0) {
+			break;
+		}
+
+		e2 = err;
+
+		if (e2 > -dx) {
+			err -= dy;
 			x += sx;
 		}
+
+		if (e2 < dy) {
+			err += dx;
+			y += sy;
+		}
 	}
 
-	return -1.0;
+	return -4.0;
 }
 
-double ObstMap::distToObstacleLimited(int x0, int y0, double angle, double limit) {
+double ObstMap::distToObstacleLimited(Pixel_Dimen x0, Pixel_Dimen y0, double angle, double limit) {
 	double distance = distToObstacle(x0, y0, angle);
 
 	if (distance <= limit) {
 		return distance;
 	}
 
-	return -1.0;
+	return -8.0;
 }
 
 /*
