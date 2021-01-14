@@ -60,15 +60,15 @@ typedef struct {
 #define degreesToRadians(angleDegrees) (angleDegrees * PI / 180.0)     
 #define radiansToDegrees(angleRadians) (angleRadians * 180.0 / PI)
 
-Obst_Map::Obst_Map(string pathname) {
-	Image *im = malloc(sizeof(Image));
+ObstMap::ObstMap(string pathname) {
+	Image *im = (Image *)malloc(sizeof(Image));
 
-	if((im->pix = stbi_load(pathname, &im->width, &im->height, &im->channels, 0)) != NULL) {
+	if((im->pix = stbi_load(pathname.c_str(), &im->width, &im->height, &im->channels, 0)) != NULL) {
 		im->size = im->width * im->height * im->channels;
 		im->allocation_ = STB_ALLOCATED;
 	} else {
 		free(im);
-		return NULL;
+		return;
 	}
 
 	height = im->height;
@@ -86,28 +86,79 @@ Obst_Map::Obst_Map(string pathname) {
 		for(unsigned im_count = 0, map_count = 0; im_count < im->size && map_count < map_size; im_count += im->channels, map_count++) {
 			map[map_count] = (uint8_t)(*(im->pix + im_count) == 255 ? 1 : 0);
 		}
-	} else {
-		free(im->pix);
-		free(im);
-		return NULL;
 	}
 
 	free(im->pix);
 	free(im);
 }
 
-unsigned ObstMap::get_height() {
+unsigned ObstMap::getHeight() {
 	return height;
 }
 
-unsigned ObstMap::get_weight() {
-	return weight;
+unsigned ObstMap::getWidth() {
+	return width;
 }
 
-unsigned spatial_transform(int x_robot, int y_robot, int x, int y) {
+unsigned ObstMap::at(int x_robot, int y_robot, int x, int y) {
 	return 0;
 }
 
+unsigned ObstMap::at(unsigned index) {
+	return 0;
+}
+
+double ObstMap::distToObstacle(int x0, int y0, double angle) {
+	int x = x0, y = y0;
+
+	double dx = cos(angle);
+	int sx = 0;
+	if (dx > 0.0) {
+		sx = 1;
+	} else if (dx < 0.0) {
+		sx = -1;
+	} else {
+		sx = 0;
+	}
+
+	double dy = sin(angle);
+	int sy = 0;
+	if (dy > 0.0) {
+		sy = 1;
+	} else if (dy < 0.0) {
+		sy = -1;
+	} else {
+		sy = 0;
+	}
+
+	double err = dx + dy;
+
+	for (double e2 = 2.0 * err; ; e2 = 2.0 * err) {
+		if (fabs(e2) >= fabs(dy)) {
+			err += dy;
+			y += sy;
+		}
+
+		if (fabs(e2) >= fabs(dx)) {
+			err += dx;
+			x += sx;
+		}
+	}
+
+	return -1.0;
+}
+
+double ObstMap::distToObstacleLimited(int x0, int y0, double angle, double limit) {
+	double distance = distToObstacle(x0, y0, angle);
+
+	if (distance <= limit) {
+		return distance;
+	}
+
+	return -1.0;
+}
+
+/*
 //THIS IS NOT IN USE, JUST EXPERIMENTAL
 int spatial_transform_2(Obst_Map* omap, int x_robot, int y_robot, int x, int y) {
 	int x_1 = x + x_robot;
@@ -140,7 +191,7 @@ void walk_along_line_of_sight_more_horizontal(Obst_Map* omap, double angle, doub
 //Everywhere you want to modify the value of x or y, use *x or *y instead (Rishi)
 void walk_along_line_of_sight_more_vertical(Obst_Map* omap, double angle, double slope, int x_robot, int y_robot, int* x, int* y) {
 	int X = 0;
-	for (int Y = 0; /*Upper Limit of Y is unknown for now*/; Y = (angle > 0 && angle < PI) ? Y + 1 : Y - 1) {
+	for (int Y = 0; ; Y = (angle > 0 && angle < PI) ? Y + 1 : Y - 1) {
 		X = floor(((double)Y) / slope);
 		if (omap->map[spatial_transform(x_robot, y_robot, X, Y)] == 1) {
 			*x = X;
@@ -154,7 +205,7 @@ void walk_along_line_of_sight_more_vertical(Obst_Map* omap, double angle, double
 
 //Everywhere you want to modify the value of x or y, use *x or *y instead (Jared)
 void walk_along_line_of_sight_non_peculiar(Obst_Map* omap, double angle, int x_robot, int y_robot, int* x, int* y) {
-	for (int X = 0, Y = 0; /*limits?*/;) {
+	for (int X = 0, Y = 0; ;) {
 		//iterating x values
 		if ((angle > 0.0 && angle < PI / 2.0) || (angle > 3.0 * PI / 2.0 && angle < 2.0 * PI))  //quadrants I,IV
 		{
@@ -213,4 +264,4 @@ unsigned pixel_to_phys_dimen(unsigned length) {
 
 unsigned phys_to_pixel_dimen(unsigned length) {
 	return length / PIXEL_PHYSICAL_LENGTH;
-}
+}*/
