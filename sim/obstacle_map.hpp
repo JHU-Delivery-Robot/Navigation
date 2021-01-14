@@ -80,7 +80,7 @@ public:
 	 * Args: 
 	 *   x      - x coordinate of point to start searching from
 	 *   y      - y coordinate of point to start searching from
-	 *   angle  - direction to search for obstacles in
+	 *   angle  - direction to search for obstacles in radians
 	 *   limit  - distance, in pixel units, to stop searching at
 	 * Returns: 
 	 *   double float (for some semblance of precision) of distance 
