@@ -43,6 +43,8 @@ private:
 
 	Pixel_Dimen CoordsToBitmapIndex(Pixel_Dimen x, Pixel_Dimen y);
 
+	double distance(Pixel_Dimen x0, Pixel_Dimen y0, Pixel_Dimen x1, Pixel_Dimen y1);
+
 public:
 
 	/*
