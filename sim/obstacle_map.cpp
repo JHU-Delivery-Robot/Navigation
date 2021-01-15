@@ -80,11 +80,11 @@ ObstMap::ObstMap(string pathname) {
 
 	if (im->channels > 1) {
 		for(unsigned im_count = 0, map_count = 0; im_count < im->size && map_count < map_size; im_count += im->channels, map_count++) {
-			map[map_count] = (uint8_t)(*(im->pix + im_count) == 255 && *(im->pix + im_count + 1) == 255 && *(im->pix + im_count + 2) == 255 ? 1 : 0);
+			map[map_count] = (Obst_Map_Px)(*(im->pix + im_count) == 255 && *(im->pix + im_count + 1) == 255 && *(im->pix + im_count + 2) == 255 ? 1 : 0);
 		}
 	} else if (im->channels == 1) {
 		for(unsigned im_count = 0, map_count = 0; im_count < im->size && map_count < map_size; im_count += im->channels, map_count++) {
-			map[map_count] = (uint8_t)(*(im->pix + im_count) == 255 ? 1 : 0);
+			map[map_count] = (Obst_Map_Px)(*(im->pix + im_count) == 255 ? 1 : 0);
 		}
 	}
 
@@ -99,6 +99,24 @@ Pixel_Dimen ObstMap::CoordsToBitmapIndex(Pixel_Dimen x, Pixel_Dimen y) {
 	return y_2 * width + x_2;
 }
 
+double ObstMap::distance(Pixel_Dimen x0, Pixel_Dimen y0, Pixel_Dimen x1, Pixel_Dimen y1) {
+	Pixel_Dimen dx = 0, dy = 0;
+
+	if (x1 > x0) {
+		dx = x1 - x0;
+	} else {
+		dx = x0 - x1;
+	}
+
+	if (y1 > y0) {
+		dy = y1 - y0;
+	} else {
+		dy = y0 - y1;
+	}
+
+	return sqrt(dx * dx + dy * dy);
+}
+
 double ObstMap::distToObstacle(Pixel_Dimen x0, Pixel_Dimen y0, double angle) {
 	if (map.at(CoordsToBitmapIndex(x0, y0)) == 1) {
 		return -2.0;
@@ -107,14 +125,14 @@ double ObstMap::distToObstacle(Pixel_Dimen x0, Pixel_Dimen y0, double angle) {
 	Pixel_Dimen x = x0, y = y0;
 
 	double dx = fabs(cos(angle));
-	int sx = (angle >= 0 && angle <= PI / 2) || (angle >= 3 * PI / 2 && angle <= 2 * PI) ? 1 : -1;
+	int sx = (angle >= 0 && angle < PI / 2) || (angle > 3 * PI / 2 && angle <= 2 * PI) ? 1 : -1;
 	double dy = fabs(sin(angle));
-	int sy = angle >= 0 && angle <= PI ? 1 : -1; 
+	int sy = angle > 0 && angle < PI ? 1 : -1;
 	double err = (dx > dy ? dx : -dy) / 2.0, e2;
 
 	while (x < width && y < height) {
 		if (map.at(CoordsToBitmapIndex(x, y)) == 1) {
-			return sqrt((x - x0) * (x - x0) + (y - y0) * (y - y0));
+			return distance(x0, y0, x, y);
 		}
 
 		if (x == 0 || y == 0) {
