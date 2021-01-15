@@ -109,7 +109,7 @@ double ObstMap::distance(Pixel_Dimen x0, Pixel_Dimen y0, Pixel_Dimen x1, Pixel_D
 	}
 
 	if (y1 > y0) {
-		dx = y1 - y0;
+		dy = y1 - y0;
 	} else {
 		dy = y0 - y1;
 	}
