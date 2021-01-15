@@ -107,9 +107,9 @@ double ObstMap::distToObstacle(Pixel_Dimen x0, Pixel_Dimen y0, double angle) {
 	Pixel_Dimen x = x0, y = y0;
 
 	double dx = fabs(cos(angle));
-	int sx = (angle >= 0 && angle <= PI / 2) || (angle >= 3 * PI / 2 && angle <= 2 * PI) ? 1 : -1;
+	int sx = (angle >= 0 && angle < PI / 2) || (angle > 3 * PI / 2 && angle <= 2 * PI) ? 1 : -1;
 	double dy = fabs(sin(angle));
-	int sy = angle >= 0 && angle <= PI ? 1 : -1; 
+	int sy = angle > 0 && angle < PI ? 1 : -1;
 	double err = (dx > dy ? dx : -dy) / 2.0, e2;
 
 	while (x < width && y < height) {
