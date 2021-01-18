@@ -35,7 +35,7 @@ typedef unsigned Physical_Dimen;
 
 /* Class for storing obstacle map and relevant information */
 class ObstMap {
-private:
+protected:
 
 	std::vector<Obst_Map_Px> map;
 	Pixel_Dimen width;
