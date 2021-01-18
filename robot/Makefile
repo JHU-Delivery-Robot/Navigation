@@ -1,52 +1,45 @@
-# Self configuring makefile
-# Just add dependencies at the indicated lines and watch the tedium of writing
-# make rules get automated for you!
+# Custom auto-dependency generating makefile
+#
+# The official docs way of autogenning (see:
+# https://www.gnu.org/software/make/manual/html_node/Automatic-Prerequisites.html)
+# deps causes make warnings. I've sourced an improved way from
+# (http://make.mad-scientist.net/papers/advanced-auto-dependency-generation/)
+# which relies on GCC special flags to avoid reinvoking make. Pretty neat.
+include $(CFGDIR)/build-meta.mk
+###################################################
+#            BEGIN MAKEFILE SETTINGS              #
+###################################################
+COMPILE.CC  = $(CC.BASE) $(DBGFLAGS)
+LDLIBS     := -lm
 
-# compiler config
-CC          := gcc
-CFLAGS      := -std=c11 -pedantic -Wall -Wextra
-DEBUG_FLAGS := -g -Og
-# some GCC magic flags to autogen deps. In order:
-# -MT $@ : set name of target in the dep makefile to be the original target
-#   name in the main makefile
-# -MMD : generate dependency information as a side effect of compilation,
-#   ignoring system header deps (use -MD to include systen deps)
-# -MP : add a target for each prereq to the list (in generated dep Makefile)
-# -MF $(BUILDIR)/$*.mk : write the generated dep file to the listed path
-DEPFLAGS     = -MT $@ -MMD -MP -MF $(BUILDIR)/$*.mk
-COMPILE.CC   = $(CC) $(DEPFLAGS) $(CFLAGS) $(DEBUG_FLAGS)
-# linker config
-LD          := gcc
-LDFLAGS     := -lm
-
+# sub-project deps
+ROBOCTRL_DEPS := $(call objpath,$(ROBOCTRL_OBJS),$(BUILDIR))
 
 # Directory defs
-BUILDIR := build
 SRCDIR  := .
 
 # add all object dependencies here without the .o extension
-MAIN_DEPS := main fastmath poten_map obstacle_map
 
 # force deafult goal to be the correct one
 .DEFAULT_GOAL := all
 
 
-all: main
+all: $(BUILDIR)/roboctrl
 
 # magic compilation rule
-main: $(addprefix $(BUILDIR)/,$(addsuffix .o,$(MAIN_DEPS))) | $(BUILDIR)
-	$(LD) -o $@ $^ $(LDFLAGS)
+$(BUILDIR)/roboctrl: $(ROBOCTRL_DEPS)| $(BUILDIR)
+	$(CC) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 
 # object build targets (with the dep Makefiles listed as deps so that the files
 # are rebuilt if the dependency files go missing for any reason
-$(BUILDIR)/%.o: $(SRCDIR)/%.c $(BUILDIR)/%.mk | $(BUILDIR)
-	$(COMPILE.CC) -o $@ -c $< $(LDFLAGS)
+$(BUILDIR)/%.$(OBJ_EXT): $(SRCDIR)/%.$(C_EXT) $(BUILDIR)/%.$(MKDEP_EXT) | $(BUILDIR)
+	$(COMPILE.CC) -o $@ -c $< $(LDLIBS)
 
 # phony targets
 clean:
-	rm -rf *.o main *~ build/
+	rm -rf $(BUILDIR)
 compiledb:
-	compiledb make --always-make --dry-run all
+	compiledb -o $(PROJECT_ROOT)/compile_commands.json make --always-make --dry-run all
 .PHONY: all clean compiledb
 
 
@@ -56,7 +49,7 @@ $(BUILDIR):
 	@mkdir -p $@
 
 # define autogen'd deps files
-SRC_DEP_FILES  := $(patsubst $(SRCDIR)/%.c,$(BUILDIR)/%.mk,$(wildcard $(SRCDIR)/*.c))
+SRC_DEP_FILES  := $(patsubst $(SRCDIR)/%.$(C_EXT),$(BUILDIR)/%.$(MKDEP_EXT),$(wildcard $(SRCDIR)/*.$(C_EXT)))
 
 # these empty targets are here to allow make to track the dependency files as
 # deps themselves

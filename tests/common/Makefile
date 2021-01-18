@@ -9,11 +9,11 @@ include $(CFGDIR)/build-meta.mk
 ###################################################
 #            BEGIN MAKEFILE SETTINGS              #
 ###################################################
-COMPILE.CXX  = $(CXX.BASE) $(DBGFLAGS) $(LIB_INCLUDES)
-LDLIBS     := -lm
+COMPILE.CXX       = $(CXX.BASE) $(DBGFLAGS) $(SIMTEST_INCLUDES)
+LDLIBS           :=
 
-ROBOSIM_DEPS := $(call objpath,$(SIM_OBJS),$(BUILDIR)) $\
-                $(LIBSTB_DEPS)
+# sub-project deps
+TEST_COMMON_DEPS := $(call objpath,$(TEST_COMMON),$(BUILDIR))
 
 # Directory defs
 SRCDIR  := .
@@ -24,11 +24,10 @@ SRCDIR  := .
 ###################################################
 #            BEGIN MAKEFILE PROPER                #
 ###################################################
-all: $(BUILDIR)/robosim
+all: test-common
 
 # Linker targets (DON'T REMOVE ANY TARGETS HERE!)
-$(BUILDIR)/robosim: $(ROBOSIM_DEPS)| $(BUILDIR)
-	$(CXX) -o $@ $^ $(LDLIBS)
+test-common: $(TEST_COMMON_DEPS) | $(BUILDIR)
 
 # object build targets (with the dep Makefiles listed as deps so that the files
 # are rebuilt if the dependency files go missing for any reason
@@ -41,7 +40,7 @@ clean:
 	rm -rf $(BUILDIR)
 compiledb:
 	compiledb -o $(PROJECT_ROOT)/compile_commands.json make --always-make --dry-run all
-.PHONY: all clean compiledb
+.PHONY: all clean compiledb zip
 
 
 # autogen deps includes and boilerplate to make everything just work (tm)
@@ -50,11 +49,11 @@ $(BUILDIR):
 	@mkdir -p $@
 
 # define autogen'd deps files
-SRC_DEP_FILES  := $(patsubst $(SRCDIR)/%.$(CXX_EXT),$(BUILDIR)/%.$(MKDEP_EXT),$(wildcard $(SRCDIR)/*.$(CXX_EXT)))
+SRC_DEP_FILES := $(patsubst $(SRCDIR)/%.$(CXX_EXT),$(BUILDIR)/%.$(MKDEP_EXT),$(wildcard $(SRCDIR)/*.$(CXX_EXT)))
 
 # these empty targets are here to allow make to track the dependency files as
 # deps themselves
-$(SRC_DEP_FILES) :
+$(SRC_DEP_FILES):
 
 # include generated dependency files so objects are remade correctly
 include $(wildcard $(SRC_DEP_FILES))
