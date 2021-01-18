@@ -5,36 +5,31 @@
 # deps causes make warnings. I've sourced an improved way from
 # (http://make.mad-scientist.net/papers/advanced-auto-dependency-generation/)
 # which relies on GCC special flags to avoid reinvoking make. Pretty neat.
-include $(CFGDIR)/build-meta.mk
+include $(CFGDIR)/base.mk
 ###################################################
 #            BEGIN MAKEFILE SETTINGS              #
 ###################################################
-COMPILE.CXX  = $(CXX.BASE) $(DBGFLAGS) $(LIB_INCLUDES)
+COMPILE.CXX  = $(CXX.BASE) $(DBGFLAGS)
 LDLIBS     := -lm
 
-ROBOSIM_DEPS := $(call objpath,$(SIM_OBJS),$(BUILDIR)) $\
-                $(LIBSTB_DEPS)
+LIB_OBJS := catch_main
+LIB_DEPS := $(call objpath,$(LIB_OBJS),$(BUILDIR))
 
 # Directory defs
 SRCDIR  := .
 
-# force default goal to be the one required by gradescope
+# force default goal to be all
 .DEFAULT_GOAL  := all
 
 ###################################################
 #            BEGIN MAKEFILE PROPER                #
 ###################################################
-all: $(BUILDIR)/robosim
-
-# Linker targets (DON'T REMOVE ANY TARGETS HERE!)
-$(BUILDIR)/robosim: $(ROBOSIM_DEPS)| $(BUILDIR)
-	$(CXX) -o $@ $^ $(LDLIBS)
+all: $(LIB_DEPS)
 
 # object build targets (with the dep Makefiles listed as deps so that the files
 # are rebuilt if the dependency files go missing for any reason
 $(BUILDIR)/%.$(OBJ_EXT): $(SRCDIR)/%.$(CXX_EXT) $(BUILDIR)/%.$(MKDEP_EXT) | $(BUILDIR)
 	$(COMPILE.CXX) -o $@ -c $< $(LDLIBS)
-
 
 # utility and phony targets
 clean:
@@ -42,7 +37,6 @@ clean:
 compiledb:
 	compiledb -o $(PROJECT_ROOT)/compile_commands.json make --always-make --dry-run all
 .PHONY: all clean compiledb
-
 
 # autogen deps includes and boilerplate to make everything just work (tm)
 # target for buildir
