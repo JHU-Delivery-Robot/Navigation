@@ -130,4 +130,11 @@ $RECYCLE.BIN/
 # project specific config
 # ignore all build files
 build/
-main
+.cache/
+# IDE stuff
+.vscode/
+compile_commands.json
+# executables
+robosim
+roboctrl
+simtests
