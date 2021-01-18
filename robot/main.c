@@ -1,5 +1,4 @@
 #include "poten_map.h"
-#include "obstacle_map.h"
 
 // no literal map (2D array representing grid), but we're constantly fed
 // robot's location and goal points
@@ -20,19 +19,19 @@ int main() {
     lidar_data[i] = 20;
   }
 
- 
+
 
   // turn endpoints in Points
   Vector cur_position = {x1, y1};
   Vector goal = {x2, y2};
-  
+
   // gradient will be a 2D vector!
   Vector attr_gradient = attr_poten_gradient(cur_position, goal);
   Vector rep_gradient = rep_poten_gradient(lidar_data);
 
-  
+
 
   free(lidar_data);
-  
+
   return 0;
 }
