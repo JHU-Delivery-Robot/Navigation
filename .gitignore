@@ -138,3 +138,7 @@ compile_commands.json
 robosim
 roboctrl
 simtests
+# coverage stuff
+*.gcno
+*.gcda
+coverage.json

@@ -9,8 +9,8 @@ include $(CFGDIR)/build-meta.mk
 ###################################################
 #            BEGIN MAKEFILE SETTINGS              #
 ###################################################
-COMPILE.CXX  = $(CXX.BASE) $(DBGFLAGS) $(LIB_INCLUDES)
-LDLIBS     := -lm
+COMPILE.CXX  = $(CXX.BASE) $(LIB_INCLUDES)
+LDLIBS      += -lm
 
 ROBOSIM_DEPS := $(call objpath,$(SIM_OBJS),$(BUILDIR)) $\
                 $(LIBSTB_DEPS)

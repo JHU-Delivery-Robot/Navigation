@@ -9,8 +9,8 @@ include $(CFGDIR)/build-meta.mk
 ###################################################
 #            BEGIN MAKEFILE SETTINGS              #
 ###################################################
-COMPILE.CXX   = $(CXX.BASE) $(DBGFLAGS) $(SIMTEST_INCLUDES)
-LDLIBS       :=
+COMPILE.CXX   = $(CXX.BASE) $(SIMTEST_INCLUDES)
+LDLIBS       +=
 
 # sub-project deps
 SIMTEST_OBJS := test_obstacle_map test_sensor_gen

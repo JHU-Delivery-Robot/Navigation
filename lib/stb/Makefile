@@ -9,7 +9,7 @@ include $(CFGDIR)/base.mk
 ###################################################
 #            BEGIN MAKEFILE SETTINGS              #
 ###################################################
-COMPILE.CC  = $(CC.BASE) $(DBGFLAGS)
+COMPILE.CC  = $(CC.LIBASE)
 LDLIBS     := -lm
 
 STB_OBJS := stb_image stb_image_write
