@@ -9,7 +9,7 @@ include $(CFGDIR)/base.mk
 ###################################################
 #            BEGIN MAKEFILE SETTINGS              #
 ###################################################
-COMPILE.CXX  = $(CXX.BASE) $(DBGFLAGS)
+COMPILE.CXX = $(CXX.LIBASE)
 LDLIBS     := -lm
 
 LIB_OBJS := catch_main

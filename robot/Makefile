@@ -9,8 +9,8 @@ include $(CFGDIR)/build-meta.mk
 ###################################################
 #            BEGIN MAKEFILE SETTINGS              #
 ###################################################
-COMPILE.CC  = $(CC.BASE) $(DBGFLAGS)
-LDLIBS     := -lm
+COMPILE.CC  = $(CC.BASE)
+LDLIBS     += -lm
 
 # sub-project deps
 ROBOCTRL_DEPS := $(call objpath,$(ROBOCTRL_OBJS),$(BUILDIR))

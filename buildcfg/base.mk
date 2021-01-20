@@ -1,5 +1,7 @@
 # Common compiler settings
-DBGFLAGS := -g3 -ggdb -Og
+DEBUG_FLAGS   := -g3 -ggdb -Og
+RELEASE_FLAGS := -O2
+COVFLAGS      := -fprofile-arcs -ftest-coverage
 # some GCC magic flags to autogen deps. In order:
 # -MT $@ : set name of target in the dep makefile to be the original target
 #   name in the main makefile
@@ -7,20 +9,42 @@ DBGFLAGS := -g3 -ggdb -Og
 #   ignoring system header deps (use -MD to include systen deps)
 # -MP : add a target for each prereq to the list (in generated dep Makefile)
 # -MF $(BUILDIR)/$*.mk : write the generated dep file to the listed path
-DEPFLAGS  = -MT $@ -MMD -MP -MF $(BUILDIR)/$*.mk
+DEPFLAGS       = -MT $@ -MMD -MP -MF $(BUILDIR)/$*.mk
+# set default build config to debug
+ifndef CONFIG
+	CONFIG := debug
+endif
 
 # C++ compiler settings
-CXX      := g++
-CXXFLAGS := -Wall -Wextra -pedantic -std=c++11
-CXX.BASE  = $(CXX) $(DEPFLAGS) $(CXXFLAGS)
+CXX        := g++
+CXXSTD     := -std=c++11
+CXXFLAGS   := -Wall -Wextra -pedantic
+CXX.BASE    = $(CXX) $(CXXSTD) $(DEPFLAGS) $(CXXFLAGS)
+CXX.LIBASE  = $(CXX) $(CXXSTD) $(DEPFLAGS)
+ifeq ($(CONFIG), release)
+	CXXFLAGS += $(RELEASE_FLAGS)
+else ifeq ($(CONFIG), debug)
+	CXXFLAGS += $(DEBUG_FLAGS) $(COVFLAGS)
+endif
 
 # C compiler settings
-CC      := gcc
-CFLAGS  := -Wall -Wextra -pedantic -std=c11
-CC.BASE  = $(CC) $(DEPFLAGS) $(CFLAGS)
+CC        := gcc
+CSTD      := -std=c11
+CFLAGS    := -Wall -Wextra -pedantic
+CC.BASE    = $(CC) $(CSTD) $(DEPFLAGS) $(CFLAGS)
+CC.LIBASE  = $(CC) $(CSTD) $(DEPFLAGS)
+ifeq ($(CONFIG), release)
+	CFLAGS += $(RELEASE_FLAGS)
+else ifeq ($(CONFIG), debug)
+	CFLAGS += $(DEBUG_FLAGS) $(COVFLAGS)
+endif
 
 # linker config
 LD          := g++
+LDLIBS      :=
+ifeq ($(CONFIG), debug)
+	LDLIBS += -lgcov
+endif
 
 # directory defs
 BUILDIR := build
