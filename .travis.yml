@@ -1,0 +1,53 @@
+language: cpp
+os: linux
+dist: focal
+
+jobs:
+  fast_finish: true
+  allow_failures:
+    # allow valgrind to fail but provide output to warn programmer
+    - name: "Valgrind Memory Checks"
+  include:
+    # first stage
+    - stage: compile
+      name: "Ubuntu 20.04 x86_64 build"
+      script: make all
+      workspaces:
+        create:
+          name: binaries-amd64
+          paths:
+            - .
+    - name: "Ubuntu 18.04 x86_64 build"
+      dist: xenial
+      script: make all
+    - name: "Ubuntu 20.04 ARM64 build"
+      arch: arm64
+      script: make roboctrl
+      workspaces:
+        create:
+          name: binaries-arm64
+          paths:
+            - roboctrl
+    # second stage
+    - stage: tests
+      name: "Unit Tests"
+      addons:
+        apt:
+          packages:
+            - gcovr
+      workspaces:
+        use: binaries-amd64
+      script:
+        - ./simtests
+      after_success:
+        - .ci/collect_coverage.sh
+        - bash <(curl -s https://codecov.io/bash) -f cov-report.xml
+    - name: "Valgrind Memory Checks"
+      addons:
+        apt:
+          packages:
+            - valgrind
+      workspaces:
+        use: binaries-amd64
+      script:
+        - .ci/valgrind.sh
