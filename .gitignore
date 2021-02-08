@@ -133,8 +133,11 @@ build/
 .cache/
 # IDE stuff
 .vscode/
+.devcontainer
 compile_commands.json
 # executables
 robosim
 roboctrl
 simtests
+
+cov-report
