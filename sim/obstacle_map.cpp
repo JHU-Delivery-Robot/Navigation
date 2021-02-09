@@ -93,7 +93,7 @@ ObstMap::ObstMap(string pathname) {
 
 Pixel_Dimen ObstMap::CoordsToBitmapIndex(Pixel_Dimen x, Pixel_Dimen y) {
 	Pixel_Dimen x_2 = x;
-	Pixel_Dimen y_2 = height - 1 - y;
+	Pixel_Dimen y_2 = y;
 
 	return y_2 * width + x_2;
 }
@@ -147,7 +147,7 @@ double ObstMap::distToObstacle(Pixel_Dimen x0, Pixel_Dimen y0, double angle) {
 
 		if (e2 < dy) {
 			err += dx;
-			y += sy;
+			y -= sy;
 		}
 	}
 
