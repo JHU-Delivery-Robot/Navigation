@@ -5,7 +5,7 @@
  * Generate sensor data for simulation --- header file
  *
  * @author avnoks (GitHub)  5 Jan 2021 (create date)
- * @author <insert implementer username here>
+ * @author jocelynhsu8
  */
 
 /* A NOTICE (5 Jan 2020): We're at an early stage.  Feel free to change
@@ -37,7 +37,7 @@ private:
                              is also the maximum possible reading */
     // probability weight of each of the 4 cases
     double w_exp;  /**< weight of the exponential component */
-    double w_hit;  /**< weight of the gaussiawn component */
+    double w_hit;  /**< weight of the gaussian component */
     double w_max;  /**< weight of the probability of gatting a max value reading*/
     double w_rand; /**< weight of the uniform distribution */
 public:
