@@ -17,7 +17,7 @@
 #define SENSOR_GEN
 /* Need to include obstacle map header file */ //#include ""
 // forward declare obstaclemap type
-class Obst_Map;
+class ObstMap;
 // typedefs
 typedef unsigned Length;
 typedef unsigned Angle;
@@ -25,6 +25,7 @@ typedef unsigned Angle;
 /**
  * Class that defines a beammodel
  *
+ * add paragraph about statistical engine calculation
  * Note that the trivial copy construuctor/assignment operator is used which
  * will assign fields element by element. If additional pointer are added as
  * fields, this will need to be overridden
@@ -36,10 +37,11 @@ private:
     double max_reading; /**< recip. prob for the unifgorm dist. used for glitches. This
                              is also the maximum possible reading */
     // probability weight of each of the 4 cases
-    double w_exp;  /**< weight of the exponential component */
-    double w_hit;  /**< weight of the gaussian component */
-    double w_max;  /**< weight of the probability of gatting a max value reading*/
-    double w_rand; /**< weight of the uniform distribution */
+    double p_exp;  /**< probability of the exponential component */
+    //double p_hit;  /**< probability of the gaussian component */
+    //double p_max;  /**< probability of getting a max value reading*/
+    double p_rand; /**< probability of the uniform distribution */
+
 public:
     /**
      * Constructor to create a new BeamModel
@@ -51,26 +53,43 @@ public:
      * @param w_exp weight of exponential component
      * @param w_rand wight of the uniform component
      */
-    BeamModel(const Obst_Map& map, double std_dev, double lambda, double max_reading,
+    BeamModel(double std_dev, double lambda, double max_reading,
               double w_exp, double w_rand);
     /*
      * Sample sensor reading from distribution described by statistics.
      * @param dist true distance to obstacle
      * @return float sampled from distribution
      */
-    Length sample(Length dist);
+    Length sampleNormal(Length dist); // 
+    Length sampleGlitch(Length dist); // obstacle map --> within range, within dist + gaussian noise; else max value
+    bool glitch(); // call first -> if T call sampleGlitch else call sampleNormal; ultracount sampleNorm 15 deg, Lidar 720 deg
 };
 
 /**
- * baseclass for all sensor data generation functions
+ * Class that defines a beammodel (edit for sensorgen)
+ *
+ * Note that the trivial copy construuctor/assignment operator is used which
+ * will assign fields element by element. If additional pointer are added as
+ * fields, this will need to be overridden
  */
 class SensorGen {
 private:
-    BeamModel beam; /**< internal beammodel used by the sensor */
-    Obst_Map& map;  /**< obstacle map referenced by the sensor */
+   BeamModel model;
+   ObstMap map; // 
+
 public:
-    SensorGen(Obst_Map& map);
-    SensorGen(Obst_Map& map, BeamModel& mdl);
+    /**
+     * Constructor to create a new BeamModel
+     *
+     * @param map obstacle map to use to intialize values
+     * @param std_dev standard deviation fo sensor gaussian
+     * @param lambda parameter for exponential distribution
+     * @param max_reading maximum reading of sensor
+     * @param w_exp weight of exponential component
+     * @param w_rand wight of the uniform component
+     */
+    SensorGen(const ObstMap& map, double std_dev, double lambda, double max_reading,
+              double w_exp, double w_rand);
 };
 
 /**
@@ -78,7 +97,7 @@ public:
  */
 class Lidar : public SensorGen {
 public:
-    Lidar(Obst_Map& map, BeamModel& mdl);
+    Lidar(ObstMap& map, BeamModel& mdl);
     /**
      * Generate Lidar readings and write to array. (Use BeamModel in lieu of sensor statistics)
      * @param readings pointer to array to write Lidar readings to
@@ -93,7 +112,7 @@ public:
  */
 class UltrasoundSensor : public SensorGen {
 public:
-    UltrasoundSensor(Obst_Map& map, BeamModel& mdl);
+    UltrasoundSensor(ObstMap& map, BeamModel& mdl);
     /**
      * Generate ultrasound reading. (Use BeamModel in lieu of sensor statistics)
      *   @param x x coordinate of sensor in obstacle map
@@ -110,7 +129,7 @@ public:
  */
 class IRSensor : public SensorGen {
 public:
-    IRSensor(Obst_Map& map, BeamModel& mdl);
+    IRSensor(ObstMap& map, BeamModel& mdl);
     /**
      * Generate ultrasound reading. (Use BeamModel in lieu of sensor statistics)
      *   @param map obstacle map reference
