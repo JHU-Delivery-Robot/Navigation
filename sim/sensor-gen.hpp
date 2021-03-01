@@ -19,8 +19,12 @@
 // forward declare obstaclemap type
 class ObstMap;
 // typedefs
-typedef unsigned Length;
-typedef unsigned Angle;
+typedef double Length;
+//RADIANS
+typedef double Angle;
+
+#define ANGLE_INCREMENT 0.00872664625
+#define PI 3.14159265358979323
 
 /**
  * Class that defines a beammodel
@@ -73,23 +77,30 @@ public:
  * fields, this will need to be overridden
  */
 class SensorGen {
-private:
-   BeamModel model;
-   ObstMap map; // 
-
+protected:
+    BeamModel beam; /**< internal beammodel used by the sensor */
+    ObstMap& map;  /**< obstacle map referenced by the sensor */
 public:
+    SensorGen(ObstMap& map, BeamModel& mdl);
+};
+
+/**
+ * Cone Sensor model
+ */
+class ConeSensor : public SensorGen {
+protected:
+    Angle fov;  /**< obstacle map referenced by the sensor */
+public:
+    ConeSensor(ObstMap& map, Angle fov, BeamModel& mdl);
     /**
-     * Constructor to create a new BeamModel
-     *
-     * @param map obstacle map to use to intialize values
-     * @param std_dev standard deviation fo sensor gaussian
-     * @param lambda parameter for exponential distribution
-     * @param max_reading maximum reading of sensor
-     * @param w_exp weight of exponential component
-     * @param w_rand wight of the uniform component
+     * Generate ultrasound reading. (Use BeamModel in lieu of sensor statistics)
+     *   @param x x coordinate of sensor in obstacle map
+     *   @param y y coordinate of sensor in obstacle map
+     *   @param fov size of ultrasonic "cone (can round to nearest half angle)
+     *   @param heading angle in which the sensor is pointed (center of fov)
+     *   @return simulated distance reading from sensor
      */
-    SensorGen(const ObstMap& map, double std_dev, double lambda, double max_reading,
-              double w_exp, double w_rand);
+    Length generate(Length x, Length y, Angle heading);
 };
 
 /**
@@ -110,35 +121,35 @@ public:
 /**
  * Ultrasonic sensor model
  */
-class UltrasoundSensor : public SensorGen {
+class UltrasoundSensor : public ConeSensor {
 public:
-    UltrasoundSensor(ObstMap& map, BeamModel& mdl);
+    UltrasoundSensor(ObstMap& map, Angle fov, BeamModel& mdl);
     /**
      * Generate ultrasound reading. (Use BeamModel in lieu of sensor statistics)
      *   @param x x coordinate of sensor in obstacle map
      *   @param y y coordinate of sensor in obstacle map
      *   @param fov size of ultrasonic "cone (can round to nearest half angle)
-     *   @param heading angle in which the sensor is pointed
+     *   @param heading angle in which the sensor is pointed (center of fov)
      *   @return simulated distance reading from sensor
      */
-    Length generate(Length x, Length y, Angle fov, Angle heading);
+    Length generate(Length x, Length y, Angle heading);
 };
 
 /**
  * IR sensor model
  */
-class IRSensor : public SensorGen {
+class IRSensor : public ConeSensor {
 public:
-    IRSensor(ObstMap& map, BeamModel& mdl);
+    IRSensor(ObstMap& map, Angle fov, BeamModel& mdl);
     /**
      * Generate ultrasound reading. (Use BeamModel in lieu of sensor statistics)
      *   @param map obstacle map reference
      *   @param x x coordinate of sensor in obstacle map
      *   @param y y coordinate of sensor in obstacle map
-     *   @param heading  - angle in which the sensor is pointed
+     *   @param heading  - angle in which the sensor is pointed (center of fov)
      *   @return simulated distance reading from sensor
      */
-    Length IR_sensor(Length x, Length y, Angle heading);
+    Length generate(Length x, Length y, Angle heading);
 };
 
 #endif
