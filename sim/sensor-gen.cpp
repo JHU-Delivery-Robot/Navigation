@@ -2,9 +2,9 @@
 
 #include <random>
 #include <cmath>
+#include <limits>
 
 #include "obstacle_map.hpp"
-
 
 BeamModel::BeamModel(double std_dev, double lambda, double max_reading,
                      double w_exp, double w_rand) :
@@ -34,27 +34,48 @@ Length BeamModel::sampleNormal(Length dist) {
     return  p_exp*rand_exp + p_hit*rand_norm + p_max*max_reading + p_rand*rand_uniform;
 }
 
-SensorGen::SensorGen(ObstMap& map) :
-    map(map) {}
-
 SensorGen::SensorGen(ObstMap& map, BeamModel& mdl) :
     map(map),
     beam(mdl) {}
 
 // all sensors: x0 y0 center of sensor, range of angles in test
+ConeSensor::ConeSensor(ObstMap& map, Angle fov, BeamModel& mdl) :
+    SensorGen(map, mdl),
+    fov(fov) {}
+
+Length ConeSensor::generate(Length x, Length y, Angle heading) {
+    Length distance = std::numeric_limits<double>::max();
+    Length distanceTemp = 0.0;
+
+    for (Angle iterator = heading - 0.5 * fov; heading <= heading + 0.5 * fov; heading += ANGLE_INCREMENT) {
+        distanceTemp = map.distToObstacle(x, y, heading);
+        if (distanceTemp < distance) {
+            distance = distanceTemp;
+        }
+    }
+
+    return distance;
+}
+
 Lidar::Lidar(ObstMap& map, BeamModel& mdl) :
     SensorGen(map, mdl) {}
 
 void Lidar::generate(Length *readings, Length x, Length y) {
-    *readings = sqrt(pow(x,2) + pow(y,2));
+    for (Angle iterator = heading; heading <= 2 * PI; heading += ANGLE_INCREMENT) {
+        *(readings++) = map.distToObstacle(x, y, heading);
+    }
 }
 
-UltrasoundSensor::UltrasoundSensor(ObstMap& map, BeamModel& mdl) :
-    SensorGen(map, mdl) {}
+UltrasoundSensor::UltrasoundSensor(ObstMap& map, Angle fov, BeamModel& mdl) :
+    ConeSensor(map, mdl, fov) {}
 
-Length UltrasoundSensor::generate(Length x, Length y, Angle fov, Angle heading) {
-    return cos(heading) * sqrt(pow(x,2)/pow(sin(fov),2)-pow(y,2));
+Length UltrasoundSensor::generate(Length x, Length y, Angle heading) {
+    return ConeSensor::generate(x, y, heading);
 }
 
-IRSensor::IRSensor(ObstMap& map, BeamModel& mdl) :
-    SensorGen(map, mdl) {}
+IRSensor::IRSensor(ObstMap& map, Angle fov, BeamModel& mdl) :
+    ConeSensor(map, mdl, fov) {}
+
+Length IRSensor::generate(Length x, Length y, Angle heading) {
+    return ConeSensor::generate(x, y, heading);
+}
