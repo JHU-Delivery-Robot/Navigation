@@ -29,6 +29,7 @@
 
 /* Physical length of pixel */
 #define PIXEL_PHYSICAL_LENGTH 2   /* Two centimeters? */
+#define ERR_CODE_COLLISION -2.0   /* Sensor is inside an object */
 
 /* ----------------------------------------------------------------------
  *   Typedefs
@@ -118,7 +119,7 @@ double ObstMap::distance(Pixel_Dimen x0, Pixel_Dimen y0, Pixel_Dimen x1, Pixel_D
 
 double ObstMap::distToObstacle(Pixel_Dimen x0, Pixel_Dimen y0, double angle) {
 	if (map.at(CoordsToBitmapIndex(x0, y0)) == 1) {
-		return -2.0;
+		return ERR_CODE_COLLISION;
 	}
 
 	Pixel_Dimen x = x0, y = y0;
@@ -157,11 +158,13 @@ double ObstMap::distToObstacle(Pixel_Dimen x0, Pixel_Dimen y0, double angle) {
 double ObstMap::distToObstacleLimited(Pixel_Dimen x0, Pixel_Dimen y0, double angle, double limit) {
 	double distance = distToObstacle(x0, y0, angle);
 
-	if (distance <= limit) {
+	if (distance <= limit && distance >= 0) {
 		return distance;
+	} else if (distance == ERR_CODE_COLLISION) {
+		return 0.0;
 	}
 
-	return -8.0;
+	return limit;
 }
 
 Physical_Dimen ObstMap::pixelToPhysDimen(Pixel_Dimen length) {
