@@ -13,6 +13,9 @@ LIBSTB_DEPS      := $(call objpath,$(LIBSTB_OBJS),$(PROJECT_ROOT)/lib/stb/$(BUIL
 LIBCATCH_OBJS    := catch_main
 LIBCATCH_DEPS    := $(call objpath,$(LIBCATCH_OBJS),$(PROJECT_ROOT)/lib/catch/$(BUILDIR))
 
+# hal deps
+HAL_OBJS := sensor_hal motor_hal
+
 # sub-project deps
 ROBOCTRL_OBJS := main fastmath poten_map
 # dependency paths

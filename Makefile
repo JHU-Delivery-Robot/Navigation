@@ -18,7 +18,7 @@ all-tests: simtests
 
 # subproject targets
 # common to all subprojects
-project-common: lib
+project-common: hal lib
 # recursive targets
 # robot side software
 roboctrl: project-common
@@ -30,6 +30,8 @@ robosim: project-common
 simtests: project-common robosim
 	$(MAKE) -C tests $@
 	cp tests/sim/$(BUILDIR)/$@ $(PROJECT_ROOT)
+hal:
+	$(MAKE) -C hal
 lib:
 	$(MAKE) -C lib
 
@@ -62,12 +64,12 @@ cov-clean:
 clean:
 	rm -f $(ARTEFACTS)
 	$(call_recursive)
-	
+
 deep-clean: clean
 	$(MAKE) -C lib clean
 
 # special make targets
-.PHONY: all all_bins all_tests roboctrl robosim tests-common simtests project-common lib compiledb clean deep-clean cov-clean
+.PHONY: all all_bins all_tests hal roboctrl robosim tests-common simtests project-common lib compiledb clean deep-clean cov-clean
 .INTERMEDIATE: coverage.json
 
 # utilities
