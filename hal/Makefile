@@ -9,39 +9,33 @@ include $(CFGDIR)/build-meta.mk
 ###################################################
 #            BEGIN MAKEFILE SETTINGS              #
 ###################################################
-COMPILE.CC  = $(CC.BASE) $(HAL_INCLUDES)
-LDLIBS     += -lm
+COMPILE.CC  = $(CXX.LIBASE)
+LDLIBS     := -lm
 
-# sub-project deps
-ROBOCTRL_DEPS := $(call objpath,$(ROBOCTRL_OBJS),$(BUILDIR))
+HAL_DEPS := $(call objpath,$(HAL_OBJS),$(BUILDIR))
 
 # Directory defs
 SRCDIR  := .
 
-# add all object dependencies here without the .o extension
+# force default goal to be all
+.DEFAULT_GOAL  := all
 
-# force deafult goal to be the correct one
-.DEFAULT_GOAL := all
-
-
-all: $(BUILDIR)/roboctrl
-
-# magic compilation rule
-$(BUILDIR)/roboctrl: $(ROBOCTRL_DEPS)| $(BUILDIR)
-	$(CC) $(LDFLAGS) -o $@ $^ $(LDLIBS)
+###################################################
+#            BEGIN MAKEFILE PROPER                #
+###################################################
+all: $(HAL_DEPS)
 
 # object build targets (with the dep Makefiles listed as deps so that the files
 # are rebuilt if the dependency files go missing for any reason
-$(BUILDIR)/%.$(OBJ_EXT): $(SRCDIR)/%.$(C_EXT) $(BUILDIR)/%.$(MKDEP_EXT) | $(BUILDIR)
+$(BUILDIR)/%.$(OBJ_EXT): $(SRCDIR)/%.$(CXX_EXT) $(BUILDIR)/%.$(MKDEP_EXT) | $(BUILDIR)
 	$(COMPILE.CC) -o $@ -c $< $(LDLIBS)
 
-# phony targets
+# utility and phony targets
 clean:
 	rm -rf $(BUILDIR)
 compiledb:
 	compiledb -o $(PROJECT_ROOT)/compile_commands.json make --always-make --dry-run all
 .PHONY: all clean compiledb
-
 
 # autogen deps includes and boilerplate to make everything just work (tm)
 # target for buildir
@@ -49,11 +43,11 @@ $(BUILDIR):
 	@mkdir -p $@
 
 # define autogen'd deps files
-SRC_DEP_FILES  := $(patsubst $(SRCDIR)/%.$(C_EXT),$(BUILDIR)/%.$(MKDEP_EXT),$(wildcard $(SRCDIR)/*.$(C_EXT)))
+SRC_DEP_FILES  := $(patsubst $(SRCDIR)/%.$(CXX_EXT),$(BUILDIR)/%.$(MKDEP_EXT),$(wildcard $(SRCDIR)/*.$(CXX_EXT)))
 
 # these empty targets are here to allow make to track the dependency files as
 # deps themselves
-$(SRC_DEP_FILES):
+$(SRC_DEP_FILES) :
 
 # include generated dependency files so objects are remade correctly
 include $(wildcard $(SRC_DEP_FILES))
