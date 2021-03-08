@@ -1,6 +1,5 @@
 #include "sensor-gen.hpp"
 
-#include <random>
 #include <cmath>
 #include <limits>
 
@@ -12,26 +11,35 @@ BeamModel::BeamModel(double std_dev, double lambda, double max_reading,
     lambda{lambda},
     max_reading{max_reading},
     p_exp{w_exp},
-    p_rand{w_rand} {
-        // constructor body
-        // need to initialize w_hit and w_max
-        // w_hit = 1 - w_rand - w_exp; eliminate; only weigh prob of noise and glitching
-        p_max = 1 - p_rand - p_exp;
+    p_rand{w_rand},
+    exp_dist(lambda),
+    uniform_dist_rand(0,1) {
+        std::random_device rd;
+        gen.seed(rd());
+        
 }
 
 Length BeamModel::sampleNormal(Length dist) {
-    srand(1);
-    // add dist to private class fields
-    std::default_random_engine gen;
-    std::mt19937 gen{rd()}; // exp_dist(gen) to sample single number for exp_dist
-    std::exponential_distribution<double> exp_dist(lambda);
     std::normal_distribution<double> norm_dist(dist, std_dev);
-    std::uniform_real_distribution<double> uniform_dist(0,max_reading);
+    Length rand_norm = norm_dist(gen);
     
-    double rand_exp = exp_dist(gen);
-    double rand_norm = norm_dist(gen);
-    double rand_uniform = uniform_dist(gen);
-    return  p_exp*rand_exp + p_hit*rand_norm + p_max*max_reading + p_rand*rand_uniform;
+    if (rand_norm < max_reading) {
+        return rand_norm;
+    } else {
+        return max_reading;
+    }
+}
+
+Length BeamModel::sampleGlitch() {
+    if (uniform_dist_rand(gen)*(p_exp + p_rand) < p_exp) {
+        return exp_dist(gen);
+    } else {
+        return uniform_dist_rand(gen)*max_reading;
+    } 
+}
+
+bool BeamModel::glitch() {
+    return uniform_dist_rand(gen) < (p_exp + p_rand);
 }
 
 SensorGen::SensorGen(ObstMap& map, BeamModel& mdl) :
