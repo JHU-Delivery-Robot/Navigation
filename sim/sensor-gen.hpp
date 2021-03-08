@@ -15,6 +15,7 @@
 #ifndef SENSOR_GEN
 
 #define SENSOR_GEN
+#include <random>
 /* Need to include obstacle map header file */ //#include ""
 // forward declare obstaclemap type
 class ObstMap;
@@ -46,6 +47,10 @@ private:
     //double p_max;  /**< probability of getting a max value reading*/
     double p_rand; /**< probability of the uniform distribution */
 
+    std::mt19937 gen; // exp_dist(gen) to sample single number for exp_dist
+    std::exponential_distribution<double> exp_dist;
+    std::uniform_real_distribution<double> uniform_dist_rand;
+
 public:
     /**
      * Constructor to create a new BeamModel
@@ -65,7 +70,7 @@ public:
      * @return float sampled from distribution
      */
     Length sampleNormal(Length dist); // 
-    Length sampleGlitch(Length dist); // obstacle map --> within range, within dist + gaussian noise; else max value
+    Length sampleGlitch(); // obstacle map --> within range, within dist + gaussian noise; else max value
     bool glitch(); // call first -> if T call sampleGlitch else call sampleNormal; ultracount sampleNorm 15 deg, Lidar 720 deg
 };
 
