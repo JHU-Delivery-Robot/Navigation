@@ -173,25 +173,25 @@ TEST_CASE("Obstacle Map Distance Testing Limited",
     REQUIRE(uut.getWidth() == 600);
 
     //Edge Case 1
-    CHECK(uut.distToObstacleLimited(300, 300, 2.356, 424) == -8.0);
+    CHECK(uut.distToObstacleLimited(300, 300, 2.356, 424) == 424.0);
 
     //Edge Case 2
     CHECK(uut.distToObstacleLimited(300, 300, 0.785, 423) == Approx(422.849855).epsilon(0.001));
 
     //Quadrant 1
-    CHECK(uut.distToObstacleLimited(300, 300, 0.56, 93) == -8.0);
+    CHECK(uut.distToObstacleLimited(300, 300, 0.56, 93) == 93.0);
     CHECK(uut.distToObstacleLimited(300, 300, 0.465, 224) == Approx(223.60679774).epsilon(0.001));
     
     //Quadrant 2
-    CHECK(uut.distToObstacleLimited(300, 300, 2.39, 219) == -8.0);
+    CHECK(uut.distToObstacleLimited(300, 300, 2.39, 219) == 219.0);
     CHECK(uut.distToObstacleLimited(300, 300, 1.95, 270) == Approx(269.25824035).epsilon(0.001));
     
     //Quadrant 3
-    CHECK(uut.distToObstacleLimited(300, 300, 3.59, 277) == -8.0);
+    CHECK(uut.distToObstacleLimited(300, 300, 3.59, 277) == 277.0);
     CHECK(uut.distToObstacleLimited(300, 300, 4.66, 201) == Approx(200.24984395).epsilon(0.001));
     
     //Quadrant 4
-    CHECK(uut.distToObstacleLimited(300, 300, 4.82, 135) == -8.0);
+    CHECK(uut.distToObstacleLimited(300, 300, 4.82, 135) == 135.0);
     CHECK(uut.distToObstacleLimited(300, 300, 6.215, 251) == Approx(250.57733337).epsilon(0.001));
     
     remove(test_map_img.c_str());
