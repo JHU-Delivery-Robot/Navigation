@@ -148,7 +148,7 @@ public:
  */
 class IRSensor : public ConeSensor {
 public:
-    IRSensor(ObstMap& map, Angle fov, BeamModel& mdl);
+    IRSensor(ObstMap& map, BeamModel& mdl, Length max, Angle fov);
     /**
      * Generate ultrasound reading. (Use BeamModel in lieu of sensor statistics)
      *   @param map obstacle map reference

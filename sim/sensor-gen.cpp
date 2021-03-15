@@ -43,8 +43,8 @@ bool BeamModel::glitch() {
 }
 
 SensorGen::SensorGen(ObstMap& map, BeamModel& mdl, Length max) :
-    map(map),
     beam(mdl),
+    map(map),
     range(max) {}
 
 // all sensors: x0 y0 center of sensor, range of angles in test
@@ -55,15 +55,15 @@ ConeSensor::ConeSensor(ObstMap& map, BeamModel& mdl, Length max, Angle fov) :
 Length ConeSensor::generate(Length x, Length y, Angle heading) {
     Length distance = std::numeric_limits<double>::max();
 
-    for (Angle iterator = heading - 0.5 * fov; heading <= heading + 0.5 * fov; heading += ANGLE_INCREMENT) {
+    for (Angle iterator = heading - 0.5 * fov; iterator <= heading + 0.5 * fov; iterator += ANGLE_INCREMENT) {
         Length distanceCandidate = 0.0;
 
         if (beam.glitch()) {
-            distanceCandidate = sampleGlitch();
+            distanceCandidate = beam.sampleGlitch();
         } else {
-            distanceCandidate = map.distToObstacleLimited(x, y, heading, max);
+            distanceCandidate = map.distToObstacleLimited(x, y, iterator, range);
 
-            if (distanceCandidate != max) {
+            if (distanceCandidate != range) {
                 distanceCandidate = beam.sampleNormal(distanceCandidate);
             }
         }
@@ -80,13 +80,13 @@ Lidar::Lidar(ObstMap& map, BeamModel& mdl, Length max) :
     SensorGen(map, mdl, max) {}
 
 void Lidar::generate(Length *readings, Length x, Length y) {
-    for (Angle iterator = heading; heading <= 2 * PI; heading += ANGLE_INCREMENT) {
+    for (Angle iterator = 0.0; iterator <= 2 * PI; iterator += ANGLE_INCREMENT) {
         if (beam.glitch()) {
-            *(readings++) = sampleGlitch();
+            *(readings++) = beam.sampleGlitch();
         } else {
-            Length distanceCandidate = map.distToObstacleLimited(x, y, heading, max);
+            Length distanceCandidate = map.distToObstacleLimited(x, y, iterator, range);
 
-            if (distanceCandidate != max) {
+            if (distanceCandidate != range) {
                 *(readings++) = beam.sampleNormal(distanceCandidate);
             } else {
                 *(readings++) = distanceCandidate;
