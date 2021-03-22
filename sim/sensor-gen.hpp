@@ -64,6 +64,19 @@ public:
      */
     BeamModel(double std_dev, double lambda, double max_reading,
               double w_exp, double w_rand);
+
+    /**
+     * Constructor to create a new BeamModel
+     *
+     * @param map obstacle map to use to intialize values
+     * @param std_dev standard deviation fo sensor gaussian
+     * @param lambda parameter for exponential distribution
+     * @param max_reading maximum reading of sensor
+     * @param w_exp weight of exponential component
+     * @param w_rand wight of the uniform component
+     */
+    BeamModel(double std_dev, double lambda, double max_reading,
+              double w_exp, double w_rand, unsigned long seed);
     /*
      * Sample sensor reading from distribution described by statistics.
      * @param dist true distance to obstacle
@@ -85,11 +98,11 @@ public:
  */
 class SensorGen {
 protected:
-    BeamModel beam; /**< internal beammodel used by the sensor */
-    ObstMap& map;  /**< obstacle map referenced by the sensor */
+    BeamModel* beam; /**< internal beammodel used by the sensor */
+    ObstMap* map;  /**< obstacle map referenced by the sensor */
     const Length range;  /**< obstacle map referenced by the sensor */
 public:
-    SensorGen(ObstMap& map, BeamModel& mdl, Length max);
+    SensorGen(ObstMap* map, BeamModel* mdl, Length max);
 };
 
 /**
@@ -99,7 +112,7 @@ class ConeSensor : public SensorGen {
 protected:
     Angle fov;  /**< obstacle map referenced by the sensor */
 public:
-    ConeSensor(ObstMap& map, BeamModel& mdl, Length max, Angle fov);
+    ConeSensor(ObstMap* map, BeamModel* mdl, Length max, Angle fov);
     /**
      * Generate ultrasound reading. (Use BeamModel in lieu of sensor statistics)
      *   @param x x coordinate of sensor in obstacle map
@@ -116,7 +129,7 @@ public:
  */
 class Lidar : public SensorGen {
 public:
-    Lidar(ObstMap& map, BeamModel& mdl, Length max);
+    Lidar(ObstMap* map, BeamModel* mdl, Length max);
     /**
      * Generate Lidar readings and write to array. (Use BeamModel in lieu of sensor statistics)
      * @param readings pointer to array to write Lidar readings to
@@ -131,7 +144,7 @@ public:
  */
 class UltrasoundSensor : public ConeSensor {
 public:
-    UltrasoundSensor(ObstMap& map, BeamModel& mdl, Length max, Angle fov);
+    UltrasoundSensor(ObstMap* map, BeamModel* mdl, Length max, Angle fov);
     /**
      * Generate ultrasound reading. (Use BeamModel in lieu of sensor statistics)
      *   @param x x coordinate of sensor in obstacle map
@@ -148,7 +161,7 @@ public:
  */
 class IRSensor : public ConeSensor {
 public:
-    IRSensor(ObstMap& map, BeamModel& mdl, Length max, Angle fov);
+    IRSensor(ObstMap* map, BeamModel* mdl, Length max, Angle fov);
     /**
      * Generate ultrasound reading. (Use BeamModel in lieu of sensor statistics)
      *   @param map obstacle map reference

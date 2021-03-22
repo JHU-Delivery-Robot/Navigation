@@ -19,6 +19,20 @@ BeamModel::BeamModel(double std_dev, double lambda, double max_reading,
         
 }
 
+BeamModel::BeamModel(double std_dev, double lambda, double max_reading,
+                     double w_exp, double w_rand, unsigned long seed) :
+    std_dev{std_dev},
+    lambda{lambda},
+    max_reading{max_reading},
+    p_exp{w_exp},
+    p_rand{w_rand},
+    exp_dist(lambda),
+    uniform_dist_rand(0,1) {
+        std::random_device rd;
+        gen.seed(seed);
+        
+}
+
 Length BeamModel::sampleNormal(Length dist) {
     std::normal_distribution<double> norm_dist(dist, std_dev);
     Length rand_norm = norm_dist(gen);
@@ -42,13 +56,13 @@ bool BeamModel::glitch() {
     return uniform_dist_rand(gen) < (p_exp + p_rand);
 }
 
-SensorGen::SensorGen(ObstMap& map, BeamModel& mdl, Length max) :
+SensorGen::SensorGen(ObstMap* map, BeamModel* mdl, Length max) :
     beam(mdl),
     map(map),
     range(max) {}
 
 // all sensors: x0 y0 center of sensor, range of angles in test
-ConeSensor::ConeSensor(ObstMap& map, BeamModel& mdl, Length max, Angle fov) :
+ConeSensor::ConeSensor(ObstMap* map, BeamModel* mdl, Length max, Angle fov) :
     SensorGen(map, mdl, max),
     fov(fov) {}
 
@@ -58,13 +72,13 @@ Length ConeSensor::generate(Length x, Length y, Angle heading) {
     for (Angle iterator = heading - 0.5 * fov; iterator <= heading + 0.5 * fov; iterator += ANGLE_INCREMENT) {
         Length distanceCandidate = 0.0;
 
-        if (beam.glitch()) {
-            distanceCandidate = beam.sampleGlitch();
+        if (beam->glitch()) {
+            distanceCandidate = beam->sampleGlitch();
         } else {
-            distanceCandidate = map.distToObstacleLimited(x, y, iterator, range);
+            distanceCandidate = map->distToObstacleLimited(x, y, iterator, range);
 
             if (distanceCandidate != range) {
-                distanceCandidate = beam.sampleNormal(distanceCandidate);
+                distanceCandidate = beam->sampleNormal(distanceCandidate);
             }
         }
 
@@ -76,18 +90,18 @@ Length ConeSensor::generate(Length x, Length y, Angle heading) {
     return distance;
 }
 
-Lidar::Lidar(ObstMap& map, BeamModel& mdl, Length max) :
+Lidar::Lidar(ObstMap* map, BeamModel* mdl, Length max) :
     SensorGen(map, mdl, max) {}
 
 void Lidar::generate(Length *readings, Length x, Length y) {
     for (Angle iterator = 0.0; iterator <= 2 * PI; iterator += ANGLE_INCREMENT) {
-        if (beam.glitch()) {
-            *(readings++) = beam.sampleGlitch();
+        if (beam->glitch()) {
+            *(readings++) = beam->sampleGlitch();
         } else {
-            Length distanceCandidate = map.distToObstacleLimited(x, y, iterator, range);
+            Length distanceCandidate = map->distToObstacleLimited(x, y, iterator, range);
 
             if (distanceCandidate != range) {
-                *(readings++) = beam.sampleNormal(distanceCandidate);
+                *(readings++) = beam->sampleNormal(distanceCandidate);
             } else {
                 *(readings++) = distanceCandidate;
             }
@@ -95,14 +109,14 @@ void Lidar::generate(Length *readings, Length x, Length y) {
     }
 }
 
-UltrasoundSensor::UltrasoundSensor(ObstMap& map, BeamModel& mdl, Length max, Angle fov) :
+UltrasoundSensor::UltrasoundSensor(ObstMap* map, BeamModel* mdl, Length max, Angle fov) :
     ConeSensor(map, mdl, max, fov) {}
 
 Length UltrasoundSensor::generate(Length x, Length y, Angle heading) {
     return ConeSensor::generate(x, y, heading);
 }
 
-IRSensor::IRSensor(ObstMap& map, BeamModel& mdl, Length max, Angle fov) :
+IRSensor::IRSensor(ObstMap* map, BeamModel* mdl, Length max, Angle fov) :
     ConeSensor(map, mdl, max, fov) {}
 
 Length IRSensor::generate(Length x, Length y, Angle heading) {
