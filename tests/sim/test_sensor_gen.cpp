@@ -58,50 +58,50 @@ static string generate_image() {
 
 TEST_CASE("IR Sensor Test",
           "[IR][IR_Distance][Sensor-gen]") {
-	string test_map_img = generate_image();
+   string test_map_img = generate_image();
 
-	ObstMap map(test_map_img.c_str());
-	BeamModel beam(0.0, 0.0, 300.0, 0.0, 0.0, 0UL);
+   ObstMap map(test_map_img.c_str());
+   BeamModel beam(0.0, 0.0, 300.0, 0.0, 0.0, 0UL);
 
-	IRSensor IR(&map,
-				&beam,
-				300.0,
-				degreesToRadians(50.0));
+   IRSensor ir(&map,
+            &beam,
+            300.0,
+            degreesToRadians(50.0));
 
-	//Edge Case 1
-	CHECK(IR.generate(300, 300, 2.356) == Approx(300.0).epsilon(0.001));
+   //Edge Case 1
+   CHECK(ir.generate(300, 300, 2.356) == Approx(300.0).epsilon(0.001));
 
     //Quadrant 1
-    CHECK(IR.generate(300, 300, 0.56) == Approx(93.49331526).epsilon(0.001));
-    CHECK(IR.generate(300, 300, 0.785) == Approx(93.49331526).epsilon(0.001));
-    CHECK(IR.generate(300, 300, 0.465) == Approx(93.49331526).epsilon(0.001));
-    
+    CHECK(ir.generate(300, 300, 0.56) == Approx(93.49331526).epsilon(0.001));
+    CHECK(ir.generate(300, 300, 0.785) == Approx(93.49331526).epsilon(0.001));
+    CHECK(ir.generate(300, 300, 0.465) == Approx(93.49331526).epsilon(0.001));
+
     //Quadrant 2
-    CHECK(IR.generate(300, 300, 2.39) == Approx(219.31712199).epsilon(0.001));
-    CHECK(IR.generate(300, 300, 1.95) == Approx(269.25824035).epsilon(0.001));
-    
+    CHECK(ir.generate(300, 300, 2.39) == Approx(219.31712199).epsilon(0.001));
+    CHECK(ir.generate(300, 300, 1.95) == Approx(269.25824035).epsilon(0.001));
+
     //Quadrant 3
-    CHECK(IR.generate(300, 300, 3.59) == Approx(277.30849247).epsilon(0.001));
-    
+    CHECK(ir.generate(300, 300, 3.59) == Approx(277.30849247).epsilon(0.001));
+
     //Quadrant 4 (or thereabouts)
-    CHECK(IR.generate(300, 300, 4.82) == Approx(135.83077707).epsilon(0.001));
-    CHECK(IR.generate(300, 300, 4.66) == Approx(135.83077707).epsilon(0.001)); //Quadrant 3
-    CHECK(IR.generate(300, 300, 6.215) == Approx(250.57733337).epsilon(0.001));
+    CHECK(ir.generate(300, 300, 4.82) == Approx(135.83077707).epsilon(0.001));
+    CHECK(ir.generate(300, 300, 4.66) == Approx(135.83077707).epsilon(0.001)); //Quadrant 3
+    CHECK(ir.generate(300, 300, 6.215) == Approx(250.57733337).epsilon(0.001));
 
     remove(test_map_img.c_str());
 }
 
 TEST_CASE("Ultrasound Sensor Test",
           "[Ultrasound][Ultrasound_Distance][Sensor-gen]") {
-	string test_map_img = generate_image();
+   string test_map_img = generate_image();
 
-	ObstMap map(test_map_img.c_str());
-	BeamModel beam(0.0, 0.0, 300.0, 0.0, 0.0, 0UL);
+   ObstMap map(test_map_img.c_str());
+   BeamModel beam(0.0, 0.0, 300.0, 0.0, 0.0, 0UL);
 
-	UltrasoundSensor ultrasound(&map,
-								&beam,
-								300.0,
-								degreesToRadians(15.0));
+   UltrasoundSensor ultrasound(&map,
+                        &beam,
+                        300.0,
+                        degreesToRadians(15.0));
 
     //Edge Case 1
     CHECK(ultrasound.generate(300, 300, 2.356) == Approx(300.0).epsilon(0.001));
@@ -112,15 +112,15 @@ TEST_CASE("Ultrasound Sensor Test",
     //Quadrant 1
     CHECK(ultrasound.generate(300, 300, 0.56) == Approx(93.49331526).epsilon(0.001));
     CHECK(ultrasound.generate(300, 300, 0.465) == Approx(93.49331526).epsilon(0.001));
-    
+
     //Quadrant 2
     CHECK(ultrasound.generate(300, 300, 2.39) == Approx(219.31712199).epsilon(0.001));
     CHECK(ultrasound.generate(300, 300, 1.95) == Approx(269.25824035).epsilon(0.001));
-    
+
     //Quadrant 3
     CHECK(ultrasound.generate(300, 300, 3.59) == Approx(277.30849247).epsilon(0.001));
     CHECK(ultrasound.generate(300, 300, 4.66) == Approx(200.24984395).epsilon(0.001));
-    
+
     //Quadrant 4
     CHECK(ultrasound.generate(300, 300, 4.82) == Approx(135.83077707).epsilon(0.001));
     CHECK(ultrasound.generate(300, 300, 6.215) == Approx(250.57733337).epsilon(0.001));
@@ -128,50 +128,50 @@ TEST_CASE("Ultrasound Sensor Test",
     //No pixel set here
     CHECK(ultrasound.generate(300, 300, 5.00) == 300.0);
     CHECK(ultrasound.generate(300, 300, 1.00) == 300.0);
-    
+
     remove(test_map_img.c_str());
 }
 
 TEST_CASE("Lidar Sensor Test",
           "[Lidar][Lidar_Distance][Sensor-gen]") {
-	string test_map_img = generate_image();
+   string test_map_img = generate_image();
 
-	ObstMap map(test_map_img.c_str());
-	BeamModel beam(0.0, 0.0, 300.0, 0.0, 0.0, 0UL);
+   ObstMap map(test_map_img.c_str());
+   BeamModel beam(0.0, 0.0, 300.0, 0.0, 0.0, 0UL);
 
-	Length readings[720];
+   Length readings[720];
 
-	Lidar lidar(&map, &beam, 300.0);
+   Lidar lidar(&map, &beam, 300.0);
 
-	lidar.generate(readings, 300, 300);
+   lidar.generate(readings, 300, 300);
 
-	for (int angle = 0; angle < 720; angle++) {
-		switch(angle) {
-		case 2 * ((int)radiansToDegrees(0.56)) + 1:
-			CHECK(readings[angle] == Approx(93.49331526).epsilon(0.001));
-			break;
+   for (int angle = 0; angle < 720; angle++) {
+      switch(angle) {
+      case 2 * ((int)radiansToDegrees(0.56)) + 1:
+         CHECK(readings[angle] == Approx(93.49331526).epsilon(0.001));
+         break;
 
-		case 2 * ((int)radiansToDegrees(0.465)) + 1:
-			CHECK(readings[angle] == Approx(223.60679774).epsilon(0.001));
-			break;
+      case 2 * ((int)radiansToDegrees(0.465)) + 1:
+         CHECK(readings[angle] == Approx(223.60679774).epsilon(0.001));
+         break;
 
-		case 2 * ((int)radiansToDegrees(4.66)) + 2:
-			CHECK(readings[angle] == Approx(200.24984395).epsilon(0.001));
-			break;
+      case 2 * ((int)radiansToDegrees(4.66)) + 2:
+         CHECK(readings[angle] == Approx(200.24984395).epsilon(0.001));
+         break;
 
-		case 2 * ((int)radiansToDegrees(4.82)) + 1:
-			CHECK(readings[angle] == Approx(135.83077707).epsilon(0.001));
-			break;
+      case 2 * ((int)radiansToDegrees(4.82)) + 1:
+         CHECK(readings[angle] == Approx(135.83077707).epsilon(0.001));
+         break;
 
-		case 2 * ((int)radiansToDegrees(6.215)):
-			CHECK(readings[angle] == Approx(250.57733337).epsilon(0.001));
-			break;
+      case 2 * ((int)radiansToDegrees(6.215)):
+         CHECK(readings[angle] == Approx(250.57733337).epsilon(0.001));
+         break;
 
-		default:
-			CHECK(readings[angle] == Approx(300.0).epsilon(0.001));
-			break;
-		}
-	}
-    
+      default:
+         CHECK(readings[angle] == Approx(300.0).epsilon(0.001));
+         break;
+      }
+   }
+
     remove(test_map_img.c_str());
 }

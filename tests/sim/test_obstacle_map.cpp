@@ -43,7 +43,7 @@ public:
  * @param map obstable map to check
  * @param img_data image to compare against
  */
-bool verify_match(ObstMapUUT map, char *img_data) {
+static bool verify_match(ObstMapUUT map, char *img_data) {
     unsigned char *img = reinterpret_cast<unsigned char*>(img_data);
     std::vector<uint8_t> map_vals = map.getMap();
     size_t img_size = map.getHeight()*map.getWidth() * 3;
@@ -65,7 +65,7 @@ bool verify_match(ObstMapUUT map, char *img_data) {
  * @param map obstable map to check
  * @param img_data image to compare against
  */
-bool verify_match_flat(ObstMapUUT map, char *img_data) {
+static bool verify_match_flat(ObstMapUUT map, char *img_data) {
     unsigned char *img = reinterpret_cast<unsigned char*>(img_data);
     std::vector<uint8_t> map_vals = map.getMap();
     size_t img_size = map.getHeight()*map.getWidth();
@@ -85,7 +85,7 @@ bool verify_match_flat(ObstMapUUT map, char *img_data) {
  * @param map obstable map to check
  * @param img_data image to compare against
  */
-string generate_image() {
+static string generate_image() {
     string test_map_img = "omap_distance_test.png";
     size_t data_size = 600*600;
     char *data = new char[data_size];
@@ -143,15 +143,15 @@ TEST_CASE("Obstacle Map Distance Testing Unlimited",
     //Quadrant 1
     CHECK(uut.distToObstacle(300, 300, 0.56) == Approx(93.49331526).epsilon(0.001));
     CHECK(uut.distToObstacle(300, 300, 0.465) == Approx(223.60679774).epsilon(0.001));
-    
+
     //Quadrant 2
     CHECK(uut.distToObstacle(300, 300, 2.39) == Approx(219.31712199).epsilon(0.001));
     CHECK(uut.distToObstacle(300, 300, 1.95) == Approx(269.25824035).epsilon(0.001));
-    
+
     //Quadrant 3
     CHECK(uut.distToObstacle(300, 300, 3.59) == Approx(277.30849247).epsilon(0.001));
     CHECK(uut.distToObstacle(300, 300, 4.66) == Approx(200.24984395).epsilon(0.001));
-    
+
     //Quadrant 4
     CHECK(uut.distToObstacle(300, 300, 4.82) == Approx(135.83077707).epsilon(0.001));
     CHECK(uut.distToObstacle(300, 300, 6.215) == Approx(250.57733337).epsilon(0.001));
@@ -159,7 +159,7 @@ TEST_CASE("Obstacle Map Distance Testing Unlimited",
     //No pixel set here
     CHECK(uut.distToObstacle(300, 300, 5.00) == -4.0);
     CHECK(uut.distToObstacle(300, 300, 1.00) == -4.0);
-    
+
     remove(test_map_img.c_str());
 }
 
@@ -181,19 +181,19 @@ TEST_CASE("Obstacle Map Distance Testing Limited",
     //Quadrant 1
     CHECK(uut.distToObstacleLimited(300, 300, 0.56, 93) == 93.0);
     CHECK(uut.distToObstacleLimited(300, 300, 0.465, 224) == Approx(223.60679774).epsilon(0.001));
-    
+
     //Quadrant 2
     CHECK(uut.distToObstacleLimited(300, 300, 2.39, 219) == 219.0);
     CHECK(uut.distToObstacleLimited(300, 300, 1.95, 270) == Approx(269.25824035).epsilon(0.001));
-    
+
     //Quadrant 3
     CHECK(uut.distToObstacleLimited(300, 300, 3.59, 277) == 277.0);
     CHECK(uut.distToObstacleLimited(300, 300, 4.66, 201) == Approx(200.24984395).epsilon(0.001));
-    
+
     //Quadrant 4
     CHECK(uut.distToObstacleLimited(300, 300, 4.82, 135) == 135.0);
     CHECK(uut.distToObstacleLimited(300, 300, 6.215, 251) == Approx(250.57733337).epsilon(0.001));
-    
+
     remove(test_map_img.c_str());
 }
 
