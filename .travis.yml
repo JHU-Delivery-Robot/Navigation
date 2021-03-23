@@ -2,52 +2,57 @@ language: cpp
 os: linux
 dist: focal
 
+branches:
+  except:
+    # ignore personal branches unless they end in -ci-enabled
+    - /^[\w-]+\/(?!.*-ci-enabled$)/ 
+
 jobs:
   fast_finish: true
   allow_failures:
-    # allow valgrind to fail but provide output to warn programmer
-    - name: "Valgrind Memory Checks"
+  - name: Valgrind Memory Checks
   include:
-    # first stage
-    - stage: compile
-      name: "Ubuntu 20.04 x86_64 build"
-      script: make all
-      workspaces:
-        create:
-          name: binaries-amd64
-          paths:
-            - .
-    - name: "Ubuntu 18.04 x86_64 build"
-      dist: xenial
-      script: make all
-    - name: "Ubuntu 20.04 ARM64 build"
-      arch: arm64
-      script: make roboctrl
-      workspaces:
-        create:
-          name: binaries-arm64
-          paths:
-            - roboctrl
-    # second stage
-    - stage: tests
-      name: "Unit Tests"
-      addons:
-        apt:
-          packages:
-            - gcovr
-      workspaces:
-        use: binaries-amd64
-      script:
-        - ./simtests
-      after_success:
-        - .ci/collect_coverage.sh
-        - bash <(curl -s https://codecov.io/bash) -f cov-report.xml
-    - name: "Valgrind Memory Checks"
-      addons:
-        apt:
-          packages:
-            - valgrind
-      workspaces:
-        use: binaries-amd64
-      script:
-        - .ci/valgrind.sh
+  - stage: compile
+    name: Ubuntu 20.04 x86_64 build
+    script: make all
+    workspaces:
+      create:
+        name: binaries-amd64
+        paths:
+        - "."
+  - name: Ubuntu 18.04 x86_64 build
+    dist: xenial
+    script: make all
+  - name: Ubuntu 20.04 ARM64 build
+    arch: arm64
+    script: make roboctrl
+    workspaces:
+      create:
+        name: binaries-arm64
+        paths:
+        - roboctrl
+  - stage: tests
+    name: Unit Tests
+    addons:
+      apt:
+        packages:
+        - gcovr
+    workspaces:
+      use: binaries-amd64
+    script:
+    - "./simtests"
+    after_success:
+    - ".ci/collect_coverage.sh"
+    - bash <(curl -s https://codecov.io/bash) -f cov-report.xml
+  - name: Valgrind Memory Checks
+    addons:
+      apt:
+        packages:
+        - valgrind
+    workspaces:
+      use: binaries-amd64
+    script:
+    - ".ci/valgrind.sh"
+notifications:
+  slack:
+    secure: kwL6pzyEhroltW+mjJZ26hVymPUPcJBYM9xnmSew+pNb7X+F0jGAIFD5BiTy7znbTol/f2TRffPBXyY9IqmGTtP5jwqtL+rQNWIsU+Syg4NrL/Alm4wy2utkvqLL9T/Q5LvZZlqolNtAy2XeAZZIaZ6BRle2FE5u6oFH6/vOvtwQ1cko0zuOnnBGDv2d+Oo5o1I/hOCGO3suOYZLY9nuL5nWUH/pgUJamfccNIvix9wVZbHI/yzbu6Xk1qmqRDDFrsGCIufqsAocH5h9hnJ+NyW2jnDgNZwD1uYEAIWhYzbZAfLHwRTFu9SIs/4PMbI24tcI2pvFfmXAPg5KRZE9EwY5GGnBTkf6J0H3ffJYTGMzjuSZEnTlKkF/VN+XU6BwQm/pd5K1FBNTwOL/V0EQT3/DnAxJszXX8wx2WpYv9T+CAO/aCgu2dt76FqLw7WPwXyEcoun/TzVJQwVTCPsu3FcluOq89Nlf7+xNrnXJLd72el78ugVlXL6tv5S+3XnjLaK8B9INSeS3vXVAje6D2WcikfZi4p0MHLf4h2ApiaRulKMQ0+fj0a48zf/sCi5mbzadvhwQJMn44Rm1ecLd3fl+25em1Q7LOMJybYBN8nlxXGgnXhhYD8sRUukvOnKN1czi3eoqxepHS0y168ENfb66B9VMCUwUXcHFJGrqzKM=
