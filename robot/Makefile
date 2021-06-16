@@ -9,7 +9,7 @@ include $(CFGDIR)/build-meta.mk
 ###################################################
 #            BEGIN MAKEFILE SETTINGS              #
 ###################################################
-COMPILE.CC  = $(CC.BASE) $(HAL_INCLUDES)
+COMPILE.CC  = $(CXX.BASE) $(HAL_INCLUDES)
 LDLIBS     += -lm
 
 # sub-project deps
@@ -28,12 +28,12 @@ all: $(BUILDIR)/roboctrl
 
 # magic compilation rule
 $(BUILDIR)/roboctrl: $(ROBOCTRL_DEPS)| $(BUILDIR)
-	$(CC) $(LDFLAGS) -o $@ $^ $(LDLIBS)
+	$(CXX) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 
 # object build targets (with the dep Makefiles listed as deps so that the files
 # are rebuilt if the dependency files go missing for any reason
-$(BUILDIR)/%.$(OBJ_EXT): $(SRCDIR)/%.$(C_EXT) $(BUILDIR)/%.$(MKDEP_EXT) | $(BUILDIR)
-	$(COMPILE.CC) -o $@ -c $< $(LDLIBS)
+$(BUILDIR)/%.$(OBJ_EXT): $(SRCDIR)/%.$(CXX_EXT) $(BUILDIR)/%.$(MKDEP_EXT) | $(BUILDIR)
+	$(COMPILE.CXX) -o $@ -c $< $(LDLIBS)
 
 # phony targets
 clean:
@@ -49,7 +49,7 @@ $(BUILDIR):
 	@mkdir -p $@
 
 # define autogen'd deps files
-SRC_DEP_FILES  := $(patsubst $(SRCDIR)/%.$(C_EXT),$(BUILDIR)/%.$(MKDEP_EXT),$(wildcard $(SRCDIR)/*.$(C_EXT)))
+SRC_DEP_FILES  := $(patsubst $(SRCDIR)/%.$(CXX_EXT),$(BUILDIR)/%.$(MKDEP_EXT),$(wildcard $(SRCDIR)/*.$(CXX_EXT)))
 
 # these empty targets are here to allow make to track the dependency files as
 # deps themselves
