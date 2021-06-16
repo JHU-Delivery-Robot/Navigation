@@ -1,4 +1,4 @@
-#include "poten_map.h"
+#include "poten_map.hpp"
 
 // no literal map (2D array representing grid), but we're constantly fed
 // robot's location and goal points
@@ -14,7 +14,7 @@ int main() {
   Coord y2 = 4;
 
   // GIVEN - assumed to be in meters
-  uint16_t * lidar_data = malloc(sizeof(uint16_t) * N_ANGLES);
+  uint16_t * lidar_data = new uint16_t[N_ANGLES];
   for(int i = 0; i < N_ANGLES; i++) {
     lidar_data[i] = 20;
   }

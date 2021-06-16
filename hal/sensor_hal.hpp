@@ -1,7 +1,7 @@
-#ifndef _SENSOR_HAL_H_
-#define _SENSOR_HAL_H_
+#ifndef _SENSOR_HAL_HPP_
+#define _SENSOR_HAL_HPP_
 
-#include "hal_types.h"
+#include "hal_types.hpp"
 
 namespace hal {
 

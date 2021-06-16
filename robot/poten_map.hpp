@@ -11,8 +11,8 @@
  *    Defines, typedefs
  * -------------------------------- */
 
-#include <stdint.h>
-#include <stdlib.h>
+#include <cstdint>
+#include <cstdlib>
 
 #define N_ANGLES 720  // number of measurements returned by the lidar scan 
 #define Q_STAR 10

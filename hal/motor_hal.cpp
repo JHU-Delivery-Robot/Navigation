@@ -1,4 +1,4 @@
-#include "motor_hal.h"
+#include "motor_hal.hpp"
 
 using namespace hal;
 
