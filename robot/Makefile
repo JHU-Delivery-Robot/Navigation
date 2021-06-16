@@ -9,7 +9,7 @@ include $(CFGDIR)/build-meta.mk
 ###################################################
 #            BEGIN MAKEFILE SETTINGS              #
 ###################################################
-COMPILE.CC  = $(CXX.BASE) $(HAL_INCLUDES)
+COMPILE.CXX  = $(CXX.BASE) $(HAL_INCLUDES)
 LDLIBS     += -lm
 
 # sub-project deps

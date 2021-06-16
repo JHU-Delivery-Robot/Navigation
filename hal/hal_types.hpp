@@ -1,5 +1,5 @@
-#ifndef _HAL_TYPES_H_
-#define _HAL_TYPES_H_
+#ifndef _HAL_TYPES_HPP_
+#define _HAL_TYPES_HPP_
 
 namespace hal {
 
