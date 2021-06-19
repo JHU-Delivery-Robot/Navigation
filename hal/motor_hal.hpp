@@ -3,7 +3,7 @@
 
 #include <pthread.h>
 
-#include "hal_types.h"
+#include "hal_types.hpp"
 
 namespace hal {
 

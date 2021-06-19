@@ -1,4 +1,4 @@
-#include "poten_map.h"
+#include "poten_map.hpp"
 #include <math.h>
 
 #define degreesToRadians(angleDegrees) (angleDegrees * PI / 180.0)

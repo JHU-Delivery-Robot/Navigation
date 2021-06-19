@@ -11,8 +11,8 @@
  * things like function names and types to things that make more sense.
  */
 
-#ifndef OBSTACLE_MAP_H
-#define OBSTACLE_MAP_H
+#ifndef OBSTACLE_MAP_HPP
+#define OBSTACLE_MAP_HPP
 
 #include <cstddef>
 #include <cstdint>

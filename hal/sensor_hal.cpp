@@ -1,5 +1,5 @@
-#include "sensor_hal.h"
-#include "hal_types.h"
+#include "sensor_hal.hpp"
+#include "hal_types.hpp"
 
 using namespace hal;
 
