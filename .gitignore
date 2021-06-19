@@ -135,6 +135,7 @@ build/
 .vscode/
 .devcontainer
 compile_commands.json
+.idea/
 # executables
 robosim
 roboctrl
