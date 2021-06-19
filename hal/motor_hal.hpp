@@ -1,5 +1,5 @@
-#ifndef _MOTOR_HAL_H_
-#define _MOTOR_HAL_H_
+#ifndef _MOTOR_HAL_HPP_
+#define _MOTOR_HAL_HPP_
 
 #include <pthread.h>
 
