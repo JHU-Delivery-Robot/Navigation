@@ -1,3 +1,6 @@
+#ifndef POTEN_MAP_HPP
+#define POTEN_MAP_HPP
+
 /*
  *
  * JHU Deliverbot Navigation Group
@@ -52,3 +55,5 @@ Vector attr_poten_gradient(Vector cur_position, Vector goal);
  *   Repulsive potential gradient vector
  */
 Vector rep_poten_gradient(uint16_t * lidar);
+
+#endif
