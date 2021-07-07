@@ -4,7 +4,7 @@
 #include "motors.hpp"
 
 Speed ang_vel_to_motor(AngVel ang_vel, Motor mtr) {
-    return 0;
+  return WHEEL_DIAMETER * ang_vel * cos(mtr.theta() / mtr.r();
 }
 
 void velocity_to_motor_output(Speed speed, AngVel ang_vel) {
