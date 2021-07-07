@@ -1,6 +1,8 @@
 #ifndef _HAL_TYPES_HPP_
 #define _HAL_TYPES_HPP_
 
+#include <cstdint>
+
 namespace hal {
 
 typedef int32_t Coord;

@@ -19,9 +19,11 @@ private:
     Coord r;
     Angle theta;
 public:
-    Motor(unsigned int channel);
+    Motor(unsigned int channel, Coord R, Angle Theta);
     int set_speed(float speed);
     float get_speed();
+    Coord get_r();
+    Angle get_theta();
     void reset_odometry();
     void set_odometry_period(float secs);
     OdomReading get_odometry_reading();
