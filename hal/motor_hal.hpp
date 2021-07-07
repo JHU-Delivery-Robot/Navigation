@@ -16,6 +16,8 @@ enum MotorStatus {
 class Motor {
 private:
     pthread_mutex_t lock_motor;
+    Coord r;
+    Angle theta;
 public:
     Motor(unsigned int channel);
     int set_speed(float speed);

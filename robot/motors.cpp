@@ -3,13 +3,13 @@
 #include "poten_map.hpp"
 #include "motors.hpp"
 
-void velocity_to_motor_output(Vector cartesian_velocity) {
-    velocity_magnitude = sqrt((float)(cartesian_velocity.x) * (float)(cartesian_velocity.x) +
-                         (float)(cartesian_velocity.y) * (float)(cartesian_velocity.y));
-    velocity_angle = atan2((float)(cartesian_velocity.y), (float)(cartesian_velocity.x));
+Speed ang_vel_to_motor(AngVel ang_vel, Motor mtr) {
+    return 0;
+}
 
-    // robot_motors.front_l.set_speed();
-    // robot_motors.back_l.set_speed();
-    // robot_motors.front_r.set_speed();
-    // robot_motors.back_r.set_speed();
+void velocity_to_motor_output(Speed speed, AngVel ang_vel) {
+    robot_motors.front_l.set_speed(speed, ang_vel_to_motor(ang_vel, robot_motors.front_l));
+    robot_motors.back_l.set_speed(speed, ang_vel_to_motor(ang_vel, robot_motors.back_l));
+    robot_motors.front_r.set_speed(speed, ang_vel_to_motor(ang_vel, robot_motors.front_r));
+    robot_motors.back_r.set_speed(speed, ang_vel_to_motor(ang_vel, robot_motors.back_r));
 }
