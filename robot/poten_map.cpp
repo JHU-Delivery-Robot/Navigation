@@ -30,3 +30,23 @@ Vector rep_poten_gradient(uint16_t * lidar) {
   Vector gradient = {(Coord)gradient_x, (Coord)gradient_y};
   return gradient;
 }
+
+////////////////////
+// Functions that convert cartesian to polar gradients
+
+// Arguments
+//   heading - current heading (angular position) of robot
+//   cartesian_gradient - [x,y] gradient calculated from potential map
+// Returns linear (forward/backward) velocity
+double cartesian_to_radial_gradient (double heading, Vector cartesian_gradient) {
+  return cos(heading) * cartesian_gradient.x + sin(heading) * cartesian_gradient.y;
+}
+
+// Arguments
+//   heading - current heading (angular position) of robot
+//   cartesian_gradient - [x,y] gradient calculated from potential map
+// Returns angular velocity
+double cartesian_to_tangent_gradient (double heading, Vector cartesian_gradient) {
+  double tan_ang  = heading + PI/2;
+  return cos(tan_ang) * cartesian_gradient.x + sin(tan_ang) * cartesian_gradient.y;
+}
