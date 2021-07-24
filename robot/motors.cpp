@@ -1,15 +1,25 @@
-#include <cmath>
-#include "hal.hpp"
-#include "poten_map.hpp"
 #include "motors.hpp"
 
-Speed ang_vel_to_motor(AngVel ang_vel, Motor mtr) {
-  return WHEEL_DIAMETER * ang_vel * cos(mtr.theta() / mtr.r();
+#include <cmath>
+#include "poten_map.hpp"
+
+PotentialMapSpeedController::PotentialMapSpeedController(MotorPositions positions, float wheelDiameter) :
+    motorPositions(positions),
+    wheelDiameter{wheelDiameter} {}
+
+Speed PotentialMapSpeedController::angularToMotor(AngVel ang_vel, MotorPosition position) {
+    // theta is angle from horizontal angle of inclination to the motors
+    // Linear distance from centre of mass to the motors
+    return WHEEL_DIAMETER * ang_vel * cos(position.theta / position.r);
 }
 
-void velocity_to_motor_output(Speed speed, AngVel ang_vel) {
-    robot_motors.front_l.set_speed(speed, ang_vel_to_motor(ang_vel, robot_motors.front_l));
-    robot_motors.back_l.set_speed(speed, ang_vel_to_motor(ang_vel, robot_motors.back_l));
-    robot_motors.front_r.set_speed(speed, ang_vel_to_motor(ang_vel, robot_motors.front_r));
-    robot_motors.back_r.set_speed(speed, ang_vel_to_motor(ang_vel, robot_motors.back_r));
+void PotentialMapSpeedController::updateSpeed(Speed speed, AngVel ang_vel) {
+    motorSpeeds.front_l = angularToMotor(ang_vel, motorPositions.front_l);
+    motorSpeeds.back_l  = angularToMotor(ang_vel, motorPositions.back_l);
+    motorSpeeds.front_r = angularToMotor(ang_vel, motorPositions.front_r);
+    motorSpeeds.back_r  = angularToMotor(ang_vel, motorPositions.back_r);
+}
+
+hal::MotorSpeeds PotentialMapSpeedController::getSpeedSettings() {
+    return motorSpeeds;
 }
