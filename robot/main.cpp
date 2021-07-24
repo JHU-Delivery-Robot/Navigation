@@ -1,4 +1,5 @@
 #include "poten_map.hpp"
+#include "types.hpp"
 
 // no literal map (2D array representing grid), but we're constantly fed
 // robot's location and goal points
@@ -14,24 +15,25 @@ int main() {
   Coord y2 = 4;
 
   // GIVEN - assumed to be in meters
-  uint16_t * lidar_data = new uint16_t[N_ANGLES];
-  for(int i = 0; i < N_ANGLES; i++) {
+  uint16_t *lidar_data = new uint16_t[Constants::LIDAR_N_ANGLES];
+  for(int i = 0; i < Constants::LIDAR_N_ANGLES; i++) {
     lidar_data[i] = 20;
   }
 
-
-
+  GradientPotentialMap potentialMap(Constants::LIDAR_N_ANGLES, Constants::Q_STAR,
+                                    Constants::GRADIENT_SCALE, {0,0});
   // turn endpoints in Points
-  Vector cur_position = {x1, y1};
-  Vector goal = {x2, y2};
+  Vec2d cur_position = {x1, y1};
+  Vec2d goal = {x2, y2};
 
   // gradient will be a 2D vector!
-  Vector attr_gradient = attr_poten_gradient(cur_position, goal);
-  Vector rep_gradient = rep_poten_gradient(lidar_data);
+  potentialMap.setGoal(goal);
+  Vec2d attr_gradient = potentialMap.getAttrPotential(cur_position);
+  Vec2d rep_gradient = potentialMap.getRepPotential(lidar_data);
 
 
 
-  free(lidar_data);
+  delete[] lidar_data;
 
   return 0;
 }
