@@ -16,19 +16,22 @@ enum MotorStatus {
 class Motor {
 private:
     pthread_mutex_t lock_motor;
-    Coord r;
-    Angle theta;
 public:
-    Motor(unsigned int channel, Coord R, Angle Theta);
+    Motor(unsigned int channel);
     int set_speed(float speed);
     float get_speed();
-    Coord get_r();
-    Angle get_theta();
     void reset_odometry();
     void set_odometry_period(float secs);
     OdomReading get_odometry_reading();
     void set_odom_callback(OdomCallback func);
     MotorStatus status();
+};
+
+struct MotorSpeeds {
+    int32_t front_l;
+    int32_t front_r;
+    int32_t back_l;
+    int32_t back_r;
 };
 
 class MotorAssembly {
