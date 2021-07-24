@@ -17,7 +17,7 @@ LIBCATCH_DEPS    := $(call objpath,$(LIBCATCH_OBJS),$(PROJECT_ROOT)/lib/catch/$(
 HAL_OBJS := sensor_hal motor_hal
 
 # sub-project deps
-ROBOCTRL_OBJS := main fastmath poten_map
+ROBOCTRL_OBJS := main fastmath poten_map speed_controller
 # dependency paths
 SIM_COMMON   := motion obstacle_map sensor-gen
 # Source files needed only for the simulation program
