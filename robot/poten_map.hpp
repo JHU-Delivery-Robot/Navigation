@@ -1,59 +1,53 @@
-#ifndef POTEN_MAP_HPP
-#define POTEN_MAP_HPP
-
-/*
- *
+/**
  * JHU Deliverbot Navigation Group
  * Navigation simulation system
  * Potential maps - header file
  *
- * @clevitt16 (Github) 
+ * @clevitt16 (Github)
  */
-
-/* ----------------------------
- *    Defines, typedefs
- * -------------------------------- */
+#ifndef POTEN_MAP_HPP
+#define POTEN_MAP_HPP
 
 #include <cstdint>
-#include <cstdlib>
 
-#define N_ANGLES 720  // number of measurements returned by the lidar scan 
-#define Q_STAR 10
-#define PI 3.14159265358979323
+#include "types.hpp"
 
-typedef int32_t Coord; // signed or unsigned?
-
-typedef struct {
-  Coord x;
-  Coord y;
-} Vector;
-
-
-/* --------------------------
- *    Function declarations
- * ----------------------------- */
-
-/*
- * Given the current position of the robot and the goal,
- * returns the attractive potential gradient vector
- * Parameters:
- *   cur_position - current position of the robot
- *   goal         - goal position of the robot
- * Returns
- *   Attractive potential gradient Vector
- *
+/**
+ * Potential map class
  */
-Vector attr_poten_gradient(Vector cur_position, Vector goal);
+class GradientPotentialMap {
+private:
+    const int nAngles;       /**< number of ranging measurements per lidar rotation */
+    const int qStar;         /**< ??? */
+    const int gradientScale; /**< constant used to scale both gradients */
+    Vec2d goal;           /**< goal point */
+public:
+    /**
+     * Consturct all required args
+     */
+    GradientPotentialMap(int nAngles, int qStar, int gradientScale, Vec2d goal);
+    /**
+     * Update goal on the potential map.
+     *
+     * @param goal target of navigation
+     */
+    void setGoal(Vec2d goal);
+    /**
+     * Given the current position of the robot and the goal, returns the
+     * attractive potential gradient vector
+     *
+     * @param cur_position current position of the robot
+     * @return Attractive potential gradient Vector
+     */
+    Vec2d getAttrPotential(Vec2d cur_position);
 
-/*
- * Calculates the repulsive potential gradient vector
- * given an array of all obstacle locations in relation
- * to the robot
- * Patameters:
- *   lidar - array of distances to nearest obstacle at N_ANGLES angles
- * Returns:
- *   Repulsive potential gradient vector
- */
-Vector rep_poten_gradient(uint16_t * lidar);
-
+    /**
+     * Calculates the repulsive potential gradient vector given an array of all
+     * obstacle locations in relation to the robot
+     *
+     * @param lidar array of distances to nearest obstacle at N_ANGLES angles
+     * @return Repulsive potential gradient vector
+     */
+    Vec2d getRepPotential(uint16_t *lidar);
+};
 #endif
