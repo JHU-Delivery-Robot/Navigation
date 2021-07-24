@@ -1,7 +1,7 @@
 #include "speed_controller.hpp"
 
 #include <cmath>
-#include "poten_map.hpp"
+#include "potential_map.hpp"
 
 PotentialMapSpeedController::PotentialMapSpeedController(MotorPositions positions, float wheelDiameter) :
     motorPositions(positions),

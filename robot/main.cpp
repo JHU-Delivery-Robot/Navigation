@@ -1,4 +1,4 @@
-#include "poten_map.hpp"
+#include "potential_map.hpp"
 #include "types.hpp"
 
 // no literal map (2D array representing grid), but we're constantly fed

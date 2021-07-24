@@ -1,4 +1,4 @@
-#include "poten_map.hpp"
+#include "potential_map.hpp"
 
 #include "util.hpp"
 
