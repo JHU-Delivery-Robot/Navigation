@@ -1,4 +1,4 @@
-#include "motors.hpp"
+#include "speed_controller.hpp"
 
 #include <cmath>
 #include "poten_map.hpp"
@@ -10,7 +10,7 @@ PotentialMapSpeedController::PotentialMapSpeedController(MotorPositions position
 Speed PotentialMapSpeedController::angularToMotor(AngVel ang_vel, MotorPosition position) {
     // theta is angle from horizontal angle of inclination to the motors
     // Linear distance from centre of mass to the motors
-    return WHEEL_DIAMETER * ang_vel * cos(position.theta / position.r);
+    return wheelDiameter * ang_vel * cos(position.theta / position.r);
 }
 
 void PotentialMapSpeedController::updateSpeed(Speed speed, AngVel ang_vel) {
