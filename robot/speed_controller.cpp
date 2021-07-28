@@ -14,10 +14,10 @@ Speed PotentialMapSpeedController::angularToMotor(AngVel ang_vel, MotorPosition 
 }
 
 void PotentialMapSpeedController::updateSpeed(Speed speed, AngVel ang_vel) {
-    motorSpeeds.front_l = angularToMotor(ang_vel, motorPositions.front_l);
-    motorSpeeds.back_l  = angularToMotor(ang_vel, motorPositions.back_l);
-    motorSpeeds.front_r = angularToMotor(ang_vel, motorPositions.front_r);
-    motorSpeeds.back_r  = angularToMotor(ang_vel, motorPositions.back_r);
+    motorSpeeds.front_l = speed + angularToMotor(ang_vel, motorPositions.front_l);
+    motorSpeeds.back_l  = speed + angularToMotor(ang_vel, motorPositions.back_l);
+    motorSpeeds.front_r = speed + angularToMotor(ang_vel, motorPositions.front_r);
+    motorSpeeds.back_r  = speed + angularToMotor(ang_vel, motorPositions.back_r);
 }
 
 hal::MotorSpeeds PotentialMapSpeedController::getSpeedSettings() {
