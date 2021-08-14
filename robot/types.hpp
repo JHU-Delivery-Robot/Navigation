@@ -26,8 +26,15 @@ struct Constants {
  * 2d Vector object
  */
 struct Vec2d {
-  Coord x;
-  Coord y;
+    Coord x;
+    Coord y;
+
+    Vec2d operator+(const Vec2d& vec) {
+        Vec2d result;
+        result.x = this->x + vec.x;
+        result.y = this->y + vec.y;
+        return result;
+    }
 };
 
 struct MotorPosition {
