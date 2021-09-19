@@ -3,7 +3,10 @@
 
 #include <cmath>
 
-inline float degreesToRadians(float degrees) {
+constexpr double M_PI = 3.14159265358979323846;
+
+inline float degreesToRadians(float degrees)
+{
     return degrees * M_PI / 180.0;
 }
 
