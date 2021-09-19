@@ -1,2 +1,5 @@
 src = ['main.cpp', 'motion.cpp', 'obstacle_map.cpp', 'sensor-gen.cpp']
-executable('sim', src, link_with : [stb_lib, hal_lib], include_directories : [lib_includes, hal_includes])
+sim_includes = include_directories('.')
+
+sim_lib = static_library('sim_lib', src, link_with : hal_lib, include_directories : hal_includes, dependencies : stb_dep)
+executable('sim', src, link_with : hal_lib, include_directories : hal_includes, dependencies : stb_dep)
