@@ -13,8 +13,8 @@ jobs:
       - run: meson setup build -Db_coverage=true
       - run: meson compile -C build
       - run: ./build/test/tests
-      - run: ninja coverage -C build
+      - run: ninja coverage -C build # `meson coverage` doesn't work
       - uses: codecov/codecov-action@v2
         with:
           files: ./build/meson-logs/coverage.xml
-      - run: valgrind -v --error-exitcode=1 --leak-check=full --show-leak-kinds=all --track-origins=yes ./build/test/sim/simtest
+      - run: valgrind -v --error-exitcode=1 --leak-check=full --show-leak-kinds=all --track-origins=yes ./build/test/tests
