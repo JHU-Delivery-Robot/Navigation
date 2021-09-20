@@ -1,6 +1,9 @@
 project(
     'navigation', 'cpp', 'c',
-    default_options: [ 'cpp_std=c++17' ]
+    default_options: [
+        'cpp_std=c++17',
+        'werror=true'
+    ]
 )
 
 stb_proj = subproject('stb', default_options : ['werror=false', 'warning_level=0'])

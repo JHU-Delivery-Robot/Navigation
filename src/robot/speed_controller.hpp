@@ -9,7 +9,11 @@
  * Speed Controller the motor control loop uses to retrieve speed settings for
  * individual motors ont he update cadence.
  */
-class SpeedController {
+class SpeedController
+{
+public:
+    virtual ~SpeedController();
+
     /**
      * Update internal motor speed states using a target speed and angular
      * velocity.
@@ -21,13 +25,13 @@ class SpeedController {
     virtual hal::MotorSpeeds getSpeedSettings() = 0;
 };
 
-
-class PotentialMapSpeedController : public SpeedController {
+class PotentialMapSpeedController : public SpeedController
+{
 private:
     const MotorPositions motorPositions; /**< motor positions in radial coords for all motors */
     const float wheelDiameter;           /**< diameters of the wheels on the robot */
     hal::MotorSpeeds motorSpeeds;        /**< individual motor speeds */
-    GradientPotentialMap* map;           /**< potential map */
+    GradientPotentialMap *map;           /**< potential map */
     /**
      * convert an angular velocity to a motor specific velocity
      *
@@ -36,6 +40,7 @@ private:
      * @return target velocity for given motor
      */
     Speed angularToMotor(AngVel angVel, MotorPosition position);
+
 public:
     /**
      * Construct with dependencies.
@@ -44,7 +49,7 @@ public:
      *                  motor in the robot
      * @param wheelDiameter diameter of the wheels in centimeters
      */
-    PotentialMapSpeedController(MotorPositions positions, float wheelDiameter, GradientPotentialMap* potenMap);
+    PotentialMapSpeedController(MotorPositions positions, float wheelDiameter, GradientPotentialMap *potenMap);
     /**
      * Implementation of the updateSpeed method from the interface.
      *
