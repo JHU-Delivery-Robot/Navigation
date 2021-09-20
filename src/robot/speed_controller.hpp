@@ -2,6 +2,8 @@
 #define MOTORS_HPP
 
 #include "hal.hpp"
+#include "vector2.hpp"
+#include "types.hpp"
 #include "potential_map.hpp"
 #include "types.hpp"
 
@@ -54,7 +56,7 @@ public:
      * @param speed linear speed target in ???
      * @para angVel angular speed target in ??
      */
-    void updateSpeed(Vec2d position, double heading);
+    void updateSpeed(common::Vector2 position, double heading);
     /**
      * Implementation of the getSpeedSettings method from the interface.
      *
