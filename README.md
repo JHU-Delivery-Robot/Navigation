@@ -22,6 +22,6 @@ Instructions on installing Meson can be found [here](https://mesonbuild.com/Quic
 
 If you are using a backend other than Ninja, see [this](https://mesonbuild.com/Using-with-Visual-Studio.html).
 
-Once you've got everything installed, you need to create build directories for Meson. For example, to create a build configuration called `debug` with the default settings, run `meson setup debug`. To create a release configuration, run `meson setup release`, and then run `meson configure -Dlto=true` and `meson configure -Doptimization=2` within the `release` folder.
+Once you've got everything installed, you need to create build directories for Meson. For example, to create a build configuration called `debug` with the default settings, run `meson setup debug`. To create a release configuration, run `meson setup release -Dbuildtype=release -Db_lto=true -Doptimization=2`.
 
 To compile the project using a specific configuration, simply run `meson compile` within that folder. To clean, run `meson compile --clean`.
