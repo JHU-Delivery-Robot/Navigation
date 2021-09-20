@@ -6,7 +6,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v1
-      - run: apt install -y valgrind
+      - run: sudo apt-get install -y valgrind
       - run: pip3 install --user gcovr
   build:
     needs: setup
@@ -32,4 +32,4 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - run: valgrind --leak-check=full --track-origins=yes ./build/test/sim/simtest
+      - run: valgrind -v --leak-check=full --show-leak-kinds=all --track-origins=yes ./build/test/sim/simtest
