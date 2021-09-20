@@ -130,4 +130,7 @@ TEST_CASE("Vector2 Scalar Multiplication", "[Vector2]")
 
     CHECK((-1 * b).x == Approx(-12.0).margin(1e-6));
     CHECK((-1 * b).y == Approx(1.0).margin(1e-6));
+
+    CHECK((b * -1).x == Approx(-12.0).margin(1e-6));
+    CHECK((b * -1).y == Approx(1.0).margin(1e-6));
 }
