@@ -7,29 +7,13 @@ jobs:
       - uses: actions/setup-python@v1
       - run: sudo apt-get install -y valgrind
       - run: pip3 install --user gcovr
-  build:
-    needs: setup
-    runs-on: ubuntu-latest
-    steps:
       - uses: actions/checkout@v2
       - uses: BSFishy/meson-build@v1.0.3
         with:
           action: build
-  test:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
       - run: ./build/test/sim/simtest
-  coverage:
-    needs: test
-    runs-on: ubuntu-latest
-    steps:
       - run: gcovr --root build/src --xml-pretty -o coverage.xml
       - uses: codecov/codecov-action@v2
         with:
           files: ./coverage.xml
-  valgrind:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
       - run: valgrind -v --leak-check=full --show-leak-kinds=all --track-origins=yes ./build/test/sim/simtest
