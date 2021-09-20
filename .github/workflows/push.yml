@@ -4,7 +4,6 @@ jobs:
   setup:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
       - uses: actions/setup-python@v1
       - run: sudo apt-get install -y valgrind
       - run: pip3 install --user gcovr
@@ -12,6 +11,7 @@ jobs:
     needs: setup
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
       - uses: BSFishy/meson-build@v1.0.3
         with:
           action: build
