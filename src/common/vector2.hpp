@@ -1,5 +1,5 @@
-#ifndef VECTOR_2D
-#define VECTOR_2D
+#ifndef VECTOR_2_HPP
+#define VECTOR_2_HPP
 
 namespace common {
 

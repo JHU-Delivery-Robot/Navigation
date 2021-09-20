@@ -1,64 +1,46 @@
 #include "potential_map.hpp"
 
-#include <cmath>
-
-#include "types.hpp"
-#include "vector2.hpp"
 #include "util.hpp"
+#include "vector2.hpp"
 
-GradientPotentialMap::GradientPotentialMap(int nAngles, int qStar, int gradientScale,
-                                           common::Vector2 goal, uint16_t *lidarData)
-    : nAngles(nAngles),
-      qStar{qStar},
-      gradientScale{gradientScale},
-      goal(goal),
-      lidar{lidarData} {}
+namespace robot {
 
-void GradientPotentialMap::setGoal(common::Vector2 goal)
-{
-  this->goal = goal;
+GradientPotentialMap::GradientPotentialMap(int qStar, int gradientScale,
+                                           common::Vector2 goal, std::array<double, SamplesPerRevolution> lidar_scan)
+    :  qStar(qStar), gradientScale(gradientScale), goal(goal), lidar_scan(lidar_scan) { }
+
+void GradientPotentialMap::updateGoal(common::Vector2 updatedGoal) {
+    goal = updatedGoal;
 }
 
-common::Vector2 GradientPotentialMap::getAttrPotential(common::Vector2 position)
-{
-  Coord gradientX = (position.x - goal.x) * gradientScale;
-  Coord gradientY = (position.y - goal.y) * gradientScale;
-  common::Vector2 gradient = common::Vector2(gradientX, gradientY);
-  return gradient;
+void GradientPotentialMap::updateLidar(std::array<double, SamplesPerRevolution> updated_lidar_scan) {
+    lidar_scan = updated_lidar_scan;
 }
 
-// so we do need to convert the lidar point to cartesian!
-common::Vector2 GradientPotentialMap::getRepPotential()
-{
-  Coord gradientX = 0;
-  Coord gradientY = 0;
-  for (int i = 0; i < nAngles; i++)
-  {
-    if (lidar[i] <= qStar)
+common::Vector2 GradientPotentialMap::getAttractivePotential(common::Vector2 position) {
+    return gradientScale * (goal - position);
+}
+
+common::Vector2 GradientPotentialMap::getRepulsivePotential() {
+    common::Vector2 gradient = common::Vector2(0.0, 0.0);
+
+    for (size_t i = 0; i < SamplesPerRevolution; i++)
     {
-      double coef = gradientScale * (1.0 / qStar - 1.0 / lidar[i]) * (1.0 / (lidar[i] * lidar[i] * lidar[i]));
-      double theta = 2 * PI * ((float)i / (float)nAngles);
-      // finding dist between current pt (q) and obstacle point (q_goal)
-      double x = (-1) * lidar[i] * cos(theta); // multiplied by -1 because it's robot - obsatcle pt
-      double y = (-1) * lidar[i] * sin(theta); // and trig gives obstacle - robot (triangle)
-      gradientX += x * coef;
-      gradientY += y * coef;
+        double d = lidar_scan[i];
+        if (d <= qStar) {
+            // negate since we want potential to repel from obstacles
+            double magnitude = -gradientScale*(1.0/qStar - 1.0/d)/(d*d*d);
+            double angle = 2*PI*i/double(SamplesPerRevolution);
+
+            gradient += common::Vector2::polar(angle, magnitude);
+        }
     }
-  }
 
-  common::Vector2 gradient = common::Vector2((Coord)gradientX, (Coord)gradientY);
-  return gradient;
+    return gradient;
 }
 
-double GradientPotentialMap::getRadialGradient(common::Vector2 position, double heading)
-{
-  common::Vector2 cartesianGradient = getAttrPotential(position) + getRepPotential();
-  return cos(heading) * cartesianGradient.x + sin(heading) * cartesianGradient.y;
+common::Vector2 GradientPotentialMap::getGradient(common::Vector2 position) {
+    return getAttractivePotential(position) + getRepulsivePotential();
 }
 
-double GradientPotentialMap::getTangentGradient(common::Vector2 position, double heading)
-{
-  common::Vector2 cartesianGradient = getAttrPotential(position) + getRepPotential();
-  double tanAng = heading + PI / 2;
-  return cos(tanAng) * cartesianGradient.x + sin(tanAng) * cartesianGradient.y;
 }

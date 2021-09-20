@@ -1,6 +1,6 @@
 #include "obstacle_map.hpp"
 
 int main () {
-	ObstMap map("sample.png");
+	sim::ObstacleMap map();
 	return 0;
 }

@@ -5,6 +5,8 @@
 
 #include "obstacle_map.hpp"
 
+namespace sim {
+
 BeamModel::BeamModel(double std_dev, double lambda, double max_reading,
                      double w_exp, double w_rand) :
     std_dev{std_dev},
@@ -56,13 +58,13 @@ bool BeamModel::glitch() {
     return uniform_dist_rand(gen) < (p_exp + p_rand);
 }
 
-SensorGen::SensorGen(ObstMap* map, BeamModel* mdl, Length max) :
+SensorGen::SensorGen(ObstacleMap* map, BeamModel* mdl, Length max) :
     beam(mdl),
     map(map),
     range(max) {}
 
 // all sensors: x0 y0 center of sensor, range of angles in test
-ConeSensor::ConeSensor(ObstMap* map, BeamModel* mdl, Length max, Angle fov) :
+ConeSensor::ConeSensor(ObstacleMap* map, BeamModel* mdl, Length max, Angle fov) :
     SensorGen(map, mdl, max),
     fov(fov) {}
 
@@ -75,9 +77,13 @@ Length ConeSensor::generate(Length x, Length y, Angle heading) {
         if (beam->glitch()) {
             distanceCandidate = beam->sampleGlitch();
         } else {
-            distanceCandidate = map->distToObstacleLimited(x, y, iterator, range);
+            common::Vector2 position(x, y);
+            common::Vector2 heading = common::Vector2::polar(iterator, 1.0);
+            bool obstacle_found;
 
-            if (distanceCandidate != range) {
+            std::tie(obstacle_found, distanceCandidate) = map->distanceToObstacle(position, heading);
+
+            if (obstacle_found && distanceCandidate < range) {
                 distanceCandidate = beam->sampleNormal(distanceCandidate);
             }
         }
@@ -90,7 +96,7 @@ Length ConeSensor::generate(Length x, Length y, Angle heading) {
     return distance;
 }
 
-Lidar::Lidar(ObstMap* map, BeamModel* mdl, Length max) :
+Lidar::Lidar(ObstacleMap* map, BeamModel* mdl, Length max) :
     SensorGen(map, mdl, max) {}
 
 void Lidar::generate(Length *readings, Length x, Length y) {
@@ -98,7 +104,10 @@ void Lidar::generate(Length *readings, Length x, Length y) {
         if (beam->glitch()) {
             *(readings++) = beam->sampleGlitch();
         } else {
-            Length distanceCandidate = map->distToObstacleLimited(x, y, iterator, range);
+            common::Vector2 position(x, y);
+            common::Vector2 heading = common::Vector2::polar(iterator, 1.0);
+
+            auto [ obstacle_found, distanceCandidate ] = map->distanceToObstacle(position, heading);
 
             if (distanceCandidate != range) {
                 *(readings++) = beam->sampleNormal(distanceCandidate);
@@ -109,16 +118,18 @@ void Lidar::generate(Length *readings, Length x, Length y) {
     }
 }
 
-UltrasoundSensor::UltrasoundSensor(ObstMap* map, BeamModel* mdl, Length max, Angle fov) :
+UltrasoundSensor::UltrasoundSensor(ObstacleMap* map, BeamModel* mdl, Length max, Angle fov) :
     ConeSensor(map, mdl, max, fov) {}
 
 Length UltrasoundSensor::generate(Length x, Length y, Angle heading) {
     return ConeSensor::generate(x, y, heading);
 }
 
-IRSensor::IRSensor(ObstMap* map, BeamModel* mdl, Length max, Angle fov) :
+IRSensor::IRSensor(ObstacleMap* map, BeamModel* mdl, Length max, Angle fov) :
     ConeSensor(map, mdl, max, fov) {}
 
 Length IRSensor::generate(Length x, Length y, Angle heading) {
     return ConeSensor::generate(x, y, heading);
+}
+
 }

@@ -1,11 +1,13 @@
-#ifndef MOTORS_HPP
-#define MOTORS_HPP
+#ifndef SPEED_CONTROLLER_HPP
+#define SPEED_CONTROLLER_HPP
 
 #include "hal.hpp"
 #include "vector2.hpp"
 #include "types.hpp"
 #include "potential_map.hpp"
 #include "types.hpp"
+
+namespace robot {
 
 /**
  * Speed Controller the motor control loop uses to retrieve speed settings for
@@ -64,5 +66,7 @@ public:
      */
     hal::MotorSpeeds getSpeedSettings();
 };
+
+}
 
 #endif

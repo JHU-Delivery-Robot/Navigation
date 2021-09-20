@@ -1,4 +1,4 @@
-src = ['main.cpp', 'motion.cpp', 'obstacle_map.cpp', 'sensor-gen.cpp']
+src = ['main.cpp', 'motion.cpp', 'obstacle_map.cpp', 'polygon.cpp', 'sensor-gen.cpp']
 sim_includes = include_directories('.')
 
 sim_lib = static_library(
