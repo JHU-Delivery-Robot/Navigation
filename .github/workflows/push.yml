@@ -1,7 +1,7 @@
 name: Build and Test
 on: push
 jobs:
-  setup:
+  build_and_test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/setup-python@v1

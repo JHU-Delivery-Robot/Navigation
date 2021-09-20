@@ -3,8 +3,7 @@
 
 #include <string>
 
-TEST_CASE("Fail")
+TEST_CASE("UnfreedMemory")
 {
     std::string *unfreed = new std::string("Allocated on heap, not freed");
-    REQUIRE(unfreed == nullptr); // fail on purpose
 }
