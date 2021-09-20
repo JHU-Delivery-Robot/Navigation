@@ -2,43 +2,40 @@
 
 using namespace hal;
 
-Motor::Motor(unsigned int channel) {
+Motor::Motor(unsigned int channel) {}
 
+int Motor::set_speed(float speed)
+{
+    return 0;
 }
 
-int Motor::set_speed(float speed) {
-
+float Motor::get_speed(void)
+{
+    return 0.0;
 }
 
-float Motor::get_speed(void) {
+void Motor::reset_odometry() {}
 
+void Motor::set_odometry_period(float secs) {}
+
+OdomReading Motor::get_odometry_reading()
+{
+    return 0;
 }
 
-void Motor::reset_odometry() {
+void Motor::set_odom_callback(OdomCallback func) {}
 
+MotorStatus Motor::status()
+{
+    return MotorStatus::NOMINAL;
 }
 
-void Motor::set_odometry_period(float secs) {
+MotorAssembly::MotorAssembly()
+    : front_l(0), front_r(1), back_l(2), back_r(3) {}
 
-}
-
-OdomReading Motor::get_odometry_reading() {
-
-}
-
-void Motor::set_odom_callback(OdomCallback func) {
-
-}
-
-MotorStatus Motor::status() {
-
-}
-
-MotorAssembly::MotorAssembly() :
-    front_l(0), front_r(1), back_l(2), back_r(3) {
-
-}
-
-Motor& get_motor_by_idx(unsigned int idx);
+Motor &MotorAssembly::get_motor_by_idx(unsigned int idx)
+{
+    return front_l;
+};
 
 MotorAssembly robot_motors;

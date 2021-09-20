@@ -3,6 +3,8 @@
 #include <cmath>
 #include "potential_map.hpp"
 
+SpeedController::~SpeedController() {}
+
 PotentialMapSpeedController::PotentialMapSpeedController(MotorPositions positions, float wheelDiameter,
     GradientPotentialMap* potenMap) :
     motorPositions(positions),
