@@ -13,7 +13,7 @@ jobs:
       - run: meson setup build -Db_coverage=true
       - run: meson compile -C build
       - run: ./build/test/tests
-      - run: ninja coverage -C build # `meson coverage` doesn't work
+      - run: ninja coverage-xml -C build # `meson coverage` doesn't work
       - uses: codecov/codecov-action@v2
         with:
           files: ./build/meson-logs/coverage.xml
