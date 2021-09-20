@@ -1,6 +1,6 @@
 #include <string>
 
-#include "catch.hpp"
+#include "catch2/catch.hpp"
 #include "stb_image_write.h"
 
 #include "obstacle_map.hpp"

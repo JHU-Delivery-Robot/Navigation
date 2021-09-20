@@ -1,3 +1,7 @@
+# Meson Wrap subprojects
+/subprojects/*
+!/subprojects/*.wrap
+!/subprojects/stb
 
 # Created by https://www.toptal.com/developers/gitignore/api/linux,windows,macos,c
 # Edit at https://www.toptal.com/developers/gitignore?templates=linux,windows,macos,c
