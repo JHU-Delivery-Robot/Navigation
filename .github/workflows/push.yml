@@ -12,7 +12,7 @@ jobs:
       - uses: actions/checkout@v2
       - run: meson setup build -Db_coverage=true
       - run: meson compile -C build
-      - run: ./build/test/sim/simtest
+      - run: ./build/test/tests
       - run: ninja coverage -C build
       - uses: codecov/codecov-action@v2
         with:
