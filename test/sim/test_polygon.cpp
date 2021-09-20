@@ -6,6 +6,8 @@
 using namespace sim;
 using namespace common;
 
+constexpr double PI = 3.14159265358979323846;
+
 TEST_CASE("Polygon No Intersections", "[Polygon]")
 {
     Polygon polygon = Polygon({Vector2(1.0, 1.0), Vector2(2.0, 1.0), Vector2(2.0, -1.0), Vector2(1.0, -1.0)});
