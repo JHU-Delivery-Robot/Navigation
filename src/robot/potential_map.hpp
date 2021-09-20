@@ -10,18 +10,19 @@
 
 #include <cstdint>
 
-#include "types.hpp"
+#include "vector2.hpp"
 
 /**
  * Potential map class
  */
-class GradientPotentialMap {
+class GradientPotentialMap
+{
 private:
     const int nAngles;       /**< number of ranging measurements per lidar rotation */
     const int qStar;         /**< ??? */
     const int gradientScale; /**< constant used to scale both gradients */
-    Vec2d goal;              /**< goal point */
-    uint16_t *lidar;         /**< lidar pointer that is in some shared memory */
+    common::Vector2 goal;
+    uint16_t *lidar; /**< lidar pointer that is in some shared memory */
     /**
      * Given the current position of the robot and the goal, returns the
      * attractive potential gradient vector
@@ -29,7 +30,7 @@ private:
      * @param curPosition current position of the robot
      * @return Attractive potential gradient Vector
      */
-    Vec2d getAttrPotential(Vec2d position);
+    common::Vector2 getAttrPotential(common::Vector2 position);
     /**
      * Calculates the repulsive potential gradient vector given an array of all
      * obstacle locations in relation to the robot
@@ -37,18 +38,19 @@ private:
      * @param lidar array of distances to nearest obstacle at N_ANGLES angles
      * @return Repulsive potential gradient vector
      */
-    Vec2d getRepPotential();
+    common::Vector2 getRepPotential();
+
 public:
     /**
      * Consturct all required args
      */
-    GradientPotentialMap(int nAngles, int qStar, int gradientScale, Vec2d goal, uint16_t *lidarData);
+    GradientPotentialMap(int nAngles, int qStar, int gradientScale, common::Vector2 goal, uint16_t *lidarData);
     /**
      * Update goal on the potential map.
      *
      * @param goal target of navigation
      */
-    void setGoal(Vec2d goal);
+    void setGoal(common::Vector2 goal);
     /**
      * Converts the cartesian gradient to radial gradient
      *
@@ -56,7 +58,7 @@ public:
      * @param cartesianGradient the cartesian gradient
      * @return The radial component of the gradient
      */
-    double getRadialGradient(Vec2d position, double heading);
+    double getRadialGradient(common::Vector2 position, double heading);
     /**
      * Converts the cartesian gradient to radial gradient
      *
@@ -65,6 +67,6 @@ public:
      * @return The tangential component of the gradient, which is analogous to
      * the angular velocity
      */
-    double getTangentGradient(Vec2d position, double heading);
+    double getTangentGradient(common::Vector2 position, double heading);
 };
 #endif
