@@ -1,6 +1,7 @@
 #ifndef ULTRASONIC_SENSOR_SIM_IMPL_HPP
 #define ULTRASONIC_SENSOR_SIM_IMPL_HPP
 
+#include "ultrasonic_sensor.hpp"
 #include "distance_sensor_model.hpp"
 #include "ultrasonic_sensor.hpp"
 #include "vector2.hpp"
