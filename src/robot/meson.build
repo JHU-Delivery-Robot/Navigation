@@ -1,7 +1,7 @@
-src = [ 'main.cpp', 'potential_map.cpp', 'speed_controller.cpp' ]
+src = [ 'main.cpp', 'potential_map.cpp' ]
 
 executable(
     'robot', src,
-    link_with : [common_lib, hal_lib],
+    link_with : [common_lib],
     include_directories : [common_includes, hal_includes]
 )

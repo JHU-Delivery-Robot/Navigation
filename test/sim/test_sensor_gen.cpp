@@ -1,13 +1,38 @@
+#include "catch2/catch.hpp"
+
+#include <memory>
 #include <string>
 
-#include "catch2/catch.hpp"
+#include "sensor_gen.hpp"
 #include "obstacle_map.hpp"
-#include "sensor-gen.hpp"
-#include "stb_image_write.h"
+#include "vector2.hpp"
 
-using std::string;
+using namespace common;
+using namespace sim;
 
-#define COORD_TO_IN(c, r, n_c) (r * n_c + c)
+TEST_CASE("Ultrasonic Sensor Test", "[Ultrasonic][SensorGen]")
+{
+   Polygon polygon = Polygon({Vector2(1.0, 1.0), Vector2(2.0, 1.0), Vector2(2.0, -1.0), Vector2(1.0, -1.0)});
+   ObstacleMap map = ObstacleMap({polygon});
 
-#define degreesToRadians(angleDegrees) (angleDegrees * PI / 180.0)
-#define radiansToDegrees(angleRadians) (angleRadians * 180.0 / PI)
+   BeamModel beam = BeamModel(0.0, 0.0, 300.0, 0.0, 0.0);
+   DistanceSensorModel model = DistanceSensorModel(map, beam, 300.0);
+
+   UltrasonicSensorImpl impl = UltrasonicSensorImpl(model, 0.1 * PI, 5);
+   UltrasonicSensor *ultrasonic = &impl;
+
+   impl.updateLocation(Vector2(-1.0, 0.0), 0.0);
+   CHECK(ultrasonic->read() == Approx(2.0).epsilon(0.001));
+
+   impl.updateLocation(Vector2(-1.0, 0.0), PI);
+   CHECK(ultrasonic->read() == Approx(300.0).epsilon(0.001));
+
+   impl.updateLocation(Vector2(-1.0, 0.0), 0.5 * PI);
+   CHECK(ultrasonic->read() == Approx(300.0).epsilon(0.001));
+
+   impl.updateLocation(Vector2(-250.0, 0.0), 0.0);
+   CHECK(ultrasonic->read() == Approx(251.0).epsilon(0.001));
+
+   impl.updateLocation(Vector2(-305, 0.0), 0.0);
+   CHECK(ultrasonic->read() == Approx(300.0).epsilon(0.001));
+}
