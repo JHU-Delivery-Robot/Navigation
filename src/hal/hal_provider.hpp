@@ -9,6 +9,7 @@
 #include "lidar_scanner.hpp"
 #include "motor.hpp"
 #include "ultrasonic_sensor.hpp"
+#include "infrared_sensor.hpp"
 
 namespace hal {
 
@@ -45,7 +46,7 @@ public:
     };
 
     class MotorAssembly {
-    public:
+public:
         virtual ~MotorAssembly(){};
 
         virtual Motor* front_left() = 0;

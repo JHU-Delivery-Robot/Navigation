@@ -119,7 +119,7 @@ MotorSimImpl* HALProviderSimImpl::MotorAssembly::front_right() {
 
 MotorSimImpl* HALProviderSimImpl::MotorAssembly::back_left() {
     return &_back_left;
-}
+    }
 
 MotorSimImpl* HALProviderSimImpl::MotorAssembly::back_right() {
     return &_back_right;
@@ -130,15 +130,15 @@ void HALProviderSimImpl::MotorAssembly::update(double time_delta) {
     _front_right.update(time_delta);
     _back_left.update(time_delta);
     _back_right.update(time_delta);
-}
+        }
 
 void HALProviderSimImpl::MotorAssembly::reset_odometry() {
     _front_left.reset_odometry();
     _front_right.reset_odometry();
     _back_left.reset_odometry();
     _back_right.reset_odometry();
-}
-
+    }
+    
 LidarScannerSimImpl* HALProviderSimImpl::lidar() {
     return &lidar_impl;
 }
@@ -149,12 +149,12 @@ HALProviderSimImpl::CliffInfraredAssembly* HALProviderSimImpl::cliff_infrared() 
 
 HALProviderSimImpl::WheelInfraredAssembly* HALProviderSimImpl::wheel_infrared() {
     return &wheel_sensors;
-}
+        }
 
 HALProviderSimImpl::UltrasonicAssembly* HALProviderSimImpl::ultrasonic() {
     return &ultrasonic_sensors;
-}
-
+    }
+    
 HALProviderSimImpl::MotorAssembly* HALProviderSimImpl::motor_assembly() {
     return &motors;
 }

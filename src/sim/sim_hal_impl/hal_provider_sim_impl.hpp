@@ -81,7 +81,7 @@ public:
     };
 
     class MotorAssembly final : public hal::HALProvider::MotorAssembly {
-    public:
+public:
         MotorAssembly();
 
         MotorSimImpl* front_left() override;
@@ -92,7 +92,7 @@ public:
         void update(double time_delta);
         void reset_odometry() override;
 
-    private:
+private:
         MotorSimImpl _front_left, _front_right, _back_left, _back_right;
     };
 
@@ -109,6 +109,8 @@ public:
 private:
     static constexpr double lidar_max_range = 600;
     BeamModel lidar_beam_model;
+    BeamModel ultrasonic_beam_model;
+    BeamModel infrared_beam_model;
 
     ObstacleMap obstacle_map;
 
