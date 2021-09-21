@@ -11,8 +11,7 @@ Contains the primary robot navigation and control software, as well as a simulat
 - `test/` - Unit & integration tests
   - `sim/`
 - `subprojects/` - Third-party dependencies
-  - `catch2/` - Testing framework
-  - `stb/` - Image library
+  - `catch2/` - Testing framework, installed via Meson wrap
 
 ## Installing
 
