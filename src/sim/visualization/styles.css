@@ -1,0 +1,41 @@
+body {
+    width:  100%;
+    height: 100%;
+    margin: 0;
+
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    
+    font-family: 'Tahoma', sans-serif, 'Helvetica Neue', sans-serif;
+}
+
+.header {
+    padding: 0.25rem 5rem;
+    background: lightseagreen;
+    text-align: center;
+}
+
+.main {
+    display: flex;
+    flex-direction: row;
+
+    margin: 2rem;
+}
+
+.sidebar {
+    display: flex;
+    flex-direction: column;
+
+    width: 15rem;
+    padding: 2rem;
+}
+
+#visualizationContainer {
+    width: 100%;
+    height: 100%;
+}
+
+canvas {
+    border: black solid 2px;
+}

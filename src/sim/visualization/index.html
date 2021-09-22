@@ -1,0 +1,35 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Robot Simulation Visualizer</title>
+    <meta name="description" content="A visualizer to play-back recorded robot simulations">
+
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="header">
+        <h1>Robot Simulation Visualizer</h1>
+        <p>Play back recorded simulation logs</p>
+    </div>
+    <div class="main">
+        <div class="sidebar">
+            <label for="simulationFile">Select a simulation file:
+                <input type="file" id="simulationFileSelector" name="simulationFile" accept=".json">
+            </label>
+        </div>
+        <div id="visualizationContainer">
+            <canvas width="100" height="100" id="visualizationCanvas">
+                Your browser does not support HTML5 Canvas, which is need to visualize the simulation.
+            </canvas>
+        </div>
+    </div>
+    <script src="visualization.js"></script>
+</body>
+
+</html>
