@@ -4,7 +4,7 @@ namespace sim {
 
 Polygon::Polygon(std::vector<common::Vector2> points) : points(points)
 {
-    for (size_t i = 0; i < points.size() - 1; i++)
+    for (size_t i = 0; i < points.size(); i++)
     {
         common::Vector2 start = points[i];
         common::Vector2 end = (i < points.size() - 1) ? points[i + 1] : points[0]; // wrap around to close polygon
@@ -49,7 +49,7 @@ std::tuple<bool, double> Polygon::intersect(common::Vector2 position, common::Ve
     bool intersection_found = false;
     double shortest_distance = std::numeric_limits<double>::max();
 
-    for (size_t i = 0; i < points.size() - 1; i++)
+    for (size_t i = 0; i < points.size(); i++)
     {
         auto [intersected, distance] = intersect(position, direction, i);
 
