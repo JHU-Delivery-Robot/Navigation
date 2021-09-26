@@ -1,8 +1,7 @@
 project(
     'navigation', 'cpp', 'c',
     default_options: [
-        'cpp_std=c++17',
-        'werror=true'
+        'cpp_std=c++17'
     ]
 )
 
