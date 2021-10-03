@@ -1,3 +1,10 @@
+#ifndef EVENT_EXECUTOR_HPP
+#define EVENT_EXECUTOR_HPP
+
+#include "runnable.hpp"
+
+#include <chrono>
+
 class EventExecutor {
 public:
     /**
@@ -9,7 +16,7 @@ public:
     * Register an event to fire on an interval. Note that this may consume
     * extra concurrency units, so be careful with use.
     */
-    virtual void registerTimedEvent(TimeInterval time, Event event);
+    virtual void registerTimedEvent(std::chrono::duration interval, Event event);
     /**
     * Convenience function to register a handler that is executed
     * regularly at a defined interval
@@ -25,4 +32,6 @@ public:
     * Start the execution loops.
     */
     virtual void start() = 0;
-}
+};
+
+#endif

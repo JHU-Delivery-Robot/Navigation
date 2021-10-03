@@ -1,3 +1,6 @@
+#ifndef RUNNABLE_HPP
+#define RUNNABLE_HPP
+
 class Runnable {
 public:
     /**
@@ -8,4 +11,6 @@ public:
     * @return status code to be passed up to the execution manager
     */
     virtual int run(void *data, ExecutionContext context) = 0;
-}
+};
+
+#endif
