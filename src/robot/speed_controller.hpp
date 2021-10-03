@@ -2,15 +2,14 @@
 #define MOTORS_HPP
 
 #include "hal.hpp"
-#include "types.hpp"
 #include "potential_map.hpp"
+#include "types.hpp"
 
 /**
  * Speed Controller the motor control loop uses to retrieve speed settings for
  * individual motors ont he update cadence.
  */
-class SpeedController
-{
+class SpeedController {
 public:
     virtual ~SpeedController();
 
@@ -18,15 +17,14 @@ public:
      * Update internal motor speed states using a target speed and angular
      * velocity.
      */
-    virtual void updateSpeed(Speed speed, AngVel angVel) = 0; //EDIT THIS TO GET CURRENT SPEED
+    virtual void updateSpeed(Speed speed, AngVel angVel) = 0;  //EDIT THIS TO GET CURRENT SPEED
     /**
      * Get speed settings for all motors on the robot
      */
     virtual hal::MotorSpeeds getSpeedSettings() = 0;
 };
 
-class PotentialMapSpeedController : public SpeedController
-{
+class PotentialMapSpeedController : public SpeedController {
 private:
     const MotorPositions motorPositions; /**< motor positions in radial coords for all motors */
     const float wheelDiameter;           /**< diameters of the wheels on the robot */
