@@ -16,6 +16,7 @@ enum MotorStatus {
 class Motor {
 private:
     pthread_mutex_t lock_motor;
+
 public:
     Motor(unsigned int channel);
     int set_speed(float speed);
@@ -48,6 +49,6 @@ public:
 extern MotorAssembly robot_motors;
 
 // end of namespace hal
-}
+}  // namespace hal
 
 #endif
