@@ -1,14 +1,32 @@
-let canvas = document.getElementById('visualizationCanvas');
+const canvas = document.getElementById('visualizationCanvas');
+const container = document.getElementById('visualization-container');
+const simulationFileSelector = document.getElementById('simulationFileSelector');
 
-let container = document.getElementById('visualizationContainer');
+// Placeholders/defaults, data will be loaded from user-supplied file
+let simRecording = {
+    obstacles: [],
+    positions: [],
+    goal: [0.0, 0.0],
+    time_step: 0.1,
+    size: 800,
+};
+
+let currentTimeIndex = 0;
+let updateTimer = null;
+
 window.addEventListener('resize', resizeCanvas, false);
+simulationFileSelector.addEventListener('input', onFileInput);
 
+// Fit canvas to initial window size
+resizeCanvas();
+
+// Triggers file selection dialog
 function selectFile() {
-    document.getElementById('simulationFileSelector').click();
+    simulationFileSelector.click();
 }
 
-const simulationFileSelector = document.getElementById('simulationFileSelector');
-simulationFileSelector.addEventListener('input', (event) => {
+// File selection callback
+function onFileInput(event) {
     const files = event.target.files;
 
     if (files.length == 1) {
@@ -16,20 +34,15 @@ simulationFileSelector.addEventListener('input', (event) => {
         event.target.value = null;
         document.getElementById('simulationFileDisplay').innerText = file.name;
 
-        loadSimRecording(file);
+        // Load/parse sim recording and display first frame
+        file.text().then(text => {
+            simRecording = JSON.parse(text);
+            visualize();
+        });
     }
-});
+}
 
-let simRecording = {
-    obstacles: [],
-    positions: [],
-    goal: [0.0, 0.0],
-    time_step: 0.1,
-};
-
-current_time_index = 0;
-updateTimer = null;
-
+// Updates which replay control icon is 'active'
 function updateActiveControl(activeControl) {
     document.getElementById('play').classList.remove('active');
     document.getElementById('pause').classList.remove('active');
@@ -40,6 +53,7 @@ function updateActiveControl(activeControl) {
     document.getElementById(activeControl).classList.add('active');
 }
 
+// Play at normal speed from current place in recording
 function play() {
     updateActiveControl('play');
 
@@ -48,9 +62,22 @@ function play() {
         updateTimer = null;
     }
 
+    // Move replay forward one tick
+    function tick() {
+        currentTimeIndex += 1;
+
+        if (currentTimeIndex >= simRecording.positions.length) {
+            currentTimeIndex = 0;
+            pause();
+        } else {
+            update();
+        }
+    }
+
     updateTimer = setInterval(tick, simRecording.time_step * 1000);
 }
 
+// Pause replay
 function pause() {
     updateActiveControl('pause');
 
@@ -60,6 +87,7 @@ function pause() {
     }
 }
 
+// Set replay to beginning and pause if playing
 function restart() {
     updateActiveControl('restart');
 
@@ -68,10 +96,11 @@ function restart() {
         updateTimer = null;
     }
 
-    current_time_index = 0;
+    currentTimeIndex = 0;
     update();
 }
 
+// Step forward one tick and pause if playing and 
 function step() {
     updateActiveControl('step');
 
@@ -80,13 +109,14 @@ function step() {
         updateTimer = null;
     }
 
-    if (current_time_index < simRecording.positions.length) {
-        current_time_index += 1;
+    if (currentTimeIndex < simRecording.positions.length) {
+        currentTimeIndex += 1;
     }
 
     update();
 }
 
+// Step back one tick and pause if playing
 function stepBack() {
     updateActiveControl('stepBack');
 
@@ -95,29 +125,20 @@ function stepBack() {
         updateTimer = null;
     }
 
-    if (current_time_index > 0) {
-        current_time_index -= 1;
+    if (currentTimeIndex > 0) {
+        currentTimeIndex -= 1;
     }
 
     update();
 }
 
-function tick() {
-    current_time_index += 1;
-
-    if (current_time_index >= simRecording.positions.length) {
-        current_time_index = 0;
-        pause();
-    } else {
-        update();
-    }
-}
-
+// Update visualization and time step display
 function update() {
     visualize();
-    document.querySelector('.timestep-counter').innerText = current_time_index;
+    document.querySelector('.timestep-counter').innerText = currentTimeIndex;
 }
 
+// Resize canvas to fit current window
 function resizeCanvas() {
     let height = window.innerHeight;
     let width = window.innerWidth - document.querySelector(".sidebar-container").getBoundingClientRect().width;
@@ -128,37 +149,31 @@ function resizeCanvas() {
     visualize();
 }
 
-resizeCanvas();
-
-function loadSimRecording(file) {
-    file.text().then(text => {
-        simRecording = JSON.parse(text);
-        visualize();
-    });
-}
-
+// Get canvas x coordinate from point in sim-coordinate space
 function pointX(point) {
     let canvasSize = Math.min(canvas.width, canvas.height);
     let size = simRecording.size;
     return point[0] * (canvasSize / size) + 0.5 * canvas.width;
 }
 
+// Get canvas y coordinate from point in sim-coordinate space
 function pointY(point) {
     let canvasSize = Math.min(canvas.width, canvas.height);
     let size = simRecording.size;
     return 0.5 * canvas.height - point[1] * (canvasSize / size);
 }
 
+// Visualize current tick of replay
 function visualize() {
-    draw_obstacles();
-    draw_goal();
+    drawObstacles();
+    drawGoal();
 
-    if (simRecording.positions[current_time_index]) {
-        draw_robot(simRecording.positions[current_time_index]);
+    if (simRecording.positions[currentTimeIndex]) {
+        drawRobot(simRecording.positions[currentTimeIndex]);
     }
 }
 
-function draw_obstacles() {
+function drawObstacles() {
     let ctx = canvas.getContext('2d');
     ctx.fillStyle = '#ddd';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -181,7 +196,7 @@ function draw_obstacles() {
     });
 }
 
-function draw_goal() {
+function drawGoal() {
     let ctx = canvas.getContext('2d');
     ctx.fillStyle = '#aa0099';
     ctx.beginPath();
@@ -189,7 +204,7 @@ function draw_goal() {
     ctx.fill();
 }
 
-function draw_robot(position) {
+function drawRobot(position) {
     let ctx = canvas.getContext('2d');
     let canvasSize = Math.min(canvas.width, canvas.height);
     let size = simRecording.size;
@@ -203,6 +218,7 @@ function draw_robot(position) {
 
     ctx.rotate(-position[2]);
 
+    // Body of robot
     ctx.rect(-25 * scale, -10 * scale, 50 * scale, 20 * scale);
     ctx.stroke();
 
@@ -210,6 +226,7 @@ function draw_robot(position) {
 
     ctx.translate(Math.cos(position[2]) * 25 * scale, -Math.sin(position[2]) * 25 * scale);
 
+    // Attractive vector
     oldLineWidth = ctx.lineWidth;
     ctx.lineWidth = 2;
     ctx.strokeStyle = '#00dd44';
@@ -218,6 +235,7 @@ function draw_robot(position) {
     ctx.lineTo(position[5] * scale, -position[6] * scale);
     ctx.stroke();
 
+    // Repulsive vector
     ctx.strokeStyle = '#dd4400';
     ctx.beginPath();
     ctx.moveTo(0, 0);
