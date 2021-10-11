@@ -1,6 +1,8 @@
 #ifndef INFRARED_SENSOR_SIM_IMPL_HPP
 #define INFRARED_SENSOR_SIM_IMPL_HPP
 
+#include <memory>
+
 #include "infrared_sensor.hpp"
 #include "distance_sensor_model.hpp"
 #include "vector2.hpp"
@@ -8,7 +10,7 @@
 namespace sim
 {
 
-class InfraredSensorSimImpl : public hal::InfraredSensor
+class InfraredSensorSimImpl final : public hal::InfraredSensor
 {
 public:
     InfraredSensorSimImpl(int id, DistanceSensorModel model, double fov, int samples);

@@ -1,9 +1,11 @@
 src = [
     'beam_model.cpp',
     'distance_sensor_model.cpp',
+    'gyroscope_sim_impl.cpp',
     'hal_provider_sim_impl.cpp',
     'infrared_sensor_sim_impl.cpp',
     'lidar_scanner_sim_impl.cpp',
+    'motor_sim_impl.cpp',
     'ultrasonic_sensor_sim_impl.cpp',
 ]
 

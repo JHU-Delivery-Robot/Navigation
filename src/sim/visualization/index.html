@@ -13,21 +13,52 @@
 </head>
 
 <body>
-    <div class="header">
-        <h1>Robot Simulation Visualizer</h1>
-        <p>Play back recorded simulation logs</p>
-    </div>
-    <div class="main">
+    <div class="sidebar-container">
+        <div class="header">
+            <h1 class="title">
+                <span class="leading">R</span>obot <br>
+                <span class="leading">S</span>imulation <br>
+                <span class="leading">V</span>isualizer
+            </h1>
+        </div>
         <div class="sidebar">
-            <label for="simulationFile">Select a simulation file:
-                <input type="file" id="simulationFileSelector" name="simulationFile" accept=".json">
-            </label>
+            <div class="control">
+                <span class="filePicker">
+                    <input hidden type="file" id="simulationFileSelector" name="simulationFile" accept=".json">
+                    <label class="fileName" for="simulationFile" id="simulationFileDisplay">
+                        Simulation file
+                    </label>
+                    <button class="btn" onclick="selectFile()">Browse</button>
+                </span>
+            </div>
+            <div class="control-group row">
+                <button class="btn" onclick="play()" id="play" title="Play">
+                    <img src="icons/play.svg" alt="Play icon" />
+                </button>
+                <button class="btn" onclick="pause()" id="pause" title="Pause">
+                    <img src="icons/pause.svg" alt="Pause icon" />
+                </button>
+                <button class="btn" onclick="restart()" id="restart" title="Restart">
+                    <img src="icons/restart.svg" alt="Restart icon" />
+                </button>
+            </div>
+            <div class="control-group row">
+                <button class="btn" onclick="stepBack()" id="stepBack" title="Step backward">
+                    <img src="icons/step-backward.svg" alt="Step backward icon" />
+                </button>
+                <button class="btn" onclick="step()" id="step" title="Step forward">
+                    <img src="icons/step-forward.svg" alt="Step forward icon" />
+                </button>
+            </div>
+            <div class="timestep-display">
+                Timestep: <span class="timestep-counter">0</span>
+            </div>
         </div>
-        <div id="visualizationContainer">
-            <canvas width="100" height="100" id="visualizationCanvas">
-                Your browser does not support HTML5 Canvas, which is need to visualize the simulation.
-            </canvas>
-        </div>
+    </div>
+    <div id="visualizationContainer">
+        <canvas width="100" height="100" id="visualizationCanvas">
+            Your browser does not support HTML5 Canvas, which is need to visualize the simulation.
+        </canvas>
     </div>
     <script src="visualization.js"></script>
 </body>

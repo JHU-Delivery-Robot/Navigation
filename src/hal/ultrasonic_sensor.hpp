@@ -7,7 +7,7 @@ namespace hal
 class UltrasonicSensor
 {
 public:
-    virtual ~UltrasonicSensor();
+    virtual ~UltrasonicSensor() { }
     
     virtual double read() = 0;
 };
