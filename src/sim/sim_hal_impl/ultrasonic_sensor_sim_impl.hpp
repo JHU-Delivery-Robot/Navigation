@@ -1,15 +1,13 @@
 #ifndef ULTRASONIC_SENSOR_SIM_IMPL_HPP
 #define ULTRASONIC_SENSOR_SIM_IMPL_HPP
 
-#include "ultrasonic_sensor.hpp"
 #include "distance_sensor_model.hpp"
+#include "ultrasonic_sensor.hpp"
 #include "vector2.hpp"
 
-namespace sim
-{
+namespace sim {
 
-class UltrasonicSensorSimImpl : public hal::UltrasonicSensor
-{
+class UltrasonicSensorSimImpl final : public hal::UltrasonicSensor {
 public:
     UltrasonicSensorSimImpl(int id, DistanceSensorModel model, double fov, int samples);
 
@@ -29,6 +27,6 @@ private:
     double heading;
 };
 
-}
+}  // namespace sim
 
 #endif

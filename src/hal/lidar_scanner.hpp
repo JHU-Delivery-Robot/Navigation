@@ -9,7 +9,7 @@ namespace hal
 class LidarScanner
 {
 public:
-    virtual ~LidarScanner();
+    virtual ~LidarScanner() { }
 
     static constexpr size_t SamplesPerRevolution = 720;
 

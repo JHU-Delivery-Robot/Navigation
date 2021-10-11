@@ -5,20 +5,20 @@
 
 namespace robot {
 
-GradientPotentialMap::GradientPotentialMap(int qStar, int gradientScale,
-                                           common::Vector2 goal, std::array<double, SamplesPerRevolution> lidar_scan)
-    :  qStar(qStar), gradientScale(gradientScale), goal(goal), lidar_scan(lidar_scan) { }
+GradientPotentialMap::GradientPotentialMap(double qStar, double attractiveGradientScale, double repulsiveGradientScale, common::Vector2 goal)
+    : qStar(qStar), attractiveGradientScale(attractiveGradientScale), repulsiveGradientScale(repulsiveGradientScale), goal(goal) { }
 
 void GradientPotentialMap::updateGoal(common::Vector2 updatedGoal) {
     goal = updatedGoal;
 }
 
-void GradientPotentialMap::updateLidar(std::array<double, SamplesPerRevolution> updated_lidar_scan) {
+void GradientPotentialMap::updateLidar(std::array<double, SamplesPerRevolution> updated_lidar_scan, double scan_start_heading) {
     lidar_scan = updated_lidar_scan;
+    lidar_start_heading = scan_start_heading;
 }
 
 common::Vector2 GradientPotentialMap::getAttractivePotential(common::Vector2 position) {
-    return gradientScale * (goal - position);
+    return attractiveGradientScale * (goal - position);
 }
 
 common::Vector2 GradientPotentialMap::getRepulsivePotential() {
@@ -29,8 +29,8 @@ common::Vector2 GradientPotentialMap::getRepulsivePotential() {
         double d = lidar_scan[i];
         if (d <= qStar) {
             // negate since we want potential to repel from obstacles
-            double magnitude = -gradientScale*(1.0/qStar - 1.0/d)/(d*d*d);
-            double angle = 2*PI*i/double(SamplesPerRevolution);
+            double magnitude = -repulsiveGradientScale*(1.0/d - 1/qStar)/(d*d);
+            double angle = lidar_start_heading + 2*PI*i/double(SamplesPerRevolution);
 
             gradient += common::Vector2::polar(angle, magnitude);
         }

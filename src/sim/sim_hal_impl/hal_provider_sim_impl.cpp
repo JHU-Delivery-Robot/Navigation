@@ -3,52 +3,174 @@
 namespace sim
 {
 
-constexpr double PI = 3.14159265358979323846;
-
-HALProviderSimImpl::HALProviderSimImpl()
-    : lidar_range(600.0), ultrasonic_range(200.0), infrared_range(100.0),
-      lidar_beam_model(0.0, 0.0, lidar_range, 0.5, 0.5),
-      ultrasonic_beam_model(0.0, 0.0, ultrasonic_range, 0.5, 0.5),
-      infrared_beam_model(0.0, 0.0, infrared_range, 0.5, 0.5),
-      obstacle_map({}) { }
-
-std::shared_ptr<hal::LidarScanner> HALProviderSimImpl::lidar() {
-    if (!lidar_impl) {
-        auto sensorModel = DistanceSensorModel(obstacle_map, lidar_beam_model, lidar_range);
-        lidar_impl = std::make_shared<LidarScannerSimImpl>(sensorModel);
-    }
-
-    return lidar_impl;
-}
-
-std::shared_ptr<hal::UltrasonicSensor> HALProviderSimImpl::ultrasonic(int id) {
-    for (auto &&ultrasonic_sensor : ultrasonic_sensors)
-    {
-        if (ultrasonic_sensor->getID() == id) {
-            return ultrasonic_sensor;
-        }
-    }
+DistanceSensorModel HALProviderSimImpl::CliffInfraredAssembly::construct_sensor_model(ObstacleMap* obstacle_map) {
+    BeamModel beam_model = BeamModel(0.0, 0.0, max_range, 0.0, 0.0);
     
-    auto sensorModel = DistanceSensorModel(obstacle_map, lidar_beam_model, lidar_range);
-    auto ultrasonic_sensor = std::make_shared<UltrasonicSensorSimImpl>(id, sensorModel, PI/12, 5);
-    ultrasonic_sensors.push_back(ultrasonic_sensor);
-
-    return ultrasonic_sensor;
+    return DistanceSensorModel(obstacle_map, beam_model, max_range);
 }
 
-std::shared_ptr<hal::InfraredSensor> HALProviderSimImpl::infrared(int id) {
-    for (auto &&infrared_sensor : infrared_sensors)
-    {
-        if (infrared_sensor->getID() == id) {
-            return infrared_sensor;
-        }
-    }
+HALProviderSimImpl::CliffInfraredAssembly::CliffInfraredAssembly(ObstacleMap* obstacle_map)
+    : _front(0, construct_sensor_model(obstacle_map), fov, samples),
+      _left(1, construct_sensor_model(obstacle_map), fov, samples),
+      _right(2, construct_sensor_model(obstacle_map), fov, samples),
+      _back(3, construct_sensor_model(obstacle_map), fov, samples) { }
+
+InfraredSensorSimImpl* HALProviderSimImpl::CliffInfraredAssembly::front() {
+    return &_front;
+}
+
+InfraredSensorSimImpl* HALProviderSimImpl::CliffInfraredAssembly::left() {
+    return &_left;
+}
+
+InfraredSensorSimImpl* HALProviderSimImpl::CliffInfraredAssembly::right() {
+    return &_right;
+}
+
+InfraredSensorSimImpl* HALProviderSimImpl::CliffInfraredAssembly::back() {
+    return &_back;
+}
+
+void HALProviderSimImpl::CliffInfraredAssembly::updateLocation(common::Vector2 position, double heading) {
+    _front.updateLocation(position, heading);
+    _left.updateLocation(position, heading);
+    _right.updateLocation(position, heading);
+    _back.updateLocation(position, heading);
+}
+
+DistanceSensorModel HALProviderSimImpl::WheelInfraredAssembly::construct_sensor_model(ObstacleMap* obstacle_map) {
+    BeamModel beam_model = BeamModel(0.0, 0.0, max_range, 0.0, 0.0);
     
-    auto sensorModel = DistanceSensorModel(obstacle_map, lidar_beam_model, lidar_range);
-    auto infrared_sensor = std::make_shared<InfraredSensorSimImpl>(id, sensorModel, PI/12, 5);
-    infrared_sensors.push_back(infrared_sensor);
-
-    return infrared_sensor;
+    return DistanceSensorModel(obstacle_map, beam_model, max_range);
 }
+
+HALProviderSimImpl::WheelInfraredAssembly::WheelInfraredAssembly(ObstacleMap* obstacle_map)
+    : _front_left(0, construct_sensor_model(obstacle_map), fov, samples),
+      _front_right(1, construct_sensor_model(obstacle_map), fov, samples),
+      _back_left(2, construct_sensor_model(obstacle_map), fov, samples),
+      _back_right(3, construct_sensor_model(obstacle_map), fov, samples) { }
+
+InfraredSensorSimImpl* HALProviderSimImpl::WheelInfraredAssembly::front_left() {
+    return &_front_left;
+}
+
+InfraredSensorSimImpl* HALProviderSimImpl::WheelInfraredAssembly::front_right() {
+    return &_front_right;
+}
+
+InfraredSensorSimImpl* HALProviderSimImpl::WheelInfraredAssembly::back_left() {
+    return &_back_left;
+}
+
+InfraredSensorSimImpl* HALProviderSimImpl::WheelInfraredAssembly::back_right() {
+    return &_back_right;
+}
+
+void HALProviderSimImpl::WheelInfraredAssembly::updateLocation(common::Vector2 position, double heading) {
+    _front_left.updateLocation(position, heading);
+    _front_right.updateLocation(position, heading);
+    _back_left.updateLocation(position, heading);
+    _back_right.updateLocation(position, heading);
+}
+
+DistanceSensorModel HALProviderSimImpl::UltrasonicAssembly::construct_sensor_model(ObstacleMap* obstacle_map) {
+    BeamModel beam_model = BeamModel(0.0, 0.0, max_range, 0.0, 0.0);
+    
+    return DistanceSensorModel(obstacle_map, beam_model, max_range);
+}
+
+HALProviderSimImpl::UltrasonicAssembly::UltrasonicAssembly(ObstacleMap* obstacle_map)
+    : _front(0, construct_sensor_model(obstacle_map), fov, samples),
+      _left(1, construct_sensor_model(obstacle_map), fov, samples),
+      _right(2, construct_sensor_model(obstacle_map), fov, samples),
+      _back(3, construct_sensor_model(obstacle_map), fov, samples) { }
+
+UltrasonicSensorSimImpl* HALProviderSimImpl::UltrasonicAssembly::front() {
+    return &_front;
+}
+
+UltrasonicSensorSimImpl* HALProviderSimImpl::UltrasonicAssembly::left() {
+    return &_left;
+}
+
+UltrasonicSensorSimImpl* HALProviderSimImpl::UltrasonicAssembly::right() {
+    return &_right;
+}
+
+UltrasonicSensorSimImpl* HALProviderSimImpl::UltrasonicAssembly::back() {
+    return &_back;
+}
+
+void HALProviderSimImpl::UltrasonicAssembly::updateLocation(common::Vector2 position, double heading) {
+    _front.updateLocation(position, heading);
+    _left.updateLocation(position, heading);
+    _right.updateLocation(position, heading);
+    _back.updateLocation(position, heading);
+}
+
+HALProviderSimImpl::MotorAssembly::MotorAssembly() { }
+
+MotorSimImpl* HALProviderSimImpl::MotorAssembly::front_left() {
+    return &_front_left;
+}
+
+MotorSimImpl* HALProviderSimImpl::MotorAssembly::front_right() {
+    return &_front_right;
+}
+
+MotorSimImpl* HALProviderSimImpl::MotorAssembly::back_left() {
+    return &_back_left;
+}
+
+MotorSimImpl* HALProviderSimImpl::MotorAssembly::back_right() {
+    return &_back_right;
+}
+
+void HALProviderSimImpl::MotorAssembly::update(double time_delta) {
+    _front_left.update(time_delta);
+    _front_right.update(time_delta);
+    _back_left.update(time_delta);
+    _back_right.update(time_delta);
+}
+
+void HALProviderSimImpl::MotorAssembly::reset_odometry() {
+    _front_left.reset_odometry();
+    _front_right.reset_odometry();
+    _back_left.reset_odometry();
+    _back_right.reset_odometry();
+}
+
+LidarScannerSimImpl* HALProviderSimImpl::lidar() {
+    return &lidar_impl;
+}
+
+HALProviderSimImpl::CliffInfraredAssembly* HALProviderSimImpl::cliff_infrared() {
+    return &cliff_sensors;
+}
+
+HALProviderSimImpl::WheelInfraredAssembly* HALProviderSimImpl::wheel_infrared() {
+    return &wheel_sensors;
+}
+
+HALProviderSimImpl::UltrasonicAssembly* HALProviderSimImpl::ultrasonic() {
+    return &ultrasonic_sensors;
+}
+
+HALProviderSimImpl::MotorAssembly* HALProviderSimImpl::motor_assembly() {
+    return &motors;
+}
+
+GyroscopeSimImpl* HALProviderSimImpl::gyroscope() {
+    return &gyroscope_impl;
+}
+
+HALProviderSimImpl::HALProviderSimImpl(std::vector<Polygon> obstacles)
+    : lidar_beam_model(0.0, 0.0, lidar_max_range, 0.0, 0.0),
+      obstacle_map(obstacles),
+      lidar_impl(DistanceSensorModel(&obstacle_map, lidar_beam_model, lidar_max_range)),
+      cliff_sensors(&obstacle_map),
+      wheel_sensors(&obstacle_map),
+      ultrasonic_sensors(&obstacle_map),
+      motors() { }
 
 }

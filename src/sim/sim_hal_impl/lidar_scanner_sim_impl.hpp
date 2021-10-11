@@ -8,7 +8,7 @@
 namespace sim
 {
 
-class LidarScannerSimImpl : public hal::LidarScanner {
+class LidarScannerSimImpl final : public hal::LidarScanner {
 public:
     LidarScannerSimImpl(DistanceSensorModel model);
     void updateLocation(common::Vector2 position, double heading);
@@ -19,7 +19,7 @@ private:
     DistanceSensorModel sensor_model;
 
     common::Vector2 position;
-    common::Vector2 direction;
+    double heading;
 };
 
 }

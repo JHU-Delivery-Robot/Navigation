@@ -7,7 +7,7 @@ namespace hal
 class InfraredSensor
 {
 public:
-    virtual ~InfraredSensor();
+    virtual ~InfraredSensor() { }
     
     virtual double read() = 0;
 };

@@ -3,9 +3,11 @@
 
 #include <memory>
 
-#include "lidar_scanner.hpp"
-#include "ultrasonic_sensor.hpp"
+#include "gyroscope.hpp"
 #include "infrared_sensor.hpp"
+#include "lidar_scanner.hpp"
+#include "motor.hpp"
+#include "ultrasonic_sensor.hpp"
 
 namespace hal
 {
@@ -13,11 +15,56 @@ namespace hal
 class HALProvider
 {
 public:
-    virtual ~HALProvider();
+    class CliffInfraredAssembly {
+    public:
+        virtual ~CliffInfraredAssembly() { };
 
-    virtual std::shared_ptr<LidarScanner> lidar() = 0;
-    virtual std::shared_ptr<UltrasonicSensor> ultrasonic(int id) = 0;
-    virtual std::shared_ptr<InfraredSensor> infrared(int id) = 0;
+        virtual InfraredSensor* front() = 0;
+        virtual InfraredSensor* left() = 0;
+        virtual InfraredSensor* right() = 0;
+        virtual InfraredSensor* back() = 0;
+    };
+
+    class WheelInfraredAssembly {
+    public:
+        virtual ~WheelInfraredAssembly() { };
+
+        virtual InfraredSensor* front_left() = 0;
+        virtual InfraredSensor* front_right() = 0;
+        virtual InfraredSensor* back_left() = 0;
+        virtual InfraredSensor* back_right() = 0;
+    };
+
+    class UltrasonicAssembly {
+    public:
+        virtual ~UltrasonicAssembly() { };
+
+        virtual UltrasonicSensor* front() = 0;
+        virtual UltrasonicSensor* left() = 0;
+        virtual UltrasonicSensor* right() = 0;
+        virtual UltrasonicSensor* back() = 0;
+    };
+  
+    class MotorAssembly {
+    public:
+        virtual ~MotorAssembly() { };
+
+        virtual Motor* front_left() = 0;
+        virtual Motor* front_right() = 0;
+        virtual Motor* back_left() = 0;
+        virtual Motor* back_right() = 0;
+
+        virtual void reset_odometry() = 0;
+    };
+
+    virtual ~HALProvider() { }
+
+    virtual LidarScanner* lidar() = 0;
+    virtual CliffInfraredAssembly* cliff_infrared() = 0;
+    virtual WheelInfraredAssembly* wheel_infrared() = 0;
+    virtual UltrasonicAssembly* ultrasonic() = 0;
+    virtual MotorAssembly* motor_assembly() = 0;
+    virtual Gyroscope* gyroscope() = 0;
 };
 
 }

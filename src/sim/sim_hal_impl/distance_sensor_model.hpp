@@ -10,13 +10,13 @@ namespace sim {
 class DistanceSensorModel
 {
 public:
-    DistanceSensorModel(ObstacleMap map, BeamModel beam_model, double max_range);
+    DistanceSensorModel(ObstacleMap* map, BeamModel beam_model, double max_range);
 
     double sample(common::Vector2 position, common::Vector2 direction);
 
 private:
     BeamModel beam_model;
-    ObstacleMap map;
+    ObstacleMap* map;
     const double max_range;
 };
 

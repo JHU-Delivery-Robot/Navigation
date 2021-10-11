@@ -19,11 +19,13 @@ namespace robot {
 
 class GradientPotentialMap {
 public:
-    GradientPotentialMap(int qStar, int gradientScale, common::Vector2 goal,
-        std::array<double, SamplesPerRevolution> lidar_scan);
+    GradientPotentialMap(double qStar, double attractiveGradientScale, double repulsiveGradientScale, common::Vector2 goal);
 
     void updateGoal(common::Vector2 goal);
-    void updateLidar(std::array<double, SamplesPerRevolution> lidar_scan);
+    void updateLidar(std::array<double, SamplesPerRevolution> lidar_scan, double scan_start_heading);
+
+    common::Vector2 getAttractivePotential(common::Vector2 position);
+    common::Vector2 getRepulsivePotential();
 
     /**
      * Calculates the gradient of the navigation potential at the specified position
@@ -31,14 +33,14 @@ public:
     common::Vector2 getGradient(common::Vector2 position);
 
 private:
-    const int qStar;
-    const int gradientScale;
+    double qStar;
+    double attractiveGradientScale;
+    double repulsiveGradientScale;
 
     common::Vector2 goal;
-    std::array<double, SamplesPerRevolution> lidar_scan;
 
-    common::Vector2 getAttractivePotential(common::Vector2 position);
-    common::Vector2 getRepulsivePotential();
+    double lidar_start_heading;
+    std::array<double, SamplesPerRevolution> lidar_scan;
 };
 
 }

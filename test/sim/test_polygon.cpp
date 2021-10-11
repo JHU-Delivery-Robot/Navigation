@@ -1,11 +1,10 @@
 #include "catch2/catch.hpp"
 
+#include "common.hpp"
 #include "polygon.hpp"
 
 using namespace sim;
 using namespace common;
-
-constexpr double PI = 3.14159265358979323846;
 
 TEST_CASE("Polygon No Intersections", "[Polygon]")
 {
