@@ -36,6 +36,9 @@ void Drivetrain::setCommand(common::Vector2 drive_command) {
         right_speed = (right_radius / front_path_radius) * speed;
     }
 
+    // left_speed = parallel_component + orthogonal_component;
+    // right_speed = parallel_component - orthogonal_component;
+
     motors->front_left()->set_speed(left_speed);
     motors->back_left()->set_speed(left_speed);
 

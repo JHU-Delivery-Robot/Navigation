@@ -9,10 +9,10 @@ Polygon::Polygon(std::vector<common::Vector2> points) : points(points) {
         common::Vector2 start = points[i];
         common::Vector2 end = (i < points.size() - 1) ? points[i + 1] : points[0];  // wrap around to close polygon
 
-        common::Vector2 delta = end - start;
-        deltas.push_back(delta);
+            common::Vector2 delta = end - start;
+            deltas.push_back(delta);
+        }
     }
-}
 
 // intersection of ray starting at p going in direction q with specified polygon side
 std::tuple<bool, double> Polygon::intersect(common::Vector2 p, common::Vector2 q, std::size_t side) const {
@@ -26,19 +26,19 @@ std::tuple<bool, double> Polygon::intersect(common::Vector2 p, common::Vector2 q
         return {false, 0.0};
     }
 
-    common::Vector2 position_translation = p - r;
+        common::Vector2 position_translation = p - r;
 
-    double beta = (q.y * position_translation.x - q.x * position_translation.y) / v;
+        double beta = (q.y * position_translation.x - q.x * position_translation.y) / v;
 
     if (beta < 0.0 || beta > 1.0) {
         return {false, 0.0};
     }
 
-    double alpha = (s.y * position_translation.x - s.x * position_translation.y) / v;
-    double distance = alpha * q.magnitude();
+        double alpha = (s.y * position_translation.x - s.x * position_translation.y) / v;
+        double distance = alpha * q.magnitude();
 
-    return {distance > 0, distance};
-}
+        return {distance > 0, distance};
+    }
 
 // closest intersection of ray starting at p going in direction q with polygon
 std::tuple<bool, double> Polygon::intersect(common::Vector2 position, common::Vector2 direction) const {
@@ -54,8 +54,8 @@ std::tuple<bool, double> Polygon::intersect(common::Vector2 position, common::Ve
         }
     }
 
-    return {intersection_found, shortest_distance};
-}
+        return {intersection_found, shortest_distance};
+    }
 
 std::ostream &operator<<(std::ostream &output, const Polygon &polygon) {
     output << "[";

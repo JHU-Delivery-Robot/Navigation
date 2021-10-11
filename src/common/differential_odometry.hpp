@@ -83,6 +83,7 @@ public:
 
 private:
     double wheel_base_width;
+    double wheel_circumference;
 
     common::Vector2 position;
     double heading;

@@ -5,8 +5,6 @@
 
 using namespace common;
 
-constexpr double PI = 3.14159265358979323846;
-
 TEST_CASE("Vector2 Polar", "[Vector2]")
 {
     Vector2 x = Vector2::polar(0.0, 5.0);
