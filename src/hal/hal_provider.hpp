@@ -9,7 +9,6 @@
 #include "lidar_scanner.hpp"
 #include "motor.hpp"
 #include "ultrasonic_sensor.hpp"
-#include "infrared_sensor.hpp"
 
 namespace hal {
 

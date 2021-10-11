@@ -1,6 +1,7 @@
 #ifndef ROBOT_HPP
 #define ROBOT_HPP
 
+#include "hal_provider.hpp"
 #include "drivetrain.hpp"
 #include "hal_provider.hpp"
 #include "potential_map.hpp"
