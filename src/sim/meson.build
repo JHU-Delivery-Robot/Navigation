@@ -11,7 +11,7 @@ sim_lib = static_library(
 )
 
 executable(
-    'sim', src + [ 'main.cpp' ],
+    'sim', src + [ 'main.cpp', 'config.cpp' ],
     link_with : [common_lib, sim_hal_impl_lib, robot_lib],
     include_directories : [common_includes, hal_includes, robot_includes, sim_hal_impl_includes],
 )

@@ -1,0 +1,15 @@
+end_distance, 20.0
+time_step, 0.02
+iteration_limit, 3000
+map_size = 800
+
+start_position, (-300.0, -200.0)
+start_angle, 90
+goal_position, (350.0, 300.0)
+
+q_star, 600
+attractive_gradient_scale, 0.08
+repulsive_gradient_scale, 0.00001
+
+obstacles, (150, 100), (400, 100), (400, -100), (150, -100)
+obstacles, (-150, 100), (-400, 100), (-400, -100), (-150, -100)
