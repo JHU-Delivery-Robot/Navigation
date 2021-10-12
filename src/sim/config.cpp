@@ -1,5 +1,6 @@
 #include "config.hpp"
 
+#include <algorithm>
 #include <fstream>
 #include <iostream>
 #include <string>
