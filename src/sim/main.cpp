@@ -42,13 +42,8 @@ int main(int argc, char* argv[]) {
     robot::Robot robot = robot::Robot(&sim_hal);
     robot::GradientPotentialMap potential_map_parallel_copy = robot::GradientPotentialMap(config.qStar, config.attractive_gradient_scale, config.repulsive_gradient_scale, config.goal_position);
 
-    sim::Recording recording("sim_output.json");
-    if (!recording.ok()) {
-        std::cout << "Initializing sim recording failed";
-        return 1;
-    }
-
-    recording.write_config(config);
+    sim::Recording recording;
+    recording.add_config(config);
 
     std::cout << "Starting simulation..." << std::endl;
 
@@ -79,8 +74,10 @@ int main(int argc, char* argv[]) {
         double right_speed = 0.5 * (sim_hal.motor_assembly()->front_right()->get_speed() + sim_hal.motor_assembly()->back_right()->get_speed());
         common::Vector2 motor_speed = common::Vector2(left_speed, right_speed);
 
-        recording.write(position, heading, motor_speed, attractive_gradient, repulsive_gradient);
+        recording.add_entry(position, heading, motor_speed, attractive_gradient, repulsive_gradient);
     }
+
+    recording.write("sim_output.json");
 
     std::cout << "Simulation finished successfully" << std::endl;
 }

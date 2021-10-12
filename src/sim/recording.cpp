@@ -1,50 +1,76 @@
 #include "recording.hpp"
 
+#include <fstream>
+#include <iostream>
+
 namespace sim {
 
-Recording::Recording(std::filesystem::path output_file_path) : output_file(output_file_path) {}
+void Recording::add_config(sim::Config config) {
+    data["size"] = std::to_string(config.map_size);
+    data["time_step"] = std::to_string(config.time_step);
+    data["goal"] = "[" + std::to_string(config.goal_position.x) + ", " + std::to_string(config.goal_position.y) + "]";
 
-Recording::~Recording() {
-    output_file << "]}" << std::endl;
-    output_file.close();
-}
+    std::stringstream ss;
 
-bool Recording::ok() {
-    return output_file.is_open() && output_file.good();
-}
-
-void Recording::write_config(sim::Config config) {
-    if (!ok()) {
-        return;
-    }
-
-    output_file << R"({"size": )" << config.map_size << ", "
-                << R"("time_step": )" << config.time_step << ", "
-                << R"("goal": [)" << config.goal_position.x << ", " << config.goal_position.y << "], "
-                << R"("obstacles": [)";
+    ss << "[";
 
     for (size_t i = 0; i < config.obstacles.size(); i++) {
-        output_file << config.obstacles[i];
+        ss << config.obstacles[i];
 
         if (i < config.obstacles.size() - 1) {
-            output_file << ", ";
+            ss << ", ";
         }
     }
 
-    output_file << R"(], "positions" : [ [)" << config.start_position.x << ", " << config.start_position.y
-                << ", " << config.start_angle << ", 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ]";
+    ss << "]";
+    data["obstacles"] = ss.str();
+
+    add_entry(config.start_position, config.start_angle, common::Vector2(0, 0), common::Vector2(0, 0), common::Vector2(0, 0));
 }
 
-void Recording::write(common::Vector2 robot_position, double robot_angle, common::Vector2 motor_speed,
-                      common::Vector2 attractive_gradient, common::Vector2 repulsive_gradient) {
-    if (!ok()) {
-        return;
+void Recording::add_entry(common::Vector2 robot_position, double robot_angle, common::Vector2 motor_speed,
+                          common::Vector2 attractive_gradient, common::Vector2 repulsive_gradient) {
+    replay_entries.push_back({robot_position, robot_angle, motor_speed, attractive_gradient, repulsive_gradient});
+}
+
+std::string Recording::serialize_entries() {
+    std::stringstream ss;
+    ss << "[";
+
+    for (size_t i = 0; i < replay_entries.size(); i++) {
+        const auto& [robot_position, robot_angle, motor_speed, attractive_gradient, repulsive_gradient] = replay_entries[i];
+
+        ss << "[" << robot_position.x << ", " << robot_position.y << ", " << robot_angle << ", "
+           << motor_speed.x << ", " << motor_speed.y << ", "
+           << attractive_gradient.x << ", " << attractive_gradient.y << ", "
+           << repulsive_gradient.x << ", " << repulsive_gradient.y << "]";
+
+        if (i < replay_entries.size() - 1) {
+            ss << ", \n";
+        }
     }
 
-    output_file << ",\n[ " << robot_position.x << ", " << robot_position.y << ", " << robot_angle << ", "
-                << motor_speed.x << ", " << motor_speed.y << ", "
-                << attractive_gradient.x << ", " << attractive_gradient.y << ", "
-                << repulsive_gradient.x << ", " << repulsive_gradient.y << " ]";
+    ss << "]";
+    return ss.str();
+}
+
+bool Recording::write(std::filesystem::path output_file_path) {
+    std::ofstream output_file(output_file_path);
+    if (!output_file.is_open() || !output_file.good()) {
+        return false;
+    }
+
+    output_file << "{\n";
+
+    for (const auto& [key, value] : data) {
+        output_file << R"(")" << key << R"(": )" << value << ",\n";
+    }
+
+    output_file << R"("positions": )" << serialize_entries() << "\n";
+
+    output_file << "}\n";
+
+    return true;
 }
 
 }  // namespace sim
