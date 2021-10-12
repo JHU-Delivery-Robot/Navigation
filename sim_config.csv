@@ -9,7 +9,7 @@ goal_position, (350.0, 300.0)
 
 q_star, 600
 attractive_gradient_scale, 0.08
-repulsive_gradient_scale, 0.00001
+repulsive_gradient_scale, 100000
 
 obstacles, (150, 100), (400, 100), (400, -100), (150, -100)
 obstacles, (-150, 100), (-400, 100), (-400, -100), (-150, -100)
