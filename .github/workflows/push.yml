@@ -10,12 +10,12 @@ jobs:
       - run: pip3 install --user ninja
       - run: pip3 install --user meson
       - uses: actions/checkout@v2
-      - run: meson setup build
+      - run: meson setup build -Db_coverage=true
       - run: meson compile -C build
       - run: ./build/test/sim/simtest
-      - run: gcovr --root build/src --xml-pretty -o coverage.xml
+      - run: ninja coverage -C build
       - uses: codecov/codecov-action@v2
         with:
-          files: ./coverage.xml
+          files: ./build/meson-logs/coverage.xml
       - run: valgrind -v --error-exitcode=1 --leak-check=full --show-leak-kinds=all --track-origins=yes ./build/test/sim/simtest
         continue-on-error: true
