@@ -80,7 +80,7 @@ std::optional<Config> Config::load(const std::filesystem::path& config_file_path
         } else if (key == "repulsive_gradient_scale") {
             config.repulsive_gradient_scale = std::stod(value);
         } else if (key == "start_angle") {
-            config.start_angle = std::stod(value) * 2 * PI / 180.0;
+            config.start_angle = std::stod(value) * PI / 180.0;
         } else if (key == "start_position") {
             config.start_position = parse_point(value);
         } else if (key == "goal_position") {

@@ -1,5 +1,5 @@
 #ifndef SIM_CONFIG_HPP
-#define SIM_CONFIH_HPP
+#define SIM_CONFIG_HPP
 
 #include <filesystem>
 #include <optional>
