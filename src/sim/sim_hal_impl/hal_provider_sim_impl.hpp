@@ -5,25 +5,17 @@
 #include <vector>
 
 #include "common.hpp"
-
-#include "hal_provider.hpp"
-#include "gyroscope.hpp"
-#include "lidar_scanner.hpp"
-#include "infrared_sensor.hpp"
-#include "motor.hpp"
-#include "ultrasonic_sensor.hpp"
-
+#include "gps_sim_impl.hpp"
 #include "gyroscope_sim_impl.hpp"
-#include "lidar_scanner_sim_impl.hpp"
+#include "hal_provider.hpp"
 #include "infrared_sensor_sim_impl.hpp"
+#include "lidar_scanner_sim_impl.hpp"
 #include "motor_sim_impl.hpp"
 #include "ultrasonic_sensor_sim_impl.hpp"
 
-namespace sim
-{
+namespace sim {
 
-class HALProviderSimImpl final : public hal::HALProvider
-{
+class HALProviderSimImpl final : public hal::HALProvider {
 public:
     class CliffInfraredAssembly final : public hal::HALProvider::CliffInfraredAssembly {
     public:
@@ -33,14 +25,14 @@ public:
         InfraredSensorSimImpl* left() override;
         InfraredSensorSimImpl* right() override;
         InfraredSensorSimImpl* back() override;
-        
+
         void updateLocation(common::Vector2 position, double heading);
 
     private:
         static DistanceSensorModel construct_sensor_model(ObstacleMap* obstacle_map);
-        
+
         static constexpr double max_range = 100;
-        static constexpr double fov = PI/6;
+        static constexpr double fov = PI / 6;
         static constexpr int samples = 5;
 
         InfraredSensorSimImpl _front, _left, _right, _back;
@@ -54,14 +46,14 @@ public:
         InfraredSensorSimImpl* front_right() override;
         InfraredSensorSimImpl* back_left() override;
         InfraredSensorSimImpl* back_right() override;
-        
+
         void updateLocation(common::Vector2 position, double heading);
-    
+
     private:
         static DistanceSensorModel construct_sensor_model(ObstacleMap* obstacle_map);
-        
+
         static constexpr double max_range = 100;
-        static constexpr double fov = PI/6;
+        static constexpr double fov = PI / 6;
         static constexpr int samples = 5;
 
         InfraredSensorSimImpl _front_left, _front_right, _back_left, _back_right;
@@ -75,19 +67,19 @@ public:
         UltrasonicSensorSimImpl* left() override;
         UltrasonicSensorSimImpl* right() override;
         UltrasonicSensorSimImpl* back() override;
-        
+
         void updateLocation(common::Vector2 position, double heading);
 
     private:
         static DistanceSensorModel construct_sensor_model(ObstacleMap* obstacle_map);
-        
+
         static constexpr double max_range = 100;
-        static constexpr double fov = PI/6;
+        static constexpr double fov = PI / 6;
         static constexpr int samples = 5;
 
         UltrasonicSensorSimImpl _front, _left, _right, _back;
     };
-  
+
     class MotorAssembly final : public hal::HALProvider::MotorAssembly {
     public:
         MotorAssembly();
@@ -112,13 +104,7 @@ public:
     UltrasonicAssembly* ultrasonic() override;
     MotorAssembly* motor_assembly() override;
     GyroscopeSimImpl* gyroscope() override;
-
-    // LidarScannerSimImpl* get_lidar_impl();
-    // CliffInfraredAssembly* get_cliff_infrared_impl();
-    // WheelInfraredAssembly* get_wheel_infrared_impl();
-    // UltrasonicAssembly* get_ultrasonic_impl();
-    // MotorAssembly* get_motor_assembly_impl();
-    // GyroscopeSimImpl* get_gyroscope_impl();
+    GPSSimImpl* gps() override;
 
 private:
     static constexpr double lidar_max_range = 600;
@@ -132,8 +118,9 @@ private:
     UltrasonicAssembly ultrasonic_sensors;
     MotorAssembly motors;
     GyroscopeSimImpl gyroscope_impl;
+    GPSSimImpl gps_impl;
 };
 
-}
+}  // namespace sim
 
 #endif

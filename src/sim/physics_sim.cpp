@@ -4,12 +4,11 @@
 
 #include "drivetrain.hpp"
 
-namespace sim
-{
+namespace sim {
 
 PhysicsSim::PhysicsSim(HALProviderSimImpl *sim_hal)
     : sim_hal(sim_hal),
-      odometry(robot::Drivetrain::wheel_base_width, robot::Drivetrain::wheel_circumference) { }
+      odometry(robot::Drivetrain::wheel_base_width, robot::Drivetrain::wheel_circumference) {}
 
 double PhysicsSim::estimate_angle_rotation(double time_delta) {
     HALProviderSimImpl::MotorAssembly *motors = sim_hal->motor_assembly();
@@ -32,7 +31,7 @@ double PhysicsSim::estimate_angle_rotation(double time_delta) {
     double instantaneous_curve_radius = 0.5 * robot::Drivetrain::wheel_base_width * (sum / diff);
 
     if (std::abs(instantaneous_curve_radius) < 1e-4) {
-        double delta_theta = 0.5*(delta_right_distance-delta_left_distance)/(PI*robot::Drivetrain::wheel_base_width);
+        double delta_theta = 0.5 * (delta_right_distance - delta_left_distance) / (PI * robot::Drivetrain::wheel_base_width);
         return delta_theta;
     }
 
@@ -57,6 +56,7 @@ void PhysicsSim::update(double time_delta) {
 
     auto [position, heading] = odometry.getPose();
 
+    sim_hal->gps()->updateLocation(position, heading);
     sim_hal->lidar()->updateLocation(position, heading);
     sim_hal->cliff_infrared()->updateLocation(position, heading);
     sim_hal->wheel_infrared()->updateLocation(position, heading);
@@ -71,10 +71,11 @@ void PhysicsSim::setPose(common::Vector2 position, double heading) {
     odometry.setPose(position, heading);
     sim_hal->gyroscope()->setHeading(heading);
 
+    sim_hal->gps()->updateLocation(position, heading);
     sim_hal->lidar()->updateLocation(position, heading);
     sim_hal->cliff_infrared()->updateLocation(position, heading);
     sim_hal->wheel_infrared()->updateLocation(position, heading);
     sim_hal->ultrasonic()->updateLocation(position, heading);
 }
 
-}
+}  // namespace sim

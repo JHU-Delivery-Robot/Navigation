@@ -39,16 +39,17 @@ int main(int argc, char* argv[]) {
 
     physics.setPose(config.start_position, config.start_angle);
 
+    // Initialize physics
+    physics.update(0.0);
+
     robot::Robot robot = robot::Robot(&sim_hal);
+    robot.updateGoal(config.goal_position);
     robot::GradientPotentialMap potential_map_parallel_copy = robot::GradientPotentialMap(config.qStar, config.attractive_gradient_scale, config.repulsive_gradient_scale, config.goal_position);
 
     sim::Recording recording;
     recording.add_config(config);
 
     std::cout << "Starting simulation..." << std::endl;
-
-    // Initialize physics
-    physics.update(0.0);
 
     int current_iteration = 0;
     while (current_iteration++ < config.iteration_limit) {

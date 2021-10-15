@@ -1,11 +1,10 @@
 #include "hal_provider_sim_impl.hpp"
 
-namespace sim
-{
+namespace sim {
 
 DistanceSensorModel HALProviderSimImpl::CliffInfraredAssembly::construct_sensor_model(ObstacleMap* obstacle_map) {
     BeamModel beam_model = BeamModel(0.0, 0.0, max_range, 0.0, 0.0);
-    
+
     return DistanceSensorModel(obstacle_map, beam_model, max_range);
 }
 
@@ -13,7 +12,7 @@ HALProviderSimImpl::CliffInfraredAssembly::CliffInfraredAssembly(ObstacleMap* ob
     : _front(0, construct_sensor_model(obstacle_map), fov, samples),
       _left(1, construct_sensor_model(obstacle_map), fov, samples),
       _right(2, construct_sensor_model(obstacle_map), fov, samples),
-      _back(3, construct_sensor_model(obstacle_map), fov, samples) { }
+      _back(3, construct_sensor_model(obstacle_map), fov, samples) {}
 
 InfraredSensorSimImpl* HALProviderSimImpl::CliffInfraredAssembly::front() {
     return &_front;
@@ -40,7 +39,7 @@ void HALProviderSimImpl::CliffInfraredAssembly::updateLocation(common::Vector2 p
 
 DistanceSensorModel HALProviderSimImpl::WheelInfraredAssembly::construct_sensor_model(ObstacleMap* obstacle_map) {
     BeamModel beam_model = BeamModel(0.0, 0.0, max_range, 0.0, 0.0);
-    
+
     return DistanceSensorModel(obstacle_map, beam_model, max_range);
 }
 
@@ -48,7 +47,7 @@ HALProviderSimImpl::WheelInfraredAssembly::WheelInfraredAssembly(ObstacleMap* ob
     : _front_left(0, construct_sensor_model(obstacle_map), fov, samples),
       _front_right(1, construct_sensor_model(obstacle_map), fov, samples),
       _back_left(2, construct_sensor_model(obstacle_map), fov, samples),
-      _back_right(3, construct_sensor_model(obstacle_map), fov, samples) { }
+      _back_right(3, construct_sensor_model(obstacle_map), fov, samples) {}
 
 InfraredSensorSimImpl* HALProviderSimImpl::WheelInfraredAssembly::front_left() {
     return &_front_left;
@@ -75,7 +74,7 @@ void HALProviderSimImpl::WheelInfraredAssembly::updateLocation(common::Vector2 p
 
 DistanceSensorModel HALProviderSimImpl::UltrasonicAssembly::construct_sensor_model(ObstacleMap* obstacle_map) {
     BeamModel beam_model = BeamModel(0.0, 0.0, max_range, 0.0, 0.0);
-    
+
     return DistanceSensorModel(obstacle_map, beam_model, max_range);
 }
 
@@ -83,7 +82,7 @@ HALProviderSimImpl::UltrasonicAssembly::UltrasonicAssembly(ObstacleMap* obstacle
     : _front(0, construct_sensor_model(obstacle_map), fov, samples),
       _left(1, construct_sensor_model(obstacle_map), fov, samples),
       _right(2, construct_sensor_model(obstacle_map), fov, samples),
-      _back(3, construct_sensor_model(obstacle_map), fov, samples) { }
+      _back(3, construct_sensor_model(obstacle_map), fov, samples) {}
 
 UltrasonicSensorSimImpl* HALProviderSimImpl::UltrasonicAssembly::front() {
     return &_front;
@@ -108,7 +107,7 @@ void HALProviderSimImpl::UltrasonicAssembly::updateLocation(common::Vector2 posi
     _back.updateLocation(position, heading);
 }
 
-HALProviderSimImpl::MotorAssembly::MotorAssembly() { }
+HALProviderSimImpl::MotorAssembly::MotorAssembly() {}
 
 MotorSimImpl* HALProviderSimImpl::MotorAssembly::front_left() {
     return &_front_left;
@@ -164,6 +163,10 @@ GyroscopeSimImpl* HALProviderSimImpl::gyroscope() {
     return &gyroscope_impl;
 }
 
+GPSSimImpl* HALProviderSimImpl::gps() {
+    return &gps_impl;
+}
+
 HALProviderSimImpl::HALProviderSimImpl(std::vector<Polygon> obstacles)
     : lidar_beam_model(0.0, 0.0, lidar_max_range, 0.0, 0.0),
       obstacle_map(obstacles),
@@ -171,6 +174,6 @@ HALProviderSimImpl::HALProviderSimImpl(std::vector<Polygon> obstacles)
       cliff_sensors(&obstacle_map),
       wheel_sensors(&obstacle_map),
       ultrasonic_sensors(&obstacle_map),
-      motors() { }
+      motors() {}
 
-}
+}  // namespace sim
