@@ -8,11 +8,14 @@ namespace robot {
 Robot::Robot(hal::HALProvider* hal)
     : hal(hal),
       drivetrain(hal->motor_assembly(), hal->gyroscope()),
-      potential_map(600, 0.08, 1E5, common::Vector2(500, 500)) {
-    drivetrain.setPose(common::Vector2(-300.0, -200.0), 0.0 * PI);
-    potential_map.updateGoal(common::Vector2(350.0, 300.0));
-
+      potential_map(600, 0.08, 1E5, std::get<0>(hal->gps()->location())) {
+    auto [position, heading] = hal->gps()->location();
+    drivetrain.setPose(position, heading);
     hal->motor_assembly()->reset_odometry();
+}
+
+void Robot::updateGoal(common::Vector2 goal) {
+    this->potential_map.updateGoal(goal);
 }
 
 void Robot::update() {
