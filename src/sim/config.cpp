@@ -74,12 +74,6 @@ std::optional<Config> Config::load(const std::filesystem::path& config_file_path
             config.iteration_limit = std::stoi(value);
         } else if (key == "map_size") {
             config.map_size = std::stoi(value);
-        } else if (key == "q_star") {
-            config.qStar = std::stod(value);
-        } else if (key == "attractive_gradient_scale") {
-            config.attractive_gradient_scale = std::stod(value);
-        } else if (key == "repulsive_gradient_scale") {
-            config.repulsive_gradient_scale = std::stod(value);
         } else if (key == "start_angle") {
             config.start_angle = std::stod(value) * PI / 180.0;
         } else if (key == "start_position") {

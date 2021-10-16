@@ -44,7 +44,7 @@ int main(int argc, char* argv[]) {
 
     robot::Robot robot = robot::Robot(&sim_hal);
     robot.updateGoal(config.goal_position);
-    robot::GradientPotentialMap potential_map_parallel_copy = robot::GradientPotentialMap(config.qStar, config.attractive_gradient_scale, config.repulsive_gradient_scale, config.goal_position);
+    robot::GradientPotentialMap potential_map_parallel_copy = robot::GradientPotentialMap(600, 0.08, 1E5, config.goal_position);
 
     sim::Recording recording;
     recording.add_config(config);
