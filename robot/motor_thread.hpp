@@ -2,11 +2,17 @@
 #define MOTOR_THREAD_HPP
 
 #include "robot_thread.hpp"
+#include "speed_controller.hpp"
+#include "types.hpp"
 
-Class MotorThread : public RobotThread {
+class MotorThread : public RobotThread {
+private:
+    PotentialMapSpeedController controller;
+    std::thread th;
 public:
-    MotorThread();
-    void start_thread();
+    MotorThread(MotorPositions positions, float wheelDiameter, int nAngles, int qStar, int gradientScale,
+                Vec2d goal, uint16_t *lidarData);
+    void start_thread() override;
 };
 
 #endif

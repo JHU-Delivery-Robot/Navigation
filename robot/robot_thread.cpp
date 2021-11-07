@@ -1,7 +1,9 @@
-#include <thread>
 #include "robot_thread.hpp"
 
 RobotThread::RobotThread() {
-    std::thread th(start_thread);
+
+}
+
+void RobotThread::stop_thread() {
     th.join();
 }

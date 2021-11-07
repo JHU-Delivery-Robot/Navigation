@@ -3,10 +3,12 @@
 
 #include "robot_thread.hpp"
 
-Class LidarThread : public RobotThread {
+class LidarThread : public RobotThread {
+private:
+    std::thread th;
 public:
     LidarThread();
-    void start_thread();
+    void start_thread() override;
 };
 
 #endif

@@ -1,6 +1,8 @@
 #include <thread>
+#include <cstddef>
 #include "potential_map.hpp"
 #include "types.hpp"
+#include "robot_thread.hpp"
 #include "motor_thread.hpp"
 #include "lidar_thread.hpp"
 
@@ -11,5 +13,8 @@
 int main() {
   LidarThread liThread = LidarThread();
   MotorThread moThread = MotorThread();
+
+  liThread.stop_thread();
+  moThread.stop_thread();
   return 0;
 }

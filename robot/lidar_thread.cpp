@@ -3,8 +3,7 @@
 
 LidarThread::LidarThread() {
     // Initialize Data Here
-    std::thread th(start_thread);
-    th.join();
+    th(start_thread);
 }
 
 void LidarThread::start_thread() {
