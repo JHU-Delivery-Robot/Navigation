@@ -5,6 +5,7 @@
 
 class LidarThread : public RobotThread {
 private:
+    // TODO: Add Instance Variables to LidarThread as needed
     std::thread th;
 public:
     LidarThread();

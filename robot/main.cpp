@@ -6,15 +6,31 @@
 #include "motor_thread.hpp"
 #include "lidar_thread.hpp"
 
-// no literal map (2D array representing grid), but we're constantly fed
-// robot's location and goal points
-// (either receive all goal points at once, or one at a time as the robot moves)
 
 int main() {
-  LidarThread liThread = LidarThread();
-  MotorThread moThread = MotorThread();
+    // TODO: Initialize all data that will be used for the threads
+    MotorPositions positions;
+    float wheelDiameter;
+    int nAngles;
+    int qStar;
+    int gradientScale;
+    Vec2d goal;
+    uint16_t *lidarData; // TODO: Implement the data type suggested in spec, refactor as needed
+    // TODO: Get these from Kalman filter
+    Vec2d position;
+    double heading;
 
-  liThread.stop_thread();
-  moThread.stop_thread();
-  return 0;
+    // TODO: Use the actual constructors and initialize all data that will be used for the threads
+    LidarThread liThread = LidarThread();
+    MotorThread moThread = MotorThread(positions, wheelDiameter, nAngles, qStar, gradientScale,
+                                       goal, lidarData, position, heading);
+
+    // TODO: Update lidarData in a loop here? Maybe change lidarData type to specified?
+    // TODO: Update position with GPS Data in loop
+    // TODO: Update heading with Gyro Data in loop
+
+    liThread.stop_thread();
+    moThread.stop_thread();
+
+    return 0;
 }

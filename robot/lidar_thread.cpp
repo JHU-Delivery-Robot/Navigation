@@ -2,10 +2,10 @@
 #include <thread>
 
 LidarThread::LidarThread() {
-    // Initialize Data Here
+    // TODO: Initialize Instance Variables Here
     th(start_thread);
 }
 
 void LidarThread::start_thread() {
-    // Implement Function to run in thread
+    // TODO: Implement Function to run in thread
 }
