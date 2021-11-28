@@ -13,7 +13,7 @@ public:
     LidarScannerSimImpl(DistanceSensorModel model, size_t points_per_scan);
     void updateLocation(common::Vector2 position, double heading);
 
-    Scan read() override;
+    Scan getLatestScan() override;
 
 private:
     DistanceSensorModel sensor_model;
