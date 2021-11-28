@@ -14,9 +14,8 @@ void GradientPotentialMap::updateGoal(common::Vector2 updatedGoal) {
     goal = updatedGoal;
 }
 
-void GradientPotentialMap::updateLidar(std::array<double, SamplesPerRevolution> updated_lidar_scan, double scan_start_heading) {
+void GradientPotentialMap::updateLidarScan(hal::LidarScanner::Scan updated_lidar_scan) {
     lidar_scan = updated_lidar_scan;
-    lidar_start_heading = scan_start_heading;
 }
 
 common::Vector2 GradientPotentialMap::getAttractivePotential(common::Vector2 position) {
@@ -26,9 +25,8 @@ common::Vector2 GradientPotentialMap::getAttractivePotential(common::Vector2 pos
 common::Vector2 GradientPotentialMap::getRepulsivePotential() {
     common::Vector2 gradient = common::Vector2(0.0, 0.0);
 
-    for (std::size_t i = 0; i < SamplesPerRevolution; i++) {
-        double d = lidar_scan[i];
-        if (d <= qStar) {
+    for (auto&& point : *lidar_scan) {
+        if (point.distance <= qStar) {
             // negate since we want potential to repel from obstacles
             double magnitude = -repulsiveGradientScale*(1.0/d - 1/qStar)/(d*d);
             double angle = lidar_start_heading + 2*PI*i/double(SamplesPerRevolution);

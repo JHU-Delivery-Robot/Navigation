@@ -10,13 +10,14 @@ namespace sim
 
 class LidarScannerSimImpl final : public hal::LidarScanner {
 public:
-    LidarScannerSimImpl(DistanceSensorModel model);
+    LidarScannerSimImpl(DistanceSensorModel model, size_t points_per_scan);
     void updateLocation(common::Vector2 position, double heading);
 
-    std::array<double, SamplesPerRevolution> read() override;
+    Scan read() override;
 
 private:
     DistanceSensorModel sensor_model;
+    size_t points_per_scan;
 
     common::Vector2 position;
     double heading;

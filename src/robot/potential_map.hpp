@@ -11,7 +11,7 @@
 #include <array>
 
 #include "vector2.hpp"
-//#include "lidar_scanner.hpp"
+#include "lidar_scanner.hpp"
 
 constexpr int SamplesPerRevolution = 720;
 
@@ -22,7 +22,7 @@ public:
     GradientPotentialMap(double qStar, double attractiveGradientScale, double repulsiveGradientScale, common::Vector2 goal);
 
     void updateGoal(common::Vector2 goal);
-    void updateLidar(std::array<double, SamplesPerRevolution> lidar_scan, double scan_start_heading);
+    void updateLidarScan(hal::LidarScanner::Scan updated_lidar_scan);
 
     common::Vector2 getAttractivePotential(common::Vector2 position);
     common::Vector2 getRepulsivePotential();
@@ -39,10 +39,9 @@ private:
 
     common::Vector2 goal;
 
-    double lidar_start_heading;
-    std::array<double, SamplesPerRevolution> lidar_scan;
+    hal::LidarScanner::Scan lidar_scan;
 };
 
-}
+}  // namespace robot
 
 #endif

@@ -170,7 +170,7 @@ GPSSimImpl* HALProviderSimImpl::gps() {
 HALProviderSimImpl::HALProviderSimImpl(std::vector<Polygon> obstacles)
     : lidar_beam_model(0.0, 0.0, lidar_max_range, 0.0, 0.0),
       obstacle_map(obstacles),
-      lidar_impl(DistanceSensorModel(&obstacle_map, lidar_beam_model, lidar_max_range)),
+      lidar_impl(DistanceSensorModel(&obstacle_map, lidar_beam_model, lidar_max_range), 1000),
       cliff_sensors(&obstacle_map),
       wheel_sensors(&obstacle_map),
       ultrasonic_sensors(&obstacle_map),
