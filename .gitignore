@@ -2,6 +2,30 @@
 /subprojects/*
 !/subprojects/*.wrap
 
+# project specific config
+# ignore all build files
+build/
+.cache/
+
+# IDE stuff
+.vscode/
+.devcontainer
+compile_commands.json
+.idea/
+.vs/
+
+# executables
+robosim
+roboctrl
+simtests
+
+# coverage stuff
+*.gcno
+*.gcda
+coverage.json
+cov-report
+
+
 # Created by https://www.toptal.com/developers/gitignore/api/linux,windows,macos,c
 # Edit at https://www.toptal.com/developers/gitignore?templates=linux,windows,macos,c
 
@@ -129,22 +153,3 @@ $RECYCLE.BIN/
 *.lnk
 
 # End of https://www.toptal.com/developers/gitignore/api/linux,windows,macos,c
-
-# project specific config
-# ignore all build files
-build/
-.cache/
-# IDE stuff
-.vscode/
-.devcontainer
-compile_commands.json
-.idea/
-# executables
-robosim
-roboctrl
-simtests
-# coverage stuff
-*.gcno
-*.gcda
-coverage.json
-cov-report
