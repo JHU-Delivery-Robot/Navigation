@@ -12,7 +12,7 @@ void LidarScannerSimImpl::updateLocation(common::Vector2 position, double headin
     this->heading = heading;
 }
 
-LidarScannerSimImpl::Scan LidarScannerSimImpl::read() {
+LidarScannerSimImpl::Scan LidarScannerSimImpl::getLatestScan() {
     Scan data = std::make_shared<std::vector<SamplePoint>>();
 
     for (std::size_t i = 0; i < points_per_scan; i++) {

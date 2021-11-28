@@ -26,7 +26,7 @@ public:
 
     virtual ~LidarScanner() {}
 
-    virtual Scan read() = 0;
+    virtual Scan getLatestScan() = 0;
 };
 
 }  // namespace hal

@@ -8,9 +8,8 @@ robot_lib = static_library(
     include_directories : [common_includes, hal_includes],
 )
 
-
 executable(
     'robot', src + [ 'main.cpp' ],
-    link_with : [common_lib],
-    include_directories : [common_includes, hal_includes]
+    link_with : [common_lib, hal_impl_lib],
+    include_directories : [common_includes, hal_includes, hal_impl_includes]
 )
