@@ -1,6 +1,7 @@
 # Meson Wrap subprojects
 /subprojects/*
 !/subprojects/*.wrap
+!/subprojects/packagefiles/
 
 # project specific config
 # ignore all build files
