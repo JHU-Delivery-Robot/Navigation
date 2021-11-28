@@ -1,7 +1,5 @@
 #include "lidar_scanner_sim_impl.hpp"
 
-//#include <iostream>
-
 #include "common.hpp"
 
 namespace sim {
@@ -17,7 +15,7 @@ void LidarScannerSimImpl::updateLocation(common::Vector2 position, double headin
 std::array<double, LidarScannerSimImpl::SamplesPerRevolution> LidarScannerSimImpl::read() {
     std::array<double, LidarScannerSimImpl::SamplesPerRevolution> data;
 
-    for (size_t i = 0; i < SamplesPerRevolution; i++) {
+    for (std::size_t i = 0; i < SamplesPerRevolution; i++) {
         common::Vector2 direction = common::Vector2::polar(heading + 2 * PI * i / double(SamplesPerRevolution), 1.0);
         data[i] = sensor_model.sample(position, direction);
     }

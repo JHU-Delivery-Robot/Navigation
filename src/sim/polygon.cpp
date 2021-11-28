@@ -5,7 +5,7 @@
 namespace sim {
 
 Polygon::Polygon(std::vector<common::Vector2> points) : points(points) {
-    for (size_t i = 0; i < points.size(); i++) {
+    for (std::size_t i = 0; i < points.size(); i++) {
         common::Vector2 start = points[i];
         common::Vector2 end = (i < points.size() - 1) ? points[i + 1] : points[0];  // wrap around to close polygon
 
@@ -15,7 +15,7 @@ Polygon::Polygon(std::vector<common::Vector2> points) : points(points) {
 }
 
 // intersection of ray starting at p going in direction q with specified polygon side
-std::tuple<bool, double> Polygon::intersect(common::Vector2 p, common::Vector2 q, size_t side) const {
+std::tuple<bool, double> Polygon::intersect(common::Vector2 p, common::Vector2 q, std::size_t side) const {
     common::Vector2 r = points[side];
     common::Vector2 s = deltas[side];
 
@@ -45,7 +45,7 @@ std::tuple<bool, double> Polygon::intersect(common::Vector2 position, common::Ve
     bool intersection_found = false;
     double shortest_distance = std::numeric_limits<double>::max();
 
-    for (size_t i = 0; i < points.size(); i++) {
+    for (std::size_t i = 0; i < points.size(); i++) {
         auto [intersected, distance] = intersect(position, direction, i);
 
         if (intersected && distance < shortest_distance) {
@@ -60,7 +60,7 @@ std::tuple<bool, double> Polygon::intersect(common::Vector2 position, common::Ve
 std::ostream &operator<<(std::ostream &output, const Polygon &polygon) {
     output << "[";
 
-    for (size_t i = 0; i < polygon.points.size(); i++) {
+    for (std::size_t i = 0; i < polygon.points.size(); i++) {
         output << "[" << polygon.points[i].x << ", " << polygon.points[i].y << "]";
         if (i < polygon.points.size() - 1) {
             output << ", ";
