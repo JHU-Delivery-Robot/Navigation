@@ -28,8 +28,8 @@ common::Vector2 parse_point(std::string s) {
 }
 
 sim::Polygon parse_polygon(std::string s) {
-    size_t last = 0;
-    size_t next = 0;
+    std::size_t last = 0;
+    std::size_t next = 0;
 
     std::vector<common::Vector2> points;
 
@@ -58,7 +58,7 @@ std::optional<Config> Config::load(const std::filesystem::path& config_file_path
 
     std::string line;
     while (std::getline(config_file, line)) {
-        size_t comma_index = line.find(',');
+        std::size_t comma_index = line.find(',');
         if (comma_index == std::string::npos) {
             continue;
         }

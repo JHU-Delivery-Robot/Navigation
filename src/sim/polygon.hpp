@@ -18,7 +18,7 @@ public:
     friend std::ostream &operator<<(std::ostream &output, const Polygon &polygon);
 
 private:
-    std::tuple<bool, double> intersect(common::Vector2 position, common::Vector2 direction, size_t side) const;
+    std::tuple<bool, double> intersect(common::Vector2 position, common::Vector2 direction, std::size_t side) const;
 
     std::vector<common::Vector2> points;  // points making up polygon
     std::vector<common::Vector2> deltas;  // vector from each point to the next

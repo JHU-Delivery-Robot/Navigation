@@ -14,7 +14,7 @@ void Recording::add_config(sim::Config config) {
 
     ss << "[";
 
-    for (size_t i = 0; i < config.obstacles.size(); i++) {
+    for (std::size_t i = 0; i < config.obstacles.size(); i++) {
         ss << config.obstacles[i];
 
         if (i < config.obstacles.size() - 1) {
@@ -37,7 +37,7 @@ std::string Recording::serialize_entries() {
     std::stringstream ss;
     ss << "[";
 
-    for (size_t i = 0; i < replay_entries.size(); i++) {
+    for (std::size_t i = 0; i < replay_entries.size(); i++) {
         const auto& [robot_position, robot_angle, motor_speed, attractive_gradient, repulsive_gradient] = replay_entries[i];
 
         ss << "[" << robot_position.x << ", " << robot_position.y << ", " << robot_angle << ", "

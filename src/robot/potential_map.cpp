@@ -1,5 +1,7 @@
 #include "potential_map.hpp"
 
+#include <cstddef>
+
 #include "util.hpp"
 #include "vector2.hpp"
 
@@ -24,8 +26,7 @@ common::Vector2 GradientPotentialMap::getAttractivePotential(common::Vector2 pos
 common::Vector2 GradientPotentialMap::getRepulsivePotential() {
     common::Vector2 gradient = common::Vector2(0.0, 0.0);
 
-    for (size_t i = 0; i < SamplesPerRevolution; i++)
-    {
+    for (std::size_t i = 0; i < SamplesPerRevolution; i++) {
         double d = lidar_scan[i];
         if (d <= qStar) {
             // negate since we want potential to repel from obstacles
@@ -43,4 +44,4 @@ common::Vector2 GradientPotentialMap::getGradient(common::Vector2 position) {
     return getAttractivePotential(position) + getRepulsivePotential();
 }
 
-}
+}  // namespace robot
