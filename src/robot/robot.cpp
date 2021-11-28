@@ -23,7 +23,7 @@ void Robot::update() {
     auto [position, heading] = drivetrain.getPose();
 
     auto lidar_scan = hal->lidar()->read();
-    potential_map.updateLidar(lidar_scan, heading);
+    potential_map.updateLidarScan(lidar_scan);
 
     common::Vector2 gradient = potential_map.getGradient(position + common::Vector2::polar(heading, 0.5 * drivetrain.length));
 

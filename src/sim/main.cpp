@@ -57,7 +57,7 @@ int main(int argc, char* argv[]) {
 
         auto [initial_position, initial_heading] = physics.getPose();
 
-        potential_map_parallel_copy.updateLidar(sim_hal.lidar()->read(), initial_heading);
+        potential_map_parallel_copy.updateLidarScan(sim_hal.lidar()->read());
         auto lidar_position = initial_position + common::Vector2::polar(initial_heading, 25);
         auto attractive_gradient = potential_map_parallel_copy.getAttractivePotential(lidar_position);
         auto repulsive_gradient = potential_map_parallel_copy.getRepulsivePotential();
