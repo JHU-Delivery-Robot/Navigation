@@ -19,11 +19,15 @@ private:
     hal::HALProvider* hal;
 
     static constexpr double waypoint_transition_threshold = 200;
+    static constexpr double q_star = 600;
+    static constexpr double potential_attractive_coefficient = 0.5;
+    static constexpr double potential_repulsive_coefficient = 1E5;
+
     std::vector<common::Vector2> waypoints;
     std::vector<common::Vector2>::iterator current_waypoint;
 
     Drivetrain drivetrain;
-    GradientPotentialMap potential_map;
+    PotentialMap potential_map;
 };
 
 }  // namespace robot
