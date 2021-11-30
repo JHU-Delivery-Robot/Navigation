@@ -6,7 +6,7 @@
 namespace robot {
 
 Drivetrain::Drivetrain(hal::HALProvider::MotorAssembly* motors, hal::Gyroscope* gyroscope)
-    : odometry(wheel_base_width, wheel_circumference), motors(motors), gyroscope(gyroscope) {}
+    : odometry(wheel_base_width), motors(motors), gyroscope(gyroscope) {}
 
 void Drivetrain::setCommand(common::Vector2 drive_command) {
     double l = 0.5 * length;

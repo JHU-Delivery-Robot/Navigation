@@ -18,12 +18,10 @@ public:
     void setPose(common::Vector2, double);
 
 private:
-    double estimate_angle_rotation(double time_delta);
-
     HALProviderSimImpl* sim_hal;
     common::DifferentialOdometry odometry;
 };
 
-}
+}  // namespace sim
 
 #endif
