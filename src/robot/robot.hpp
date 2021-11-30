@@ -3,6 +3,10 @@
 
 #include "common.hpp"
 #include "hal_provider.hpp"
+#include <vector>
+
+#include "drivetrain.hpp"
+#include "hal_provider.hpp"
 #include "potential_map.hpp"
 #include "speed_controller.hpp"
 
