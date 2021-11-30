@@ -1,12 +1,5 @@
-/**
- * JHU Deliverbot Navigation Group
- * Navigation simulation system
- * Potential maps - header file
- *
- * @clevitt16 (Github)
- */
-#ifndef POTENIAL_MAP_HPP
-#define POTENIAL_MAP_HPP
+#ifndef POTENTIAL_MAP_HPP
+#define POTENTIAL_MAP_HPP
 
 #include <array>
 
@@ -15,9 +8,20 @@
 
 namespace robot {
 
-class GradientPotentialMap {
+/**
+ * PotentialMap provides a navigational potential function. By constructing a function
+ * with high potential near obstacles, and decreasing potential near a target location,
+ * a robot can navigate by greedily following the negative of the gradient. Note that
+ * obstacles may create local minima which the robot could get stuck in. Higher-level
+ * route planning is needed to avoid this.
+ * 
+ * PotentialMap accounts for obstacles when calculating the gradient using a lidar scan
+ * of the robot's current surroundings. The lidar scan should be updated whenever a new
+ * scan is available.
+ */
+class PotentialMap {
 public:
-    GradientPotentialMap(double qStar, double attractiveGradientScale, double repulsiveGradientScale, common::Vector2 goal);
+    PotentialMap(double qStar, double attractive_coefficient, double repulsive_coefficient);
 
     void updateGoal(common::Vector2 goal);
     void updateLidarScan(hal::LidarScanner::Scan updated_lidar_scan);
@@ -31,9 +35,9 @@ public:
     common::Vector2 getGradient(common::Vector2 position);
 
 private:
-    double qStar;
-    double attractiveGradientScale;
-    double repulsiveGradientScale;
+    double q_star;
+    double attractive_coefficient;
+    double repulsive_coefficient;
 
     common::Vector2 goal;
 

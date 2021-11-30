@@ -11,7 +11,7 @@ namespace robot {
 Robot::Robot(hal::HALProvider* hal)
     : hal(hal),
       drivetrain(hal->motor_assembly(), hal->gyroscope()),
-      potential_map(600, 0.5, 1E5, std::get<0>(hal->gps()->location())) {
+      potential_map(q_star, potential_attractive_coefficient, potential_repulsive_coefficient) {
     auto [position, heading] = hal->gps()->location();
     drivetrain.setPose(position, heading);
     hal->motor_assembly()->reset_odometry();

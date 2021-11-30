@@ -229,22 +229,5 @@ function drawRobot(position) {
 
     ctx.translate(Math.cos(position[2]) * 25 * scale, -Math.sin(position[2]) * 25 * scale);
 
-    //// Attractive vector
-    //oldLineWidth = ctx.lineWidth;
-    //ctx.lineWidth = 2;
-    //ctx.strokeStyle = '#00dd44';
-    //ctx.beginPath();
-    //ctx.moveTo(0, 0);
-    //ctx.lineTo(position[5] * scale, -position[6] * scale);
-    //ctx.stroke();
-
-    //// Repulsive vector
-    //ctx.strokeStyle = '#dd4400';
-    //ctx.beginPath();
-    //ctx.moveTo(0, 0);
-    //ctx.lineTo(position[7] * scale, -position[8] * scale);
-    //ctx.stroke();
-    //ctx.lineWidth = oldLineWidth;
-
     ctx.restore();
 }
