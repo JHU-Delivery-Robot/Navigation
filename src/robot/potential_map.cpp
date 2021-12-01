@@ -6,10 +6,11 @@
 
 namespace robot {
 
-PotentialMap::PotentialMap(double q_star, double attractive_coefficient, double repulsive_coefficient)
+PotentialMap::PotentialMap(double q_star, double attractive_coefficient, double repulsive_coefficient, double threshold_distance)
     : q_star(q_star),
       attractive_coefficient(attractive_coefficient),
       repulsive_coefficient(repulsive_coefficient),
+      threshold_distance(threshold_distance),
       goal(0.0, 0.0) {}
 
 void PotentialMap::updateGoal(common::Vector2 updated_goal) {
@@ -21,7 +22,16 @@ void PotentialMap::updateLidarScan(hal::LidarScanner::Scan updated_lidar_scan) {
 }
 
 common::Vector2 PotentialMap::getAttractivePotential(common::Vector2 position) {
-    return attractive_coefficient * (goal - position);
+    auto delta = goal - position;
+    auto distance = delta.magnitude();
+
+    if (distance < threshold_distance) {
+        // Quadratic potential near goal
+        return attractive_coefficient * delta;
+    } else {
+        // Conical/linear potential away from goal
+        return threshold_distance * attractive_coefficient * delta * (1 / distance);
+    }
 }
 
 common::Vector2 PotentialMap::getRepulsivePotential() {

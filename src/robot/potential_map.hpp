@@ -21,7 +21,7 @@ namespace robot {
  */
 class PotentialMap {
 public:
-    PotentialMap(double qStar, double attractive_coefficient, double repulsive_coefficient);
+    PotentialMap(double qStar, double attractive_coefficient, double repulsive_coefficient, double threshold_distance);
 
     void updateGoal(common::Vector2 goal);
     void updateLidarScan(hal::LidarScanner::Scan updated_lidar_scan);
@@ -38,6 +38,7 @@ private:
     double q_star;
     double attractive_coefficient;
     double repulsive_coefficient;
+    double threshold_distance;
 
     common::Vector2 goal;
 
