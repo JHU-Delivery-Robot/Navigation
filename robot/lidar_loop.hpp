@@ -5,8 +5,8 @@
 
 class LidarLoop : public RobotLoop {
 public:
-    LidarLoop();
-    void loop() override;
+    LidarLoop(int interval);
+    void doWork() override;
 };
 
 #endif

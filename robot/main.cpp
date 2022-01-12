@@ -19,14 +19,17 @@ int main() {
     Vec2d position;
     double heading;
 
-    LidarLoop lidarLoop = LidarLoop();
+    LidarLoop lidarLoop = LidarLoop(20);
     MotorLoop motorLoop = MotorLoop(positions, wheelDiameter, nAngles, qStar, gradientScale,
-                                    goal, lidarData, position, heading);
+                                    goal, lidarData, position, heading, 20);
 
     std::thread lidarThread(&LidarLoop::loop, &lidarLoop);
     std::thread motorThread(&MotorLoop::loop, &motorLoop);
 
-    // TODO: while loop to get lidar data, position, and heading goes here
+    // TODO: while loop to get lidar data, position, heading, and goal goes here
+
+    lidarLoop.cancel();
+    motorLoop.cancel();
 
     lidarThread.join();
     motorThread.join();

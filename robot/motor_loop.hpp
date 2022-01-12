@@ -15,8 +15,8 @@ private:
 public:
     MotorLoop(MotorPositions positions, float wheelDiameter, int nAngles, int qStar,
               int gradientScale, Vec2d goal, uint16_t *lidarData, Vec2d &pos,
-              double &head);
-    void loop() override;
+              double &head, int interval);
+    void doWork() override;
 };
 
 #endif
