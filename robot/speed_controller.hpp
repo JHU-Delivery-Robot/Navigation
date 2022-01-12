@@ -7,14 +7,14 @@
 
 /**
  * Speed Controller the motor control loop uses to retrieve speed settings for
- * individual motors ont he update cadence.
+ * individual motors on the update cadence.
  */
 class SpeedController {
     /**
      * Update internal motor speed states using a target speed and angular
      * velocity.
      */
-    virtual void updateSpeed(Speed speed, AngVel angVel) = 0; //EDIT THIS TO GET CURRENT SPEED
+    virtual void updateSpeed(Vec2d position, double heading) = 0;
     /**
      * Get speed settings for all motors on the robot
      */
@@ -48,16 +48,16 @@ public:
     /**
      * Implementation of the updateSpeed method from the interface.
      *
-     * @param speed linear speed target in ???
-     * @para angVel angular speed target in ??
+     * @param position
+     * @para heading
      */
-    void updateSpeed(Vec2d position, double heading);
+    void updateSpeed(Vec2d position, double heading) override;
     /**
      * Implementation of the getSpeedSettings method from the interface.
      *
      * @return MotorSpeeds object containing speed setpoint for each motor
      */
-    hal::MotorSpeeds getSpeedSettings();
+    hal::MotorSpeeds getSpeedSettings() override;
 };
 
 #endif

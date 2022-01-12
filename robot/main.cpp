@@ -1,36 +1,36 @@
 #include <thread>
-#include <cstddef>
-#include "potential_map.hpp"
 #include "types.hpp"
-#include "robot_thread.hpp"
-#include "motor_thread.hpp"
-#include "lidar_thread.hpp"
+#include "motor_loop.hpp"
+#include "lidar_loop.hpp"
 
 
 int main() {
     // TODO: Initialize all data that will be used for the threads
     MotorPositions positions;
-    float wheelDiameter;
-    int nAngles;
-    int qStar;
-    int gradientScale;
+    float wheelDiameter = 0.0;
+    int nAngles = 1;
+    int qStar = 1;
+    int gradientScale = 1;
     Vec2d goal;
-    uint16_t *lidarData; // TODO: Implement the data type suggested in spec, refactor as needed
-    // TODO: Get these from Kalman filter
+
+    // TODO: Implement the data type suggested in spec, refactor as needed
+    uint16_t *lidarData;
+
+    // TODO: Get the following two from Kalman filter
     Vec2d position;
     double heading;
 
-    // TODO: Use the actual constructors and initialize all data that will be used for the threads
-    LidarThread liThread = LidarThread();
-    MotorThread moThread = MotorThread(positions, wheelDiameter, nAngles, qStar, gradientScale,
-                                       goal, lidarData, position, heading);
+    LidarLoop lidarLoop = LidarLoop();
+    MotorLoop motorLoop = MotorLoop(positions, wheelDiameter, nAngles, qStar, gradientScale,
+                                    goal, lidarData, position, heading);
 
-    // TODO: Update lidarData in a loop here? Maybe change lidarData type to specified?
-    // TODO: Update position with GPS Data in loop
-    // TODO: Update heading with Gyro Data in loop
+    std::thread lidarThread(&LidarLoop::loop, &lidarLoop);
+    std::thread motorThread(&MotorLoop::loop, &motorLoop);
 
-    liThread.stop_thread();
-    moThread.stop_thread();
+    // TODO: while loop to get lidar data, position, and heading goes here
+
+    lidarThread.join();
+    motorThread.join();
 
     return 0;
 }
