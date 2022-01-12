@@ -3,7 +3,6 @@
 #include "motor_loop.hpp"
 #include "lidar_loop.hpp"
 
-
 int main() {
     // TODO: Initialize all data that will be used for the threads
     MotorPositions positions;
