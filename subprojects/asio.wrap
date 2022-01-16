@@ -1,9 +1,9 @@
 [wrap-file]
-directory = asio-1.20.0
-source_url = https://sourceforge.net/projects/asio/files/asio/1.20.0%20%28Stable%29/asio-1.20.0.zip/download
-source_filename = asio-1.20.0.zip
-source_hash = c6c401ab08432efb681728ad0c7407eee08143192c15dc7f38c713e83cc1d9d2
-patch_directory = asio-1.20.0
+directory = asio-1.21.0
+source_url = https://sourceforge.net/projects/asio/files/asio/1.21.0%20%28Development%29/asio-1.21.0.zip/download
+source_filename = asio-1.21.0.zip
+source_hash = 87874120bb3d2efb24adf659149478b578c9a7b65004dc207503d5ce3c109cf2
+patch_directory = asio-1.21.0
 
 [provide]
 asio = asio_dep
