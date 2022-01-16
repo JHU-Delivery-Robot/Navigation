@@ -45,7 +45,7 @@ public:
     };
 
     class MotorAssembly {
-public:
+    public:
         virtual ~MotorAssembly(){};
 
         virtual Motor* front_left() = 0;

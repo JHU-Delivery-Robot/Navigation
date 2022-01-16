@@ -10,10 +10,8 @@
 
 #include <array>
 
-#include "vector2.hpp"
 #include "lidar_scanner.hpp"
-
-constexpr int SamplesPerRevolution = 720;
+#include "vector2.hpp"
 
 namespace robot {
 

@@ -17,7 +17,7 @@ void PhysicsSim::update(double time_delta) {
 
     double total_left_distance = 0.5 * (motors->front_left()->odometry_distance() + motors->back_left()->odometry_distance());
     double total_right_distance = 0.5 * (motors->front_right()->odometry_distance() + motors->back_right()->odometry_distance());
-    
+
     double delta_theta = odometry.estimateRotation(total_left_distance, total_right_distance);
     sim_hal->gyroscope()->updateHeading(delta_theta);
 
