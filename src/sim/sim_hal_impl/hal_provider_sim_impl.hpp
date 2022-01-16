@@ -9,7 +9,6 @@
 #include "gyroscope_sim_impl.hpp"
 #include "hal_provider.hpp"
 #include "infrared_sensor_sim_impl.hpp"
-#include "gyroscope_sim_impl.hpp"
 #include "lidar_scanner_sim_impl.hpp"
 #include "motor_sim_impl.hpp"
 #include "ultrasonic_sensor_sim_impl.hpp"
@@ -82,7 +81,7 @@ public:
     };
 
     class MotorAssembly final : public hal::HALProvider::MotorAssembly {
-public:
+    public:
         MotorAssembly();
 
         MotorSimImpl* front_left() override;
@@ -93,7 +92,7 @@ public:
         void update(double time_delta);
         void reset_odometry() override;
 
-private:
+    private:
         MotorSimImpl _front_left, _front_right, _back_left, _back_right;
     };
 
