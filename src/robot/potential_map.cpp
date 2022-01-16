@@ -8,7 +8,7 @@
 namespace robot {
 
 GradientPotentialMap::GradientPotentialMap(double qStar, double attractiveGradientScale, double repulsiveGradientScale, common::Vector2 goal)
-    : qStar(qStar), attractiveGradientScale(attractiveGradientScale), repulsiveGradientScale(repulsiveGradientScale), goal(goal) { }
+    : qStar(qStar), attractiveGradientScale(attractiveGradientScale), repulsiveGradientScale(repulsiveGradientScale), goal(goal) {}
 
 void GradientPotentialMap::updateGoal(common::Vector2 updatedGoal) {
     goal = updatedGoal;
@@ -28,10 +28,9 @@ common::Vector2 GradientPotentialMap::getRepulsivePotential() {
     for (auto&& point : *lidar_scan) {
         if (point.distance <= qStar) {
             // negate since we want potential to repel from obstacles
-            double magnitude = -repulsiveGradientScale*(1.0/d - 1/qStar)/(d*d);
-            double angle = lidar_start_heading + 2*PI*i/double(SamplesPerRevolution);
-
-            gradient += common::Vector2::polar(angle, magnitude);
+            double d = point.distance;
+            double magnitude = -repulsiveGradientScale * (1.0 / d - 1 / qStar) / (d * d);
+            gradient += common::Vector2::polar(point.angle, magnitude);
         }
     }
 
