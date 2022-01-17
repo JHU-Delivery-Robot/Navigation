@@ -2,7 +2,6 @@
 
 #include <cstddef>
 
-#include "util.hpp"
 #include "vector2.hpp"
 
 namespace robot {
