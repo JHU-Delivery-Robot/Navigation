@@ -25,7 +25,7 @@ void Drivetrain::setCommand(common::Vector2 drive_command) {
         right_speed = parallel_component;
     } else {
         double robot_path_radius = -l * (parallel_component / orthogonal_component);
-        double front_path_radius = std::copysign(sqrt(l * l + robot_path_radius * robot_path_radius), -orthogonal_component);
+        double front_path_radius = std::copysign(std::sqrt(l * l + robot_path_radius * robot_path_radius), -orthogonal_component);
 
         double left_radius = robot_path_radius - w;
         double right_radius = robot_path_radius + w;

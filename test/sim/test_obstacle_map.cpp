@@ -61,7 +61,7 @@ TEST_CASE("Obstacle Map Simple Intersections", "[ObstacleMap]")
 
     std::tie(obstacle_found, distance) = map.distanceToObstacle(Vector2(0.0, 0.0), Vector2::polar(0.2 * PI, 2.0));
     CHECK(obstacle_found);
-    CHECK(distance == Approx(sqrt(1 + tan(0.2 * PI) * tan(0.2 * PI))).epsilon(1e-6));
+    CHECK(distance == Approx(std::sqrt(1 + std::tan(0.2 * PI) * std::tan(0.2 * PI))).epsilon(1e-6));
 
     polygon = Polygon({Vector2(1.0, 1.0), Vector2(1.0, -1.0), Vector2(2.0, -1.0), Vector2(2.0, 1.0)});
     map = ObstacleMap({polygon});
@@ -72,5 +72,5 @@ TEST_CASE("Obstacle Map Simple Intersections", "[ObstacleMap]")
 
     std::tie(obstacle_found, distance) = map.distanceToObstacle(Vector2(0.0, 0.0), Vector2::polar(0.2 * PI, 2.0));
     CHECK(obstacle_found);
-    CHECK(distance == Approx(sqrt(1 + tan(0.2 * PI) * tan(0.2 * PI))).epsilon(1e-6));
+    CHECK(distance == Approx(std::sqrt(1 + std::tan(0.2 * PI) * std::tan(0.2 * PI))).epsilon(1e-6));
 }
