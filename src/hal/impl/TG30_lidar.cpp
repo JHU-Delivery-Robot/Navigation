@@ -375,7 +375,7 @@ void TG30Lidar::readScanPacket() {
             serial.cancel();
         };
 
-        auto read_handler = [&, header, sample_bytes_to_read](const asio::error_code& err, size_t) {
+        auto read_handler = [&, header](const asio::error_code& err, size_t) {
             if (err == asio::error::operation_aborted) {
                 return;
             } else if (err) {
