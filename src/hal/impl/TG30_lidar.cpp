@@ -1,6 +1,7 @@
 #include "TG30_lidar.hpp"
 
 #include <chrono>
+#include <cmath>
 #include <iomanip>
 #include <vector>
 
@@ -465,7 +466,7 @@ bool TG30Lidar::setScanFrequency(double scan_frequency) {
 
     std::optional<double> current_frequency = sendFrequencyCommand(query_scan_frequency);
 
-    while (current_frequency.has_value() && abs(current_frequency.value() - scan_frequency) > 0.05) {
+    while (current_frequency.has_value() && std::abs(current_frequency.value() - scan_frequency) > 0.05) {
         double delta = scan_frequency - current_frequency.value();
         if (delta >= 1.0) {
             current_frequency = sendFrequencyCommand(increase_scan_frequency_one);
