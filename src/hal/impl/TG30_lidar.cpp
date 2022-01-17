@@ -188,7 +188,7 @@ std::optional<std::vector<uint8_t>> TG30Lidar::sendRequest(RequestSpec request) 
         serial.cancel();
     };
 
-    auto read_handler = [&](const asio::error_code& err, std::size_t bytes_read) {
+    auto read_handler = [&](const asio::error_code& err, std::size_t) {
         if (err == asio::error::operation_aborted) {
             return;
         } else if (err) {
@@ -240,7 +240,7 @@ void TG30Lidar::syncPacketHeader(int max_sync_attempts, std::function<void(bool)
     // advance position
     packet_sync_bytes[1] = packet_sync_bytes[0];
 
-    auto read_handler = [&, max_sync_attempts, callback](const asio::error_code& err, std::size_t bytes_read) {
+    auto read_handler = [&, max_sync_attempts, callback](const asio::error_code& err, std::size_t) {
         if (err == asio::error::operation_aborted) {
             return;
         } else if (err) {
@@ -277,7 +277,7 @@ void TG30Lidar::scanHeader(std::function<void(std::optional<PacketHeader>)> call
         serial.cancel();
     };
 
-    auto read_handler = [&, callback](const asio::error_code& err, std::size_t bytes_read) {
+    auto read_handler = [&, callback](const asio::error_code& err, std::size_t) {
         if (err == asio::error::operation_aborted) {
             return;
         } else if (err) {
@@ -374,7 +374,7 @@ void TG30Lidar::readScanPacket() {
             serial.cancel();
         };
 
-        auto read_handler = [&, header, sample_bytes_to_read](const asio::error_code& err, size_t bytes_read) {
+        auto read_handler = [&, header, sample_bytes_to_read](const asio::error_code& err, size_t) {
             if (err == asio::error::operation_aborted) {
                 return;
             } else if (err) {
