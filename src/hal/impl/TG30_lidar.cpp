@@ -1,6 +1,7 @@
 #include "TG30_lidar.hpp"
 
 #include <chrono>
+#include <cmath>
 #include <iomanip>
 #include <vector>
 
@@ -188,7 +189,7 @@ std::optional<std::vector<uint8_t>> TG30Lidar::sendRequest(RequestSpec request) 
         serial.cancel();
     };
 
-    auto read_handler = [&](const asio::error_code& err, std::size_t bytes_read) {
+    auto read_handler = [&](const asio::error_code& err, std::size_t) {
         if (err == asio::error::operation_aborted) {
             return;
         } else if (err) {
@@ -240,7 +241,7 @@ void TG30Lidar::syncPacketHeader(int max_sync_attempts, std::function<void(bool)
     // advance position
     packet_sync_bytes[1] = packet_sync_bytes[0];
 
-    auto read_handler = [&, max_sync_attempts, callback](const asio::error_code& err, std::size_t bytes_read) {
+    auto read_handler = [&, max_sync_attempts, callback](const asio::error_code& err, std::size_t) {
         if (err == asio::error::operation_aborted) {
             return;
         } else if (err) {
@@ -277,7 +278,7 @@ void TG30Lidar::scanHeader(std::function<void(std::optional<PacketHeader>)> call
         serial.cancel();
     };
 
-    auto read_handler = [&, callback](const asio::error_code& err, std::size_t bytes_read) {
+    auto read_handler = [&, callback](const asio::error_code& err, std::size_t) {
         if (err == asio::error::operation_aborted) {
             return;
         } else if (err) {
@@ -374,7 +375,7 @@ void TG30Lidar::readScanPacket() {
             serial.cancel();
         };
 
-        auto read_handler = [&, header, sample_bytes_to_read](const asio::error_code& err, size_t bytes_read) {
+        auto read_handler = [&, header](const asio::error_code& err, size_t) {
             if (err == asio::error::operation_aborted) {
                 return;
             } else if (err) {
@@ -465,7 +466,7 @@ bool TG30Lidar::setScanFrequency(double scan_frequency) {
 
     std::optional<double> current_frequency = sendFrequencyCommand(query_scan_frequency);
 
-    while (current_frequency.has_value() && abs(current_frequency.value() - scan_frequency) > 0.05) {
+    while (current_frequency.has_value() && std::abs(current_frequency.value() - scan_frequency) > 0.05) {
         double delta = scan_frequency - current_frequency.value();
         if (delta >= 1.0) {
             current_frequency = sendFrequencyCommand(increase_scan_frequency_one);
