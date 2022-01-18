@@ -14,7 +14,7 @@ jobs:
         env:
           CC: gcc
           CXX: g++
-      - run: CXX=clang meson setup build_clang -Db_coverage=true
+      - run: meson setup build_clang -Db_coverage=true
         env:
           CC: clang
           CXX: clang++
