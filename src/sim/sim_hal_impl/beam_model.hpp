@@ -31,7 +31,6 @@ private:
     bool glitch();
 
     double std_dev;     /**< std deviation of the gaussian sensor dist. (accuracy) */
-    double lambda;      /**< parameter for an exponential dist. of short reading */
     double max_reading; /**< recip. prob for the unifgorm dist. used for glitches. This
                         is also the maximum possible reading */
     // probability weight of each of the 4 cases
