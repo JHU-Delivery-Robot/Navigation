@@ -3,7 +3,6 @@
 
 #include "hal_provider.hpp"
 #include "drivetrain.hpp"
-#include "hal_provider.hpp"
 #include "potential_map.hpp"
 
 namespace robot {

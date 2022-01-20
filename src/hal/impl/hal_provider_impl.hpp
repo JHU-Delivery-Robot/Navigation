@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <vector>
+#include <string>
 
 #include "common.hpp"
 #include "hal_provider.hpp"
@@ -14,6 +15,13 @@ namespace impl {
 
 class HALProviderImpl final : public HALProvider {
 public:
+    class LidarConfig {
+    public:
+        LidarConfig(std::string port, double scan_frequency);
+        std::string port;
+        double scan_frequency;
+    };
+
     class CliffInfraredAssembly final : public HALProvider::CliffInfraredAssembly {
     public:
         InfraredSensor* front() override;
@@ -50,11 +58,11 @@ public:
         void reset_odometry() override;
     };
 
-    HALProviderImpl();
+    HALProviderImpl(LidarConfig config);
 
     void initialize();
 
-    LidarScanner* lidar() override;
+    TG30Lidar* lidar() override;
     CliffInfraredAssembly* cliff_infrared() override;
     WheelInfraredAssembly* wheel_infrared() override;
     UltrasonicAssembly* ultrasonic() override;
@@ -63,6 +71,7 @@ public:
     GPS* gps() override;
 
 private:
+    LidarConfig config;
     TG30Lidar lidar_impl;
     CliffInfraredAssembly cliff_sensors;
     WheelInfraredAssembly wheel_sensors;

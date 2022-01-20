@@ -8,6 +8,9 @@ namespace hal {
 
 namespace impl {
 
+HALProviderImpl::LidarConfig::LidarConfig(std::string port, double scan_frequency)
+    : port(port), scan_frequency(scan_frequency) {}
+
 InfraredSensor* HALProviderImpl::CliffInfraredAssembly::front() {
     return nullptr;
 }
@@ -76,7 +79,7 @@ Motor* HALProviderImpl::MotorAssembly::back_right() {
 
 void HALProviderImpl::MotorAssembly::reset_odometry() {}
 
-LidarScanner* HALProviderImpl::lidar() {
+TG30Lidar* HALProviderImpl::lidar() {
     return &lidar_impl;
 }
 
@@ -104,14 +107,12 @@ GPS* HALProviderImpl::gps() {
     return nullptr;
 }
 
-HALProviderImpl::HALProviderImpl() {}
+HALProviderImpl::HALProviderImpl(LidarConfig config) : config(config) {}
 
 void HALProviderImpl::initialize() {
-    // Need to setup config that holds port details, etc.
-    static const std::string lidar_port = "COM3";
-
-    lidar_impl.initialize(lidar_port);
-    lidar_impl.setScanFrequency(12.0);
+    // TODO: Need to setup config that holds port details, etc.
+    lidar_impl.initialize(config.port);
+    lidar_impl.setScanFrequency(config.scan_frequency);
 }
 
 }  // namespace impl
