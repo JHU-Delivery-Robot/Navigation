@@ -9,7 +9,11 @@ project(
     ]
 )
 
-asio = dependency('asio')
+# Meson will find correct threading library (i.e. pthreads or W32)
+thread_dep = dependency('threads')
+
+# External dependencies
+asio_dep = dependency('asio')
 catch2_dep = dependency('catch2')
 
 subdir('src')

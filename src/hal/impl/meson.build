@@ -9,5 +9,5 @@ hal_impl_lib = static_library(
     'hal_impl_lib', src,
     link_with : common_lib,
     include_directories : [common_includes, hal_includes],
-    dependencies: asio,
+    dependencies: asio_dep,
 )
