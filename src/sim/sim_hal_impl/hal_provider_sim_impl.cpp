@@ -176,4 +176,13 @@ HALProviderSimImpl::HALProviderSimImpl(std::vector<Polygon> obstacles)
       ultrasonic_sensors(&obstacle_map),
       motors() {}
 
+void HALProviderSimImpl::updatePose(common::Vector2 position, double heading) {
+    gyroscope_impl.setHeading(heading);
+    gps_impl.updateLocation(position, heading);
+    lidar_impl.updateLocation(position, heading);
+    cliff_sensors.updateLocation(position, heading);
+    wheel_sensors.updateLocation(position, heading);
+    ultrasonic_sensors.updateLocation(position, heading);
+}
+
 }  // namespace sim

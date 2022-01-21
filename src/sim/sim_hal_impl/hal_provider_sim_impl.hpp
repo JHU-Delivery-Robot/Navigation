@@ -106,6 +106,8 @@ public:
     GyroscopeSimImpl* gyroscope() override;
     GPSSimImpl* gps() override;
 
+    void updatePose(common::Vector2 position, double heading);
+
 private:
     static constexpr double lidar_max_range = 600;
     BeamModel lidar_beam_model;

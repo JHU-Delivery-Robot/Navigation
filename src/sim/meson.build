@@ -1,17 +1,16 @@
 sim_includes = include_directories('.')
+sim_src = files([
+    'obstacle_map.cpp',
+    'physics_sim.cpp', 
+    'polygon.cpp',
+    'config.cpp',
+    'recording.cpp',
+])
 
 subdir('sim_hal_impl')
 
-src = [ 'obstacle_map.cpp', 'physics_sim.cpp', 'polygon.cpp' ]
-
-sim_lib = static_library(
-    'sim_lib', src + common_src,
-    link_with : [ sim_hal_impl_lib, robot_lib ],
-    include_directories : [common_includes, hal_includes, robot_includes, sim_hal_impl_includes],
-)
-
 executable(
-    'sim', src + common_src + [ 'main.cpp', 'config.cpp', 'recording.cpp' ],
-    link_with : [ sim_hal_impl_lib, robot_lib ],
-    include_directories : [ common_includes, hal_includes, robot_includes, sim_hal_impl_includes ],
+    'sim', sim_src + common_src + robot_src + [ 'main.cpp' ],
+    include_directories : [ common_includes, hal_includes, robot_includes ],
+    dependencies: [ sim_hal_impl_dep ]
 )

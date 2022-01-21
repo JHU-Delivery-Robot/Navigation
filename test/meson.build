@@ -4,9 +4,8 @@ subdir('common')
 subdir('sim')
 
 tests = executable(
-    'tests', all_test_src + common_src,
-    include_directories: [ common_includes, sim_includes ],
-    link_with: [ sim_lib ],
+    'tests', all_test_src + common_src + sim_src,
+    include_directories: [ common_includes, hal_includes, robot_includes, sim_includes ],
     dependencies: catch2_dep
 )
 

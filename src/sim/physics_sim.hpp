@@ -4,21 +4,21 @@
 #include <tuple>
 
 #include "differential_odometry.hpp"
-#include "hal_provider_sim_impl.hpp"
+#include "hal_provider.hpp"
 #include "vector2.hpp"
 
 namespace sim {
 
 class PhysicsSim {
 public:
-    PhysicsSim(HALProviderSimImpl* sim_hal);
-    void update(double time_delta);
+    PhysicsSim(hal::HALProvider* hal);
+    void update();
 
     std::tuple<common::Vector2, double> getPose();
     void setPose(common::Vector2, double);
 
 private:
-    HALProviderSimImpl* sim_hal;
+    hal::HALProvider* hal;
     common::DifferentialOdometry odometry;
 };
 

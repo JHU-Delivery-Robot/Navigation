@@ -37,10 +37,11 @@ int main(int argc, char* argv[]) {
     sim::HALProviderSimImpl sim_hal(config.obstacles);
     sim::PhysicsSim physics = sim::PhysicsSim(&sim_hal);
 
-    physics.setPose(config.start_position, config.start_angle);
-
     // Initialize physics
-    physics.update(0.0);
+    physics.setPose(config.start_position, config.start_angle);
+    sim_hal.updatePose(config.start_position, config.start_angle);
+    sim_hal.motor_assembly()->reset_odometry();
+    physics.update();
 
     robot::Robot robot = robot::Robot(&sim_hal);
     robot.updateGoal(config.goal_position);
@@ -62,9 +63,11 @@ int main(int argc, char* argv[]) {
         auto attractive_gradient = potential_map_parallel_copy.getAttractivePotential(lidar_position);
         auto repulsive_gradient = potential_map_parallel_copy.getRepulsivePotential();
 
-        physics.update(config.time_step);
-
+        sim_hal.motor_assembly()->update(config.time_step);
+        physics.update();
         auto [position, heading] = physics.getPose();
+        sim_hal.updatePose(position, heading);
+
         double distance_to_goal = (position - config.goal_position).magnitude();
 
         if (distance_to_goal <= config.end_distance) {
