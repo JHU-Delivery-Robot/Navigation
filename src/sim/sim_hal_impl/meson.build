@@ -13,7 +13,6 @@ src = [
 sim_hal_impl_includes = include_directories('.')
 
 sim_hal_impl_lib = static_library(
-    'sim_hal_impl_lib', src,
-    link_with : common_lib,
-    include_directories : [common_includes, hal_includes, sim_includes],
+    'sim_hal_impl_lib', src + common_src,
+    include_directories : [ common_includes, hal_includes, sim_includes ],
 )
