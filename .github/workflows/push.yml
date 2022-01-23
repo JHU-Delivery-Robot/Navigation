@@ -11,7 +11,15 @@ jobs:
       - run: pip3 install --user meson
       - uses: actions/checkout@v2
       - run: meson setup build -Db_coverage=true
+        env:
+          CC: gcc
+          CXX: g++
+      - run: meson setup build_clang -Db_coverage=true
+        env:
+          CC: clang
+          CXX: clang++
       - run: meson compile -C build
+      - run: meson compile -C build_clang
       - run: ./build/test/tests
       - run: ninja coverage-xml -C build # `meson coverage` doesn't work
       - uses: codecov/codecov-action@v2
