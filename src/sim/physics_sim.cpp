@@ -2,13 +2,13 @@
 
 #include <cmath>
 
-#include "drivetrain.hpp"
+#include "robot.hpp"
 
 namespace sim {
 
 PhysicsSim::PhysicsSim(hal::HALProvider *hal)
     : hal(hal),
-      odometry(robot::Drivetrain::wheel_base_width) {}
+      odometry(robot::Robot::wheel_base_width) {}
 
 void PhysicsSim::update() {
     hal::HALProvider::MotorAssembly *motors = hal->motor_assembly();

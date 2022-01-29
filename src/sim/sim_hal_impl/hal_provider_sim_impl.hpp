@@ -5,12 +5,12 @@
 #include <vector>
 
 #include "common.hpp"
-#include "gps_sim_impl.hpp"
 #include "gyroscope_sim_impl.hpp"
 #include "hal_provider.hpp"
 #include "infrared_sensor_sim_impl.hpp"
 #include "lidar_scanner_sim_impl.hpp"
 #include "motor_sim_impl.hpp"
+#include "positioning_sim_impl.hpp"
 #include "ultrasonic_sensor_sim_impl.hpp"
 
 namespace sim {
@@ -104,7 +104,7 @@ public:
     UltrasonicAssembly* ultrasonic() override;
     MotorAssembly* motor_assembly() override;
     GyroscopeSimImpl* gyroscope() override;
-    GPSSimImpl* gps() override;
+    PositioningSimImpl* positioning() override;
 
     void updatePose(common::Vector2 position, double heading);
 
@@ -120,7 +120,7 @@ private:
     UltrasonicAssembly ultrasonic_sensors;
     MotorAssembly motors;
     GyroscopeSimImpl gyroscope_impl;
-    GPSSimImpl gps_impl;
+    PositioningSimImpl positioning_impl;
 };
 
 }  // namespace sim

@@ -1,7 +1,6 @@
 #include "robot.hpp"
 
-#include <iostream>
-#include <iterator>
+#include <cmath>
 
 #include "common.hpp"
 #include "vector2.hpp"
@@ -10,10 +9,8 @@ namespace robot {
 
 Robot::Robot(hal::HALProvider* hal)
     : hal(hal),
-      drivetrain(hal->motor_assembly(), hal->gyroscope()),
-      potential_map(q_star, potential_attractive_coefficient, potential_repulsive_coefficient, waypoint_transition_threshold) {
-    auto [position, heading] = hal->gps()->location();
-    drivetrain.setPose(position, heading);
+      potential_map(6, 0.0008, 1E2, std::get<0>(hal->positioning()->getPose())),
+      speed_controller(getWheelPositions(), 2 * wheel_radius, 2.0, hal) {
     hal->motor_assembly()->reset_odometry();
 }
 
@@ -24,9 +21,6 @@ void Robot::setWaypoints(std::vector<common::Vector2> waypoints) {
 }
 
 void Robot::update() {
-    drivetrain.updateOdometry();
-    auto [position, heading] = drivetrain.getPose();
-
     auto lidar_scan = hal->lidar()->getLatestScan();
     potential_map.updateLidarScan(lidar_scan);
 
@@ -39,13 +33,21 @@ void Robot::update() {
         }
     }
 
-    common::Vector2 gradient = potential_map.getGradient(position + common::Vector2::polar(heading, 0.5 * drivetrain.length));
+    common::Vector2 gradient = potential_map.getGradient(position + common::Vector2::polar(heading, 0.5 * length));
 
-    if (gradient.magnitude() >= 200.0) {
-        gradient = gradient * (200.0 / gradient.magnitude());
-    }
+    speed_controller.updateSpeed(gradient);
+}
 
-    drivetrain.setCommand(gradient);
+WheelPositions Robot::getWheelPositions() {
+    double radius = std::sqrt(0.25 * length * length + 0.25 * wheel_base_width * wheel_base_width);
+    double theta = std::atan2(0.5 * length, 0.5 * wheel_base_width);
+
+    WheelPosition front_left(PI - theta, radius);
+    WheelPosition front_right(theta, radius);
+    WheelPosition back_left(PI + theta, radius);
+    WheelPosition back_right(2 * PI - theta, radius);
+
+    return WheelPositions(front_left, front_right, back_left, back_right);
 }
 
 }  // namespace robot

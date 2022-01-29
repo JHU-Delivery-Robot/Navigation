@@ -3,7 +3,7 @@
 
 #include <memory>
 
-#include "gps.hpp"
+#include "positioning.hpp"
 #include "gyroscope.hpp"
 #include "infrared_sensor.hpp"
 #include "lidar_scanner.hpp"
@@ -64,7 +64,7 @@ public:
     virtual UltrasonicAssembly* ultrasonic() = 0;
     virtual MotorAssembly* motor_assembly() = 0;
     virtual Gyroscope* gyroscope() = 0;
-    virtual GPS* gps() = 0;
+    virtual Positioning* positioning() = 0;
 };
 
 }  // namespace hal

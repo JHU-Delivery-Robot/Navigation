@@ -163,8 +163,8 @@ GyroscopeSimImpl* HALProviderSimImpl::gyroscope() {
     return &gyroscope_impl;
 }
 
-GPSSimImpl* HALProviderSimImpl::gps() {
-    return &gps_impl;
+PositioningSimImpl* HALProviderSimImpl::positioning() {
+    return &positioning_impl;
 }
 
 HALProviderSimImpl::HALProviderSimImpl(std::vector<Polygon> obstacles)
@@ -178,7 +178,7 @@ HALProviderSimImpl::HALProviderSimImpl(std::vector<Polygon> obstacles)
 
 void HALProviderSimImpl::updatePose(common::Vector2 position, double heading) {
     gyroscope_impl.setHeading(heading);
-    gps_impl.updateLocation(position, heading);
+    positioning_impl.updateLocation(position, heading);
     lidar_impl.updateLocation(position, heading);
     cliff_sensors.updateLocation(position, heading);
     wheel_sensors.updateLocation(position, heading);
