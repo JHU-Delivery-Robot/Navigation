@@ -68,7 +68,7 @@ public:
     UltrasonicAssembly* ultrasonic() override;
     MotorAssembly* motor_assembly() override;
     Gyroscope* gyroscope() override;
-    GPS* gps() override;
+    Positioning* positioning() override;
 
 private:
     LidarConfig config;

@@ -1,10 +1,10 @@
 #ifndef ROBOT_HPP
 #define ROBOT_HPP
 
-#include <vector>
-
-#include "drivetrain.hpp"
+#include "common.hpp"
+#include "hal_provider.hpp"
 #include "potential_map.hpp"
+#include "speed_controller.hpp"
 
 namespace robot {
 
@@ -14,6 +14,12 @@ public:
 
     void setWaypoints(std::vector<common::Vector2> waypoints);
     void update();
+
+    // all in meters
+    static constexpr double wheel_base_width = 0.40;
+    static constexpr double length = 0.50;
+    static constexpr double wheel_radius = 0.08;
+    static constexpr double wheel_circumference = 2 * PI * wheel_radius;
 
 private:
     hal::HALProvider* hal;
@@ -26,8 +32,10 @@ private:
     std::vector<common::Vector2> waypoints;
     std::vector<common::Vector2>::iterator current_waypoint;
 
-    Drivetrain drivetrain;
-    PotentialMap potential_map;
+    GradientPotentialMap potential_map;
+    SpeedController speed_controller;
+
+    static WheelPositions getWheelPositions();
 };
 
 }  // namespace robot

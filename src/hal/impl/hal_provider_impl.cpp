@@ -103,7 +103,7 @@ Gyroscope* HALProviderImpl::gyroscope() {
     return nullptr;
 }
 
-GPS* HALProviderImpl::gps() {
+Positioning* HALProviderImpl::positioning() {
     return nullptr;
 }
 
