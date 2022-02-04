@@ -51,4 +51,8 @@ Vector2 operator*(double scalar, const Vector2& rhs) {
     return Vector2(rhs.x * scalar, rhs.y * scalar);
 }
 
+std::ostream& operator<<(std::ostream& output, const Vector2& vector) {
+    return output << "(" << vector.x << ", " << vector.y << ")";
+}
+
 }  // namespace common
