@@ -1,6 +1,8 @@
 #ifndef VECTOR_2_HPP
 #define VECTOR_2_HPP
 
+#include <iostream>
+
 namespace common {
 
 class Vector2 {
@@ -22,6 +24,8 @@ public:
 
     friend Vector2 operator*(const Vector2& lhs, double scalar);
     friend Vector2 operator*(double scalar, const Vector2& rhs);
+
+    friend std::ostream& operator<<(std::ostream& output, const Vector2& vector);
 
     double x;
     double y;
