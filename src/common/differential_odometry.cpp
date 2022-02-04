@@ -1,7 +1,6 @@
 #include "differential_odometry.hpp"
 
 #include <cmath>
-#include <iostream>
 
 #include "common.hpp"
 

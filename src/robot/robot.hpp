@@ -20,7 +20,7 @@ public:
     void update();
 
     // all in meters
-    static constexpr double wheel_base_width = 0.40;
+    static constexpr double wheel_base_width = 0.20;
     static constexpr double length = 0.50;
     static constexpr double wheel_radius = 0.08;
     static constexpr double wheel_circumference = 2 * PI * wheel_radius;
@@ -28,10 +28,10 @@ public:
 private:
     hal::HALProvider* hal;
 
-    static constexpr double waypoint_transition_threshold = 200;
-    static constexpr double q_star = 600;
-    static constexpr double potential_attractive_coefficient = 0.5;
-    static constexpr double potential_repulsive_coefficient = 1E5;
+    static constexpr double waypoint_transition_threshold = 1;
+    static constexpr double q_star = 6;
+    static constexpr double potential_attractive_coefficient = 20.0;
+    static constexpr double potential_repulsive_coefficient = 0.01;
 
     std::vector<common::Vector2> waypoints;
     std::vector<common::Vector2>::iterator current_waypoint;

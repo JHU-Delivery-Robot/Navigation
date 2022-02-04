@@ -31,7 +31,7 @@ public:
     private:
         static DistanceSensorModel construct_sensor_model(ObstacleMap* obstacle_map);
 
-        static constexpr double max_range = 100;
+        static constexpr double max_range = 1;
         static constexpr double fov = PI / 6;
         static constexpr int samples = 5;
 
@@ -52,7 +52,7 @@ public:
     private:
         static DistanceSensorModel construct_sensor_model(ObstacleMap* obstacle_map);
 
-        static constexpr double max_range = 100;
+        static constexpr double max_range = 1;
         static constexpr double fov = PI / 6;
         static constexpr int samples = 5;
 
@@ -73,7 +73,7 @@ public:
     private:
         static DistanceSensorModel construct_sensor_model(ObstacleMap* obstacle_map);
 
-        static constexpr double max_range = 100;
+        static constexpr double max_range = 1;
         static constexpr double fov = PI / 6;
         static constexpr int samples = 5;
 
@@ -109,7 +109,7 @@ public:
     void updatePose(common::Vector2 position, double heading);
 
 private:
-    static constexpr double lidar_max_range = 600;
+    static constexpr double lidar_max_range = 20.0;
     BeamModel lidar_beam_model;
 
     ObstacleMap obstacle_map;

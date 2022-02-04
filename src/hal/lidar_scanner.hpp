@@ -19,7 +19,7 @@ public:
         double distance;
         double angle;
 
-        SamplePoint(uint16_t distance, double angle) : distance(distance), angle(angle) {}
+        SamplePoint(double distance, double angle) : distance(distance), angle(angle) {}
     };
 
     using Scan = std::shared_ptr<std::vector<SamplePoint>>;

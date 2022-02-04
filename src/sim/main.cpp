@@ -72,7 +72,8 @@ int main(int argc, char* argv[]) {
         recording.add_entry(position, heading, motor_speed);
     }
 
-    recording.write("sim_output.json");
+    std::filesystem::path output_file_path = std::filesystem::path("sim_output.json");
+    recording.write(output_file_path);
 
-    std::cout << "Simulation finished successfully" << std::endl;
+    std::cout << "Simulation finished successfully, output written to " << output_file_path << std::endl;
 }

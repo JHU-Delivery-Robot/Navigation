@@ -1,6 +1,7 @@
 #include "robot.hpp"
 
 #include <cmath>
+#include <iterator>
 
 #include "common.hpp"
 #include "vector2.hpp"
@@ -9,7 +10,7 @@ namespace robot {
 
 Robot::Robot(hal::HALProvider* hal)
     : hal(hal),
-      potential_map(6, 0.0008, 1E2, std::get<0>(hal->positioning()->getPose())),
+      potential_map(q_star, potential_attractive_coefficient, potential_repulsive_coefficient, waypoint_transition_threshold),
       speed_controller(getWheelPositions(), 2 * wheel_radius, 2.0, hal) {
     hal->motor_assembly()->reset_odometry();
 }
@@ -23,6 +24,8 @@ void Robot::setWaypoints(std::vector<common::Vector2> waypoints) {
 void Robot::update() {
     auto lidar_scan = hal->lidar()->getLatestScan();
     potential_map.updateLidarScan(lidar_scan);
+
+    auto [position, heading] = hal->positioning()->getPose();
 
     // Once we are close enough to the current waypoint, set goal to the next waypoint
     if ((*current_waypoint - position).magnitude() < waypoint_transition_threshold) {
