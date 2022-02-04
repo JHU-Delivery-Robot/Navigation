@@ -27,7 +27,7 @@ common::Vector2 parse_point(std::string s) {
     return common::Vector2(x, y);
 }
 
-sim::Polygon parse_polygon(std::string s) {
+std::vector<common::Vector2> parse_point_list(std::string s) {
     std::size_t last = 0;
     std::size_t next = 0;
 
@@ -44,7 +44,7 @@ sim::Polygon parse_polygon(std::string s) {
         last = s.find(',', next) + 1;
     }
 
-    return sim::Polygon(points);
+    return points;
 }
 
 std::optional<Config> Config::load(const std::filesystem::path& config_file_path) {
@@ -78,10 +78,12 @@ std::optional<Config> Config::load(const std::filesystem::path& config_file_path
             config.start_angle = std::stod(value) * PI / 180.0;
         } else if (key == "start_position") {
             config.start_position = parse_point(value);
-        } else if (key == "goal_position") {
-            config.goal_position = parse_point(value);
+        } else if (key == "waypoints") {
+            config.waypoints = parse_point_list(value);
         } else if (key == "obstacles") {
-            config.obstacles.push_back(parse_polygon(value));
+            auto points = parse_point_list(value);
+            auto polygon = sim::Polygon(points);
+            config.obstacles.push_back(polygon);
         } else {
             std::cerr << "Unrecognized sim config key: " << key << std::endl;
             return {};

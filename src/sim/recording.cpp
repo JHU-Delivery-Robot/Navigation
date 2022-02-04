@@ -9,29 +9,41 @@ namespace sim {
 void Recording::add_config(sim::Config config) {
     data["size"] = std::to_string(config.map_size);
     data["time_step"] = std::to_string(config.time_step);
-    data["goal"] = "[" + std::to_string(config.goal_position.x) + ", " + std::to_string(config.goal_position.y) + "]";
 
-    std::stringstream ss;
+    std::stringstream waypoints_ss;
+    waypoints_ss << "[";
 
-    ss << "[";
+    for (std::size_t i = 0; i < config.waypoints.size(); i++) {
+        auto waypoint = config.waypoints[i];
+        waypoints_ss << "[" << std::to_string(waypoint.x) << ", " << std::to_string(waypoint.y) << "]";
 
-    for (std::size_t i = 0; i < config.obstacles.size(); i++) {
-        ss << config.obstacles[i];
-
-        if (i < config.obstacles.size() - 1) {
-            ss << ", ";
+        if (i < config.waypoints.size() - 1) {
+            waypoints_ss << ", ";
         }
     }
 
-    ss << "]";
-    data["obstacles"] = ss.str();
+    waypoints_ss << "]";
+    data["waypoints"] = waypoints_ss.str();
 
-    add_entry(config.start_position, config.start_angle, common::Vector2(0, 0), common::Vector2(0, 0), common::Vector2(0, 0));
+    std::stringstream obstacles_ss;
+    obstacles_ss << "[";
+
+    for (std::size_t i = 0; i < config.obstacles.size(); i++) {
+        obstacles_ss << config.obstacles[i];
+
+        if (i < config.obstacles.size() - 1) {
+            obstacles_ss << ", ";
+        }
+    }
+
+    obstacles_ss << "]";
+    data["obstacles"] = obstacles_ss.str();
+
+    add_entry(config.start_position, config.start_angle, common::Vector2(0, 0));
 }
 
-void Recording::add_entry(common::Vector2 robot_position, double robot_angle, common::Vector2 motor_speed,
-                          common::Vector2 attractive_gradient, common::Vector2 repulsive_gradient) {
-    replay_entries.push_back({robot_position, robot_angle, motor_speed, attractive_gradient, repulsive_gradient});
+void Recording::add_entry(common::Vector2 robot_position, double robot_angle, common::Vector2 motor_speed) {
+    replay_entries.push_back({robot_position, robot_angle, motor_speed});
 }
 
 std::string Recording::serialize_entries() {
@@ -39,12 +51,10 @@ std::string Recording::serialize_entries() {
     ss << "[";
 
     for (std::size_t i = 0; i < replay_entries.size(); i++) {
-        const auto& [robot_position, robot_angle, motor_speed, attractive_gradient, repulsive_gradient] = replay_entries[i];
+        const auto& [robot_position, robot_angle, motor_speed] = replay_entries[i];
 
         ss << "[" << robot_position.x << ", " << robot_position.y << ", " << robot_angle << ", "
-           << motor_speed.x << ", " << motor_speed.y << ", "
-           << attractive_gradient.x << ", " << attractive_gradient.y << ", "
-           << repulsive_gradient.x << ", " << repulsive_gradient.y << "]";
+           << motor_speed.x << ", " << motor_speed.y << "]";
 
         if (i < replay_entries.size() - 1) {
             ss << ", \n";
