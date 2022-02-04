@@ -6,7 +6,7 @@ const simulationFileSelector = document.getElementById('simulationFileSelector')
 let simRecording = {
     obstacles: [],
     positions: [],
-    goal: [0.0, 0.0],
+    waypoints: [],
     time_step: 0.1,
     size: 800,
 };
@@ -166,7 +166,7 @@ function pointY(point) {
 // Visualize current tick of replay
 function visualize() {
     drawObstacles();
-    drawGoal();
+    drawWaypoints();
 
     if (simRecording.positions[currentTimeIndex]) {
         drawRobot(simRecording.positions[currentTimeIndex]);
@@ -196,12 +196,15 @@ function drawObstacles() {
     });
 }
 
-function drawGoal() {
+function drawWaypoints() {
     let ctx = canvas.getContext('2d');
     ctx.fillStyle = '#aa0099';
-    ctx.beginPath();
-    ctx.arc(pointX(simRecording.goal), pointY(simRecording.goal), 5, 0, 2 * Math.PI, false);
-    ctx.fill();
+
+    simRecording.waypoints.forEach(waypoint => {
+        ctx.beginPath();
+        ctx.arc(pointX(waypoint), pointY(waypoint), 5, 0, 2 * Math.PI, false);
+        ctx.fill();
+    });
 }
 
 function drawRobot(position) {
@@ -226,22 +229,22 @@ function drawRobot(position) {
 
     ctx.translate(Math.cos(position[2]) * 25 * scale, -Math.sin(position[2]) * 25 * scale);
 
-    // Attractive vector
-    oldLineWidth = ctx.lineWidth;
-    ctx.lineWidth = 2;
-    ctx.strokeStyle = '#00dd44';
-    ctx.beginPath();
-    ctx.moveTo(0, 0);
-    ctx.lineTo(position[5] * scale, -position[6] * scale);
-    ctx.stroke();
+    //// Attractive vector
+    //oldLineWidth = ctx.lineWidth;
+    //ctx.lineWidth = 2;
+    //ctx.strokeStyle = '#00dd44';
+    //ctx.beginPath();
+    //ctx.moveTo(0, 0);
+    //ctx.lineTo(position[5] * scale, -position[6] * scale);
+    //ctx.stroke();
 
-    // Repulsive vector
-    ctx.strokeStyle = '#dd4400';
-    ctx.beginPath();
-    ctx.moveTo(0, 0);
-    ctx.lineTo(position[7] * scale, -position[8] * scale);
-    ctx.stroke();
-    ctx.lineWidth = oldLineWidth;
+    //// Repulsive vector
+    //ctx.strokeStyle = '#dd4400';
+    //ctx.beginPath();
+    //ctx.moveTo(0, 0);
+    //ctx.lineTo(position[7] * scale, -position[8] * scale);
+    //ctx.stroke();
+    //ctx.lineWidth = oldLineWidth;
 
     ctx.restore();
 }

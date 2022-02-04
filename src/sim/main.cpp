@@ -44,8 +44,7 @@ int main(int argc, char* argv[]) {
     physics.update();
 
     robot::Robot robot = robot::Robot(&sim_hal);
-    robot.updateGoal(config.goal_position);
-    robot::GradientPotentialMap potential_map_parallel_copy = robot::GradientPotentialMap(600, 0.08, 1E5, config.goal_position);
+    robot.setWaypoints(config.waypoints);
 
     sim::Recording recording;
     recording.add_config(config);
@@ -55,21 +54,13 @@ int main(int argc, char* argv[]) {
     int current_iteration = 0;
     while (current_iteration++ < config.iteration_limit) {
         robot.update();
-
-        auto [initial_position, initial_heading] = physics.getPose();
-
-        potential_map_parallel_copy.updateLidarScan(sim_hal.lidar()->getLatestScan());
-        auto lidar_position = initial_position + common::Vector2::polar(initial_heading, 25);
-        auto attractive_gradient = potential_map_parallel_copy.getAttractivePotential(lidar_position);
-        auto repulsive_gradient = potential_map_parallel_copy.getRepulsivePotential();
-
+        
         sim_hal.motor_assembly()->update(config.time_step);
         physics.update();
         auto [position, heading] = physics.getPose();
         sim_hal.updatePose(position, heading);
 
-        double distance_to_goal = (position - config.goal_position).magnitude();
-
+        double distance_to_goal = (position - config.waypoints[config.waypoints.size() - 1]).magnitude();
         if (distance_to_goal <= config.end_distance) {
             break;
         }
@@ -78,7 +69,7 @@ int main(int argc, char* argv[]) {
         double right_speed = 0.5 * (sim_hal.motor_assembly()->front_right()->get_speed() + sim_hal.motor_assembly()->back_right()->get_speed());
         common::Vector2 motor_speed = common::Vector2(left_speed, right_speed);
 
-        recording.add_entry(position, heading, motor_speed, attractive_gradient, repulsive_gradient);
+        recording.add_entry(position, heading, motor_speed);
     }
 
     recording.write("sim_output.json");

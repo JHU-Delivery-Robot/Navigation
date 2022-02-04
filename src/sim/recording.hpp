@@ -13,14 +13,13 @@ namespace sim {
 class Recording {
 public:
     void add_config(sim::Config config);
-    void add_entry(common::Vector2 robot_position, double robot_angle, common::Vector2 motor_speed,
-                   common::Vector2 attractive_gradient, common::Vector2 repulsive_gradient);
+    void add_entry(common::Vector2 robot_position, double robot_angle, common::Vector2 motor_speed);
 
     bool write(std::filesystem::path output_file_path);
 
 private:
     std::map<std::string, std::string> data;
-    std::vector<std::tuple<common::Vector2, double, common::Vector2, common::Vector2, common::Vector2>> replay_entries;
+    std::vector<std::tuple<common::Vector2, double, common::Vector2>> replay_entries;
 
     std::string serialize_entries();
 };
