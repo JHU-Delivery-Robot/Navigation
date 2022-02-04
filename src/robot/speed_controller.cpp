@@ -38,7 +38,7 @@ void SpeedController::updateSpeed(common::Vector2 gradient) {
         gradient = gradient * (max_speed / gradient.magnitude());
     }
 
-    double speed = 100 * gradient.dot(common::Vector2::polar(heading, 1.0));         // radial component of gradient
+    double speed = gradient.dot(common::Vector2::polar(heading, 1.0));               // radial component of gradient
     double ang_vel = gradient.dot(common::Vector2::polar(heading + 0.5 * PI, 1.0));  // tangential component of gradient
 
     motors->front_left()->set_speed(speed + angularToWheelFrequency(ang_vel, wheel_positions.front_l));
