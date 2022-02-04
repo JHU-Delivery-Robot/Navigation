@@ -37,7 +37,6 @@ void DifferentialOdometry::updateOdometry(double heading, double total_left_dist
     // Keep delta_angle in range [-PI, PI]
     if (std::abs(delta_angle) > PI) {
         delta_angle = copysign(2.0 * PI - std::abs(delta_angle), -delta_angle);
-        std::cout << delta_angle << std::endl;
     }
 
     if (std::abs(delta_angle) < 1e-4) {
@@ -51,7 +50,7 @@ void DifferentialOdometry::updateOdometry(double heading, double total_left_dist
 
     double radius = distance / delta_angle;
     double chord_angle = heading - delta_angle / 2.0;
-    double chord_length = std::abs(2.0 * radius * std::sin(delta_angle / 2.0));
+    double chord_length = 2.0 * radius * std::sin(delta_angle / 2.0);
 
     double delta_x = chord_length * std::cos(chord_angle);
     double delta_y = chord_length * std::sin(chord_angle);
