@@ -50,7 +50,10 @@ common::Vector2 PotentialMap::getRepulsivePotential() {
 }
 
 common::Vector2 PotentialMap::getGradient(common::Vector2 position) {
-    return getAttractivePotential(position) + getRepulsivePotential();
+    auto attractive = getAttractivePotential(position);
+    auto repulsive = getRepulsivePotential();
+
+    return attractive + repulsive;
 }
 
 }  // namespace robot

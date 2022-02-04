@@ -33,14 +33,14 @@ To use the simulation backend, run `/src/sim/sim` and pass it the path of a simu
 ```
 > ./src/sim/sim ../sim_config.csv
 ```
-from within a build directory. Points are given as `(x, y)`, e.g. `(20.5, -34.23)`. Units are all in centimeters or seconds unless otherwise specified. Config is in CSV format, so each line is just `key, value`. Units are implied, don't include them with the value. All config parameters are optional, defaults are noted below.
+from within a build directory. Points are given as `(x, y)`, e.g. `(20.5, -34.23)`. Units are all in meters or seconds unless otherwise specified. Config is in CSV format, so each line is just `key, value`. Units are implied, don't include them with the value. All config parameters are optional, defaults are noted below.
 
 Simulation config parameters:
-- `end_distance` &mdash; If the robot gets within this distance of the goal position, the simulation will end. Default is 20.0 cm.
+- `end_distance` &mdash; If the robot gets within this distance of the goal position, the simulation will end. Default is 0.2 m.
 - `time_step` &mdash; Increase in simulation time between iterations. Default is 0.02 s.
 - `iteration_limit` &mdash; Maximum iterations simulation will run for, must be an integer. Default is 3000.
-- `map_size` &mdash; Width/height of area that the replay frontend will display, centered on `(0,0)`. Must be an integer, default is 800 cm.
-- `start_position` &mdash; The position to start the robot at. Specified as a `point`, default is `(-300.0, -200.0)`.
+- `map_size` &mdash; Width/height of area that the replay frontend will display, centered on `(0,0)`. Must be an integer, default is 8 m.
+- `start_position` &mdash; The position to start the robot at. Specified as a `point`, default is `(-3.0, -2.0)`.
 - `start_angle` &mdash; Angle (measured counterclockwise from standard x-axis) to start robot at. Specified in degrees, default is 90.0&deg;.
-- `goal_position` &mdash; The goal position for robot to try to drive to. Specified as a `point`, default is `(350.0, 300.0)`.
+- `goal_position` &mdash; The goal position for robot to try to drive to. Specified as a `point`, default is `(3.5, 3.0)`.
 - `obstacles` &mdash; A polygonal obstacle, specified as a comma separated list of points all on the same line. This key can be specified multiple times to add multiple obstacles. Must specify at least three points, do not close (specify start point again at end). Default is no obstacles.

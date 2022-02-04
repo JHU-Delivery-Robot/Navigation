@@ -1,6 +1,7 @@
 #include "lidar_scanner_sim_impl.hpp"
 
 #include "common.hpp"
+#include "robot.hpp"
 
 namespace sim {
 
@@ -8,7 +9,7 @@ LidarScannerSimImpl::LidarScannerSimImpl(DistanceSensorModel model, size_t point
     : sensor_model(model), points_per_scan(points_per_scan), position(0.0, 0.0) {}
 
 void LidarScannerSimImpl::updateLocation(common::Vector2 position, double heading) {
-    this->position = position + common::Vector2::polar(heading, 25);
+    this->position = position + common::Vector2::polar(heading, 0.5 * robot::Robot::length);
     this->heading = heading;
 }
 

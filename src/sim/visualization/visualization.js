@@ -8,7 +8,7 @@ let simRecording = {
     positions: [],
     waypoints: [],
     time_step: 0.1,
-    size: 800,
+    size: 8,
 };
 
 let currentTimeIndex = 0;
@@ -222,12 +222,12 @@ function drawRobot(position) {
     ctx.rotate(-position[2]);
 
     // Body of robot
-    ctx.rect(-25 * scale, -10 * scale, 50 * scale, 20 * scale);
+    ctx.rect(-0.25 * scale, -0.1 * scale, 0.5 * scale, 0.2 * scale);
     ctx.stroke();
 
     ctx.restore();
 
-    ctx.translate(Math.cos(position[2]) * 25 * scale, -Math.sin(position[2]) * 25 * scale);
+    ctx.translate(Math.cos(position[2]) * 0.25 * scale, -Math.sin(position[2]) * 0.25 * scale);
 
     ctx.restore();
 }
