@@ -5,6 +5,8 @@
 #include <iomanip>
 #include <vector>
 
+#include "common.hpp"
+
 namespace hal {
 
 namespace impl {
@@ -339,6 +341,10 @@ void TG30Lidar::parseScanPacket(const PacketHeader& header) {
         if (distance == 0) {
             continue;
         }
+
+        // TG30 uses millimeters and degrees, we want meters and radians
+        distance = distance / 1000.0;
+        angle = PI * angle / 180.0;
 
         in_progress_scan->push_back(SamplePoint(distance, angle));
     }
