@@ -1,11 +1,9 @@
 #ifndef ROBOT_HPP
 #define ROBOT_HPP
 
-#include "common.hpp"
-#include "hal_provider.hpp"
 #include <vector>
 
-#include "drivetrain.hpp"
+#include "common.hpp"
 #include "hal_provider.hpp"
 #include "potential_map.hpp"
 #include "speed_controller.hpp"
@@ -31,12 +29,12 @@ private:
     static constexpr double waypoint_transition_threshold = 1;
     static constexpr double q_star = 6;
     static constexpr double potential_attractive_coefficient = 20.0;
-    static constexpr double potential_repulsive_coefficient = 0.01;
+    static constexpr double potential_repulsive_coefficient = 0.02;
 
     std::vector<common::Vector2> waypoints;
     std::vector<common::Vector2>::iterator current_waypoint;
 
-    GradientPotentialMap potential_map;
+    PotentialMap potential_map;
     SpeedController speed_controller;
 
     static WheelPositions getWheelPositions();

@@ -54,7 +54,7 @@ int main(int argc, char* argv[]) {
     int current_iteration = 0;
     while (current_iteration++ < config.iteration_limit) {
         robot.update();
-        
+
         sim_hal.motor_assembly()->update(config.time_step);
         physics.update();
         auto [position, heading] = physics.getPose();
