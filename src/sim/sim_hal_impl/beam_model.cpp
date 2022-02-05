@@ -31,7 +31,7 @@ double BeamModel::sampleMax() {
 }
 
 double BeamModel::sample(double actualDistance) {
-        double p = uniform_dist_rand(gen);
+    double p = uniform_dist_rand(gen);
     if (p < p_rand) {
         return sampleRandom();
     }

@@ -30,7 +30,7 @@ LidarScannerSimImpl::Scan LidarScannerSimImpl::getLatestScan() {
         curr_angle += angle;
         common::Vector2 direction = common::Vector2::polar(curr_angle, 1.0);
         double distance = sensor_model.sample(position, direction);
-        data->push_back(SamplePoint(distance, angle));
+        data->push_back(SamplePoint(distance, curr_angle));
     }
 
     return data;
