@@ -21,6 +21,8 @@ private:
 
     common::Vector2 position;
     double heading;
+
+    std::mt19937 gen;
 };
 
 }

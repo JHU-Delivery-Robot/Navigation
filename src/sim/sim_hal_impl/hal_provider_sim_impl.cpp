@@ -3,7 +3,7 @@
 namespace sim {
 
 DistanceSensorModel HALProviderSimImpl::CliffInfraredAssembly::construct_sensor_model(ObstacleMap* obstacle_map) {
-    BeamModel beam_model = BeamModel(0.0, 0.0, max_range, 0.0, 0.0);
+    BeamModel beam_model = BeamModel(0.0, max_range, 0.0, 0.0);
 
     return DistanceSensorModel(obstacle_map, beam_model, max_range);
 }
@@ -38,7 +38,7 @@ void HALProviderSimImpl::CliffInfraredAssembly::updateLocation(common::Vector2 p
 }
 
 DistanceSensorModel HALProviderSimImpl::WheelInfraredAssembly::construct_sensor_model(ObstacleMap* obstacle_map) {
-    BeamModel beam_model = BeamModel(0.0, 0.0, max_range, 0.0, 0.0);
+    BeamModel beam_model = BeamModel(0.0, max_range, 0.0, 0.0);
 
     return DistanceSensorModel(obstacle_map, beam_model, max_range);
 }
@@ -73,7 +73,7 @@ void HALProviderSimImpl::WheelInfraredAssembly::updateLocation(common::Vector2 p
 }
 
 DistanceSensorModel HALProviderSimImpl::UltrasonicAssembly::construct_sensor_model(ObstacleMap* obstacle_map) {
-    BeamModel beam_model = BeamModel(0.0, 0.0, max_range, 0.0, 0.0);
+    BeamModel beam_model = BeamModel(0.0, max_range, 0.0, 0.0);
 
     return DistanceSensorModel(obstacle_map, beam_model, max_range);
 }
@@ -168,7 +168,7 @@ PositioningSimImpl* HALProviderSimImpl::positioning() {
 }
 
 HALProviderSimImpl::HALProviderSimImpl(std::vector<Polygon> obstacles)
-    : lidar_beam_model(0.0, 0.0, lidar_max_range, 0.0, 0.0),
+    : lidar_beam_model(0.0, lidar_max_range, 0.0, 0.0),
       obstacle_map(obstacles),
       lidar_impl(DistanceSensorModel(&obstacle_map, lidar_beam_model, lidar_max_range), 1000),
       cliff_sensors(&obstacle_map),
