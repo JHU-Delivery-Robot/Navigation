@@ -6,7 +6,10 @@
 namespace sim {
 
 LidarScannerSimImpl::LidarScannerSimImpl(DistanceSensorModel model, size_t points_per_scan)
-    : sensor_model(model), points_per_scan(points_per_scan), position(0.0, 0.0) {}
+    : sensor_model(model), points_per_scan(points_per_scan), position(0.0, 0.0) {
+        std::random_device random_device;
+        gen.seed(random_device());
+}
 
 void LidarScannerSimImpl::updateLocation(common::Vector2 position, double heading) {
     this->position = position + common::Vector2::polar(heading, 0.5 * robot::Robot::length);
@@ -16,9 +19,16 @@ void LidarScannerSimImpl::updateLocation(common::Vector2 position, double headin
 LidarScannerSimImpl::Scan LidarScannerSimImpl::getLatestScan() {
     Scan data = std::make_shared<std::vector<SamplePoint>>();
 
-    for (std::size_t i = 0; i < points_per_scan; i++) {
-        double angle = heading + 2 * PI * i / double(points_per_scan);
-        common::Vector2 direction = common::Vector2::polar(angle, 1.0);
+    double median_angle = 2 * PI / points_per_scan;
+
+    std::normal_distribution<double> norm_dist(median_angle, 0.1 * median_angle);
+
+    double curr_angle = 0.0;
+
+    while (curr_angle < 2*PI) {
+        double angle = norm_dist(gen);
+        curr_angle += angle;
+        common::Vector2 direction = common::Vector2::polar(curr_angle, 1.0);
         double distance = sensor_model.sample(position, direction);
         data->push_back(SamplePoint(distance, angle));
     }

@@ -2,11 +2,11 @@
 
 namespace sim {
 
-BeamModel::BeamModel(double std_dev, double lambda, double max_reading,
-                     double w_exp, double w_rand)
+BeamModel::BeamModel(double std_dev, double max_reading,
+                     double w_max, double w_rand)
     : std_dev(std_dev), max_reading(max_reading),
-      p_exp(w_exp), p_rand(w_rand),
-      exp_dist(lambda), uniform_dist_rand(0,1) {
+      p_max(w_max), p_rand(w_rand),
+      uniform_dist_rand(0,1) {
         std::random_device random_device;
         gen.seed(random_device());
 }
@@ -22,20 +22,25 @@ double BeamModel::sampleNormal(double actualDistance) {
     }
 }
 
-double BeamModel::sampleGlitch() {
-    if (uniform_dist_rand(gen)*(p_exp + p_rand) < p_exp) {
-        return exp_dist(gen);
-    } else {
-        return uniform_dist_rand(gen)*max_reading;
-    }
+double BeamModel::sampleRandom() {
+    return uniform_dist_rand(gen) * max_reading;
+}
+
+double BeamModel::sampleMax() {
+    return max_reading;
 }
 
 double BeamModel::sample(double actualDistance) {
-    return glitch() ? sampleGlitch() : sampleNormal(actualDistance);
-}
-
-bool BeamModel::glitch() {
-    return uniform_dist_rand(gen) < (p_exp + p_rand);
+        double p = uniform_dist_rand(gen);
+    if (p < p_rand) {
+        return sampleRandom();
+    }
+    else if (p < p_rand + p_max) {
+        return sampleRandom();
+    }
+    else {
+        return sampleNormal(actualDistance);
+    }
 }
 
 }
