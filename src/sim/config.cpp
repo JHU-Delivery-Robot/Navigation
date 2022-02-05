@@ -8,10 +8,10 @@
 namespace sim {
 
 std::string trim(std::string s) {
-    auto left_it = std::find_if(s.begin(), s.end(), [](unsigned char ch) { return !std::isspace<char>(ch, std::locale("")); });
+    auto left_it = std::find_if(s.begin(), s.end(), [](unsigned char ch) { return !std::isspace(ch); });
     s.erase(s.begin(), left_it);
 
-    auto right_it = std::find_if(s.rbegin(), s.rend(), [](unsigned char ch) { return !std::isspace<char>(ch, std::locale("")); });
+    auto right_it = std::find_if(s.rbegin(), s.rend(), [](unsigned char ch) { return !std::isspace(ch); });
     s.erase(right_it.base(), s.end());
 
     return s;
