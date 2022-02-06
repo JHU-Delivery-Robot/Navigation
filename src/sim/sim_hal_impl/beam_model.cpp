@@ -36,7 +36,7 @@ double BeamModel::sample(double actualDistance) {
         return sampleRandom();
     }
     else if (p < p_rand + p_max) {
-        return sampleRandom();
+        return sampleMax();
     }
     else {
         return sampleNormal(actualDistance);
