@@ -10,7 +10,7 @@ namespace events {
 
 class RouteUpdateEvent : public Event {
 public:
-    RouteUpdateEvent(std::vector<common::Vector2> route);
+    RouteUpdateEvent(std::vector<common::Vector2> route, int priority);
 
 private:
     std::vector<common::Vector2> route;
