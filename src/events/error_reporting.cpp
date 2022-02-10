@@ -7,7 +7,7 @@ namespace events {
 ErrorReporting::ErrorReporting(EventQueue* event_queue) : event_queue(event_queue){};
 
 void ErrorReporting::reportError(std::string origin, std::string details) {
-    ErrorEvent error = ErrorEvent(origin, details, Event::HIGH_PRIORITY);
+    ErrorEvent error = ErrorEvent(origin, details);
     event_queue->add(error);
 }
 
