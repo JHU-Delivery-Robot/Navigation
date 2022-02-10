@@ -9,7 +9,7 @@ namespace events {
 
 class ErrorEvent : public Event {
 public:
-    ErrorEvent(std::string origin, std::string details);
+    ErrorEvent(std::string origin, std::string details, int priority);
 
 private:
     std::string origin;
