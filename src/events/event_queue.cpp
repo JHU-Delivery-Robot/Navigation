@@ -24,7 +24,7 @@ std::optional<Event> EventQueue::remove() {
 }
 
 bool EventQueue::priority_compare(const Event& a, const Event& b) {
-    return a.priority < b.priority;
+    return a.getPriority() < b.getPriority();
 }
 
 }  // namespace events
