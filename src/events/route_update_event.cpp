@@ -2,7 +2,6 @@
 
 namespace events {
 
-RouteUpdateEvent::RouteUpdateEvent(std::vector<common::Vector2> route, int priority)
-    : Event(priority), route(route){};
+RouteUpdateEvent::RouteUpdateEvent(std::vector<common::Vector2> route) : Event(1), route(route){};
 
 }  // namespace events
