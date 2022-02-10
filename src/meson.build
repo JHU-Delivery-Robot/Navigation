@@ -1,4 +1,5 @@
 subdir('common')
+subdir('events')
 subdir('hal')
 subdir('robot')
 subdir('sim')
