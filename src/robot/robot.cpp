@@ -2,14 +2,16 @@
 
 #include <cmath>
 #include <iterator>
+#include <optional>
 
 #include "common.hpp"
 #include "vector2.hpp"
 
 namespace robot {
 
-Robot::Robot(hal::HALProvider* hal)
+Robot::Robot(hal::HALProvider* hal, events::EventQueue* event_queue)
     : hal(hal),
+      event_queue(event_queue),
       potential_map(q_star, potential_attractive_coefficient, potential_repulsive_coefficient, waypoint_transition_threshold),
       speed_controller(getWheelPositions(), 2 * wheel_radius, 2.0, hal) {
     hal->motor_assembly()->reset_odometry();
@@ -22,6 +24,14 @@ void Robot::setWaypoints(std::vector<common::Vector2> waypoints) {
 }
 
 void Robot::update() {
+    std::optional<events::Event> event = event_queue->remove();
+    while (event.has_value()) {
+        // Handle events
+
+        // Fetch next event
+        event = event_queue->remove();
+    };
+
     auto lidar_scan = hal->lidar()->getLatestScan();
     potential_map.updateLidarScan(lidar_scan);
 

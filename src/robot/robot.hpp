@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "common.hpp"
+#include "event_queue.hpp"
 #include "hal_provider.hpp"
 #include "potential_map.hpp"
 #include "speed_controller.hpp"
@@ -12,7 +13,7 @@ namespace robot {
 
 class Robot {
 public:
-    Robot(hal::HALProvider* hal);
+    Robot(hal::HALProvider* hal, events::EventQueue* event_queue);
 
     void setWaypoints(std::vector<common::Vector2> waypoints);
     void update();
@@ -25,6 +26,7 @@ public:
 
 private:
     hal::HALProvider* hal;
+    events::EventQueue* event_queue;
 
     static constexpr double waypoint_transition_threshold = 1;
     static constexpr double q_star = 6;

@@ -10,7 +10,7 @@ sim_src = files([
 subdir('sim_hal_impl')
 
 executable(
-    'sim', sim_src + common_src + robot_src + [ 'main.cpp' ],
-    include_directories : [ common_includes, hal_includes, robot_includes ],
+    'sim', sim_src + common_src + events_src + robot_src + [ 'main.cpp' ],
+    include_directories : [ common_includes, events_includes, hal_includes, robot_includes ],
     dependencies: [ sim_hal_impl_dep ]
 )
