@@ -5,6 +5,7 @@
 #include <optional>
 
 #include "config.hpp"
+#include "event_queue.hpp"
 #include "hal_provider_sim_impl.hpp"
 #include "obstacle_map.hpp"
 #include "physics_sim.hpp"
@@ -43,7 +44,8 @@ int main(int argc, char* argv[]) {
     sim_hal.motor_assembly()->reset_odometry();
     physics.update();
 
-    robot::Robot robot = robot::Robot(&sim_hal);
+    events::EventQueue event_queue;
+    robot::Robot robot = robot::Robot(&sim_hal, &event_queue);
     robot.setWaypoints(config.waypoints);
 
     sim::Recording recording;
