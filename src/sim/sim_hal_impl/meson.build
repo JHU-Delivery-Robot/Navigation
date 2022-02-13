@@ -12,7 +12,7 @@ sim_hal_impl_src = files([
 ])
 
 sim_hal_impl_lib = static_library(
-    'sim_hal_impl_lib', sim_hal_impl_src + common_src + events_src, robot_src,
+    'sim_hal_impl_lib', sim_hal_impl_src + common_src + events_src + robot_src,
     include_directories : [ common_includes, events_includes, hal_includes, robot_includes, sim_includes ],
 )
 

@@ -5,6 +5,9 @@
 #include <optional>
 
 #include "common.hpp"
+#include "error_event.hpp"
+#include "event.hpp"
+#include "route_update_event.hpp"
 #include "vector2.hpp"
 
 namespace robot {
@@ -12,6 +15,7 @@ namespace robot {
 Robot::Robot(hal::HALProvider* hal, events::EventQueue* event_queue)
     : hal(hal),
       event_queue(event_queue),
+      e_stopped(false),
       potential_map(q_star, potential_attractive_coefficient, potential_repulsive_coefficient, waypoint_transition_threshold),
       speed_controller(getWheelPositions(), 2 * wheel_radius, 2.0, hal) {
     hal->motor_assembly()->reset_odometry();
@@ -27,10 +31,29 @@ void Robot::update() {
     std::optional<events::Event> event = event_queue->remove();
     while (event.has_value()) {
         // Handle events
+        switch (event->getType()) {
+            case events::Event::Type::FATAL_ERROR: {
+                e_stopped = true;
+                events::ErrorEvent* error = dynamic_cast<events::ErrorEvent*>(&event.value());
+                std::cout << "Error from " << error->getOrigin() << ": " << error->getDetails() << std::endl;
+            } break;
 
+            case events::Event::Type::ROUTE_UPDATE: {
+                events::RouteUpdateEvent* route_update = dynamic_cast<events::RouteUpdateEvent*>(&event.value());
+                setWaypoints(route_update->getRoute());
+            } break;
+
+            default:
+                break;
+        }
         // Fetch next event
         event = event_queue->remove();
     };
+
+    if (e_stopped) {
+        speed_controller.updateSpeed(common::Vector2(0.0, 0.0));
+        return;
+    }
 
     auto lidar_scan = hal->lidar()->getLatestScan();
     potential_map.updateLidarScan(lidar_scan);
