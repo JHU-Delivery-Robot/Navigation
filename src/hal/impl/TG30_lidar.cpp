@@ -11,48 +11,49 @@ namespace hal {
 
 namespace impl {
 
-TG30Lidar::TG30Lidar() : serial(io_context), timeout(io_context), is_scanning(false) {}
+TG30Lidar::TG30Lidar(events::ErrorReporting error_reporting)
+    : serial(io_context), timeout(io_context), is_scanning(false), error_reporting(error_reporting) {}
 
 bool TG30Lidar::initialize(std::string port) {
     asio::error_code err;
     serial.open(port, err);
     if (err) {
-        std::cout << err.message() << std::endl;
+        error_reporting.reportError("TG30_lidar", err.message());
         return false;
     }
 
     // Configure serial port baud rate
     serial.set_option(asio::serial_port_base::baud_rate(baud_rate), err);
     if (err) {
-        std::cout << err.message() << std::endl;
+        error_reporting.reportError("TG30_lidar", err.message());
         return false;
     }
 
     // Configure serial port to use eight data bits per byte
     serial.set_option(asio::serial_port_base::character_size(8), err);
     if (err) {
-        std::cout << err.message() << std::endl;
+        error_reporting.reportError("TG30_lidar", err.message());
         return false;
     }
 
     // Configure serial port to use one stop bit
     serial.set_option(asio::serial_port_base::stop_bits(asio::serial_port_base::stop_bits::one), err);
     if (err) {
-        std::cout << err.message() << std::endl;
+        error_reporting.reportError("TG30_lidar", err.message());
         return false;
     }
 
     // Configure serial port to have no parity
     serial.set_option(asio::serial_port_base::parity(asio::serial_port_base::parity::none), err);
     if (err) {
-        std::cout << err.message() << std::endl;
+        error_reporting.reportError("TG30_lidar", err.message());
         return false;
     }
 
     // Configure serial port to use no flow control
     serial.set_option(asio::serial_port_base::flow_control(asio::serial_port_base::flow_control::none));
     if (err) {
-        std::cout << err.message() << std::endl;
+        error_reporting.reportError("TG30_lidar", err.message());
         return false;
     }
 
@@ -88,7 +89,7 @@ bool TG30Lidar::flushSerialBuffer() {
         if (err == asio::error::operation_aborted) {
             return;
         } else if (err) {
-            std::cout << err.message() << std::endl;
+            error_reporting.reportError("TG30_lidar", err.message());
             success = false;
         }
 
@@ -99,7 +100,7 @@ bool TG30Lidar::flushSerialBuffer() {
         if (err == asio::error::operation_aborted) {
             return;
         } else if (err) {
-            std::cout << err.message() << std::endl;
+            error_reporting.reportError("TG30_lidar", err.message());
             success = false;
         }
 
@@ -158,7 +159,7 @@ bool TG30Lidar::sendCommand(RequestSpec request) {
     uint8_t command_message[2] = {tg30_sync_byte, request.request_byte};
     asio::write(serial, asio::buffer(command_message), err);
     if (err) {
-        std::cout << err.message() << std::endl;
+        error_reporting.reportError("TG30_lidar", err.message());
         return false;
     }
 
@@ -170,7 +171,7 @@ std::optional<std::vector<uint8_t>> TG30Lidar::sendRequest(RequestSpec request) 
     uint8_t request_message[2] = {tg30_sync_byte, request.request_byte};
     asio::write(serial, asio::buffer(request_message), err);
     if (err) {
-        std::cout << err.message() << std::endl;
+        error_reporting.reportError("TG30_lidar", err.message());
         return {};
     }
 
@@ -184,7 +185,7 @@ std::optional<std::vector<uint8_t>> TG30Lidar::sendRequest(RequestSpec request) 
         if (err == asio::error::operation_aborted) {
             return;
         } else if (err) {
-            std::cout << err.message() << std::endl;
+            error_reporting.reportError("TG30_lidar", err.message());
             success = false;
         }
 
@@ -195,7 +196,7 @@ std::optional<std::vector<uint8_t>> TG30Lidar::sendRequest(RequestSpec request) 
         if (err == asio::error::operation_aborted) {
             return;
         } else if (err) {
-            std::cout << err.message() << std::endl;
+            error_reporting.reportError("TG30_lidar", err.message());
             success = false;
         }
 
@@ -231,7 +232,7 @@ void TG30Lidar::syncPacketHeader(int max_sync_attempts, std::function<void(bool)
         if (err == asio::error::operation_aborted) {
             return;
         } else if (err) {
-            std::cout << err.message() << std::endl;
+            error_reporting.reportError("TG30_lidar", err.message());
             callback(false);
             return;
         }
@@ -271,7 +272,7 @@ void TG30Lidar::scanHeader(std::function<void(std::optional<PacketHeader>)> call
         if (err == asio::error::operation_aborted) {
             return;
         } else if (err) {
-            std::cout << err.message() << std::endl;
+            error_reporting.reportError("TG30_lidar", err.message());
             callback({});
             return;
         }
@@ -385,7 +386,7 @@ void TG30Lidar::readScanPacket() {
             if (err == asio::error::operation_aborted) {
                 return;
             } else if (err) {
-                std::cout << err.message() << std::endl;
+                error_reporting.reportError("TG30_lidar", err.message());
                 return;
             }
 

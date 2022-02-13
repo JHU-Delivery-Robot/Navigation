@@ -107,7 +107,8 @@ Positioning* HALProviderImpl::positioning() {
     return nullptr;
 }
 
-HALProviderImpl::HALProviderImpl(LidarConfig config) : config(config) {}
+HALProviderImpl::HALProviderImpl(LidarConfig config, events::ErrorReporting error_reporting)
+    : error_reporting(error_reporting), config(config), lidar_impl(TG30Lidar(error_reporting)) {}
 
 void HALProviderImpl::initialize() {
     // TODO: Need to setup config that holds port details, etc.

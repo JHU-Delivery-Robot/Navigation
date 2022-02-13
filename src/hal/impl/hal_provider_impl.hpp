@@ -6,6 +6,7 @@
 #include <string>
 
 #include "common.hpp"
+#include "error_reporting.hpp"
 #include "hal_provider.hpp"
 #include "TG30_lidar.hpp"
 
@@ -58,7 +59,7 @@ public:
         void reset_odometry() override;
     };
 
-    HALProviderImpl(LidarConfig config);
+    HALProviderImpl(LidarConfig config, events::ErrorReporting error_reporting);
 
     void initialize();
 
@@ -71,6 +72,7 @@ public:
     Positioning* positioning() override;
 
 private:
+    events::ErrorReporting error_reporting;
     LidarConfig config;
     TG30Lidar lidar_impl;
     CliffInfraredAssembly cliff_sensors;

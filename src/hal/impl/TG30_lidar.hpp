@@ -8,6 +8,7 @@
 #include <string>
 
 #include "asio.hpp"
+#include "error_reporting.hpp"
 #include "lidar_scanner.hpp"
 
 namespace hal {
@@ -53,9 +54,9 @@ public:
     /**
      * Construct lidar interface
      * 
-     * @param io Instance of asio::io_context for serial communication
+     * @param error_reporting Error event instance
      */
-    TG30Lidar();
+    TG30Lidar(events::ErrorReporting error_reporting);
 
     /**
      * Initialize serial port communication with lidar unit
@@ -188,6 +189,7 @@ private:
     // the future from going out of scope and being destructed
     std::future<void> scanning_executor;
 
+    events::ErrorReporting error_reporting;
     bool flushSerialBuffer();
     bool checkResponseHeader(std::vector<uint8_t> response, RequestSpec request);
     bool sendCommand(RequestSpec command);

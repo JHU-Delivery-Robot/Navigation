@@ -11,14 +11,15 @@ int main() {
     hal::impl::HALProviderImpl::LidarConfig lidar_config =
         hal::impl::HALProviderImpl::LidarConfig("COM3", 12.0);
 
+    events::EventQueue event_queue;
+    events::ErrorReporting error_reporting(&event_queue);
+
     //Initialize hal provider implementation
-    hal::impl::HALProviderImpl hal_provider = hal::impl::HALProviderImpl(lidar_config);
+    hal::impl::HALProviderImpl hal_provider = hal::impl::HALProviderImpl(lidar_config, error_reporting);
     hal_provider.initialize();
 
     //Get Lidar
     hal::impl::TG30Lidar* lidar = hal_provider.lidar();
-
-    events::EventQueue event_queue;
 
     //Get Robot
     robot::Robot rob = robot::Robot(&hal_provider, &event_queue);

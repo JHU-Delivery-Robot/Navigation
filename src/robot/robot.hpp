@@ -36,6 +36,8 @@ private:
     std::vector<common::Vector2> waypoints;
     std::vector<common::Vector2>::iterator current_waypoint;
 
+    bool e_stopped;
+
     PotentialMap potential_map;
     SpeedController speed_controller;
 
