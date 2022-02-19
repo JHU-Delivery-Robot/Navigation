@@ -98,6 +98,7 @@ bool TG30Lidar::flushSerialBuffer() {
 
     auto read_handler = [&](const asio::error_code& err, std::size_t bytes_read) {
         if (err == asio::error::operation_aborted) {
+            error_reporting.reportError("TG30_lidar", "flushSerialBuffer Error");
             return;
         } else if (err) {
             error_reporting.reportError("TG30_lidar", err.message());
@@ -194,6 +195,7 @@ std::optional<std::vector<uint8_t>> TG30Lidar::sendRequest(RequestSpec request) 
 
     auto read_handler = [&](const asio::error_code& err, std::size_t) {
         if (err == asio::error::operation_aborted) {
+            error_reporting.reportError("TG30_lidar", "sendRequest Error, request_byte is " + request.request_byte);
             return;
         } else if (err) {
             error_reporting.reportError("TG30_lidar", err.message());
@@ -246,6 +248,7 @@ void TG30Lidar::syncPacketHeader(int max_sync_attempts, std::function<void(bool)
 
     auto read_handler = [&, max_sync_attempts, callback](const asio::error_code& err, std::size_t) {
         if (err == asio::error::operation_aborted) {
+            error_reporting.reportError("TG30_lidar", "syncPacketHeader Error");
             return;
         } else if (err) {
             callback(false);
@@ -283,6 +286,7 @@ void TG30Lidar::scanHeader(std::function<void(std::optional<PacketHeader>)> call
 
     auto read_handler = [&, callback](const asio::error_code& err, std::size_t) {
         if (err == asio::error::operation_aborted) {
+            error_reporting.reportError("TG30_lidar", "scanHeader Error");
             return;
         } else if (err) {
             callback({});
@@ -384,6 +388,7 @@ void TG30Lidar::readScanPacket() {
 
         auto read_handler = [&, header](const asio::error_code& err, size_t) {
             if (err == asio::error::operation_aborted) {
+                error_reporting.reportError("TG30_lidar", "readScanPacket Error");
                 return;
             } else if (err) {
                 error_reporting.reportError("TG30_lidar", err.message());
