@@ -4,28 +4,70 @@ Contains the primary robot navigation and control software, as well as a simulat
 
 ## Contents
 
-- `src/` - All primary source
-  - `/hal` - Hardware Abstraction Layer
-  - `/robot` - Control and navigation software
-  - `/sim` - Simulation of sensors and physics for testing `robot`
-- `test/` - Unit & integration tests
-  - `sim/`
-- `subprojects/` - Third-party dependencies
-  - `catch2/` - Testing framework, installed via Meson wrap
+- [Cheat sheet](#cheat-sheet)
+- [Installing](#installing)
+  - [Windows](#windows)
+  - [Linux](#linux)
+  - [Mac](#mac)
+- [Building](#building)
+- [Simulator usage](#simulator)
+- [Project structure](#project-structure)
+- [Add components to project](#add-components-to-project)
+
+## Cheat Sheet
+
+| Action | Command |
+| --- | --- |
+| Set up meson build target named `build` | `meson setup build` |
+| Run build for meson build target named `build` | `meson compile -C build` |
+| Clean build target named `build` | `meson compile -C build --clean` |
+| Run unit tests in `build` target | `./build/test/tests` |
+| Run simulator using config `sim_config.csv` | `./build/src/sim/sim sim_config.csv` |
 
 ## Installing
 
-After cloning the repo, you will need C/C++ compilers, the Meson build system, and a backend supported by Meson.
+After completing the relevant installation instructions for your platform, see the [Building](#building) instructions next to make sure your installation works.
 
-Instructions on installing Meson can be found [here](https://mesonbuild.com/Quick-guide.html). The backends supported by Meson are Ninja, Visual Studio, and XCode. 
+### Windows
 
-If you are using a backend other than Ninja, see [this](https://mesonbuild.com/Using-with-Visual-Studio.html).
+These instructions will use the [scoop package manager](https://scoop.sh). However, you are entirely free to use the new Windows Package Manager, Chocolately, or just install the necessary software manually. If you aren't sure, just use scoop.
+
+Install `scoop` by following the instructions at https://scoop.sh. To posterity, open `Powershell` (or better yet Powershell Core aka `pwsh` if it's installed), and run the command
+```
+iwr -useb get.scoop.sh | iex
+```
+If you get an error, run `Set-ExecutionPolicy RemoteSigned -scope CurrentUser` and then re-run `iwr -useb get.scoop.sh | iex`.
+
+Next, install Git, Python 3, the Ninja build system, and the GCC compiler suite. Using scoop, simply run:
+```
+scoop install git python ninja
+```
+
+Next, clone this repository. Open your terminal (Powershell/pwsh if you have no other preference), use the change directory command `cd` to navigate to the folder you want this project to live under, and run `git clone https://github.com/JHU-Delivery-Robot/Navigation.git`.
+
+Finally, we install meson. This should just be `pip install meson`. Run `meson --version` to make sure it is installed properly, if meson cannot be found you need to place Python package scripts onto your PATH. If you don't know how to do this, just uninstall Python and re-install using scoop which will do it for you.
+
+### Linux
+
+Use your system package manager to acquire Git, the GCC compiler suite, a recent version of Python 3, and the Ninja build system. If you are using Ubuntu/Debian, this is simply
+```
+sudo apt install git gcc python3 ninja-build
+```
+Next, clone this repository into the folder of your choice using `git clone https://github.com/JHU-Delivery-Robot/Navigation.git`.
+
+Finally, we install meson. This should just be `pip install meson`. Run `meson --version` to make sure it is installed properly, if meson cannot be found you need to place Python package scripts onto your PATH.
+
+### Mac
+
+TODO
+
+## Building
 
 Once you've got everything installed, you need to create build directories for Meson. For example, to create a build configuration called `debug` with the default settings, run `meson setup debug`. To create a release configuration, run `meson setup release -Dbuildtype=release -Db_lto=true -Doptimization=2`.
 
 To compile the project using a specific configuration, simply run `meson compile` within that folder. To clean, run `meson compile --clean`.
 
-## Simulation
+## Simulator
 
 The simulation is split into two parts: a backend and a frontend. The backend runs the actual simulation and outputs a file called `sim_output.json` wherever it was run from that contains everything that happened during the simulation. The frontend is a local replay tool that can be used to replay and visualize the simulation output file. To use the frontend, open `./sim/visualization/index.html`.
 
@@ -44,3 +86,25 @@ Simulation config parameters:
 - `start_angle` &mdash; Angle (measured counterclockwise from standard x-axis) to start robot at. Specified in degrees, default is 90.0&deg;.
 - `goal_position` &mdash; The goal position for robot to try to drive to. Specified as a `point`, default is `(3.5, 3.0)`.
 - `obstacles` &mdash; A polygonal obstacle, specified as a comma separated list of points all on the same line. This key can be specified multiple times to add multiple obstacles. Must specify at least three points, do not close (specify start point again at end). Default is no obstacles.
+
+## Project Structure
+
+- `src/` - All primary source
+  - `common/` - Shared utilities and types
+  - `events/` - Event queue component used for error reporting and server communications handling.
+  - `hal/` - Hardware Abstraction Layer
+    - `impl/` - HAL implementation for our primary hardware platform
+  - `robot/` - Top-level control and navigation software
+  - `sim/` - Simulation of sensors and physics for testing `robot`
+    - `sim_hal_impl/` - HAL implementation for virtual simulation environment
+    - `visualization/` - Simulation replay/visualization tools
+- `test/` - Unit & integration tests
+  - `common/`
+  - `sim/`
+- `subprojects/` - Third-party dependencies
+  - `asio` - Platform-independent asychronous IO library
+  - `catch2` - Testing framework, installed via Meson wrap
+
+## Add components to project
+
+TODO
