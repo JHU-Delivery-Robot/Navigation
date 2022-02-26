@@ -59,7 +59,31 @@ Finally, we install meson. This should just be `pip install meson`. Run `meson -
 
 ### Mac
 
-TODO
+#### Intel
+
+First, install brew from [here](https://brew.sh/)
+
+Then, ensure that you have python 3 installed by running `python --version` (or `python3 --version`) in your terminal. If you do not, install the latest python from [here](https://www.python.org/downloads/)
+
+Install the following by running the associated commands:
+- GCC: `brew install gcc`
+- Meson: `pip install meson`
+- Ninja: `brew install gcc`
+
+Next, enable python certs by doing the following:
+1. Open your finder and go to **Applications** in the left panel
+2. Find and open the Python 3.xx folder
+3. Double-click the *Install Certificates.command* file. Let its terminal run to completion, and input whatever you need to in order to let it run
+
+Clone this repository and open the Navigation directory in a terminal. Now, use the following commands to build the executables:
+1. First, you create your *build* folder by running: `CC=/usr/local/opt/gcc/bin/gcc-11 CXX=/usr/local/opt/gcc/bin/g++-11 meson setup build`
+2. Then, you compile the code by running: `meson compile -C build`. Re-compile as needed
+3. Finally, when you want to clean out your binaries, use this command: `meson compile -C build --clean`. You may re-run step 2 to re-compile everything
+4. If you want to do a full cleaning of all your binaries and libraries, delete your build folder. You may re-run steps 1 and 2 to bring back libraries and binaries
+
+#### M1
+
+(WORK IN PROGRESS)
 
 ## Building
 
