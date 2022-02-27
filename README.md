@@ -59,7 +59,7 @@ Finally, we install meson. This should just be `pip install meson`. Run `meson -
 
 ### Mac
 
-#### Intel
+#### Intel Mac (x86-64)
 
 First, install brew from [here](https://brew.sh/)
 
@@ -81,7 +81,7 @@ Clone this repository and open the Navigation directory in a terminal. Now, use 
 3. Finally, when you want to clean out your binaries, use this command: `meson compile -C build --clean`. You may re-run step 2 to re-compile everything
 4. If you want to do a full cleaning of all your binaries and libraries, delete your build folder. You may re-run steps 1 and 2 to bring back libraries and binaries
 
-#### M1
+#### M1 Mac (ARM)
 
 (WORK IN PROGRESS)
 
