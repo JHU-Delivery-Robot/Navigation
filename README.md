@@ -68,7 +68,7 @@ Then, ensure that you have python 3 installed by running `python --version` (or 
 Install the following by running the associated commands:
 - GCC: `brew install gcc`
 - Meson: `pip install meson`
-- Ninja: `brew install gcc`
+- Ninja: `brew install ninja`
 
 Next, enable python certs by doing the following:
 1. Open your finder and go to **Applications** in the left panel
