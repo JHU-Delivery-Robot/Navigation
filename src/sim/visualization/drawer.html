@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+        <title>Robot Simulation Visualizer</title>
+        <meta name="description" content="A visualizer to play-back recorded robot simulations">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="styles/styles.css">
+
+    </head>
+    <body>
+        <div class = 'container-fluid d-flex flex-column w-100 vh-100 m-3' id = 'drawCanvas3'>
+            <div class = "w-100 border h-100" id = 'draw-container'>
+                <canvas width="100" height="100" id="drawCanvas" style = "z-index: 10;">
+                    Your browser does not support HTML5 Canvas.
+                </canvas>
+            </div>
+            
+            <div class="btn-group mx-auto mt-auto w-75 p-4" role="group" aria-label="tools">
+                <button type="button" class="btn btn-secondary" id ="start_button">Set startpoint</button>
+                <button type="button" class="btn btn-secondary" id="way_button">Draw waypoint</button>
+                <button type="button" class="btn btn-secondary" id="poly_button">Draw polygon</button>
+                <button type="button" class="btn btn-secondary" id = "fin_button">Finish drawing</button>
+              </div>
+        </div>
+        <script src="scripts/drawer.js"></script>
+
+    </body>
+</html>
