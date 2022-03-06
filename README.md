@@ -40,7 +40,7 @@ If you get an error, run `Set-ExecutionPolicy RemoteSigned -scope CurrentUser` a
 
 Next, install Git, Python 3, the Ninja build system, and the GCC compiler suite. Using scoop, simply run:
 ```
-scoop install git python ninja
+scoop install git python ninja gcc
 ```
 
 Next, clone this repository. Open your terminal (Powershell/pwsh if you have no other preference), use the change directory command `cd` to navigate to the folder you want this project to live under, and run `git clone https://github.com/JHU-Delivery-Robot/Navigation.git`.
@@ -95,7 +95,7 @@ To compile the project using a specific configuration, simply run `meson compile
 
 The simulation is split into two parts: a backend and a frontend. The backend runs the actual simulation and outputs a file called `sim_output.json` wherever it was run from that contains everything that happened during the simulation. The frontend is a local replay tool that can be used to replay and visualize the simulation output file. To use the frontend, open `./sim/visualization/index.html`.
 
-To use the simulation backend, run `/src/sim/sim` and pass it the path of a simulation config file. A simple example is provided in`sim_config.csv`, which can be run with
+To use the simulation backend, run `/src/sim/sim` and pass it the path of a simulation config file. A simple example is provided in `sim_config.csv`, which can be run with
 ```
 > ./src/sim/sim ../sim_config.csv
 ```
