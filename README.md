@@ -32,7 +32,7 @@ After completing the relevant installation instructions for your platform, see t
 
 These instructions will use the [scoop package manager](https://scoop.sh). However, you are entirely free to use the new Windows Package Manager, Chocolately, or just install the necessary software manually. If you aren't sure, just use scoop.
 
-Install `scoop` by following the instructions at https://scoop.sh. To posterity, open `Powershell` (or better yet Powershell Core aka `pwsh` if it's installed), and run the command
+Install `scoop` by following the instructions at https://scoop.sh, or by opening a terminal (e.g. `Powershell`) and running the command
 ```
 iwr -useb get.scoop.sh | iex
 ```
