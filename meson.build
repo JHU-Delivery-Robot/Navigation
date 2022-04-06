@@ -15,6 +15,7 @@ thread_dep = dependency('threads')
 # External dependencies
 asio_dep = dependency('asio')
 catch2_dep = dependency('catch2')
+json_dep = dependency('nlohmann_json')
 
 subdir('src')
 subdir('test')
