@@ -2,7 +2,6 @@ sim_hal_impl_includes = include_directories('.')
 sim_hal_impl_src = files([
     'beam_model.cpp',
     'distance_sensor_model.cpp',
-    'gyroscope_sim_impl.cpp',
     'hal_provider_sim_impl.cpp',
     'infrared_sensor_sim_impl.cpp',
     'lidar_scanner_sim_impl.cpp',
@@ -13,7 +12,7 @@ sim_hal_impl_src = files([
 
 sim_hal_impl_lib = static_library(
     'sim_hal_impl_lib', sim_hal_impl_src + common_src + events_src + robot_src,
-    include_directories : [ common_includes, events_includes, hal_includes, robot_includes, sim_includes ],
+    include_directories : navigation_includes,
 )
 
 sim_hal_impl_dep = declare_dependency(

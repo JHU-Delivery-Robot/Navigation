@@ -3,9 +3,10 @@
 
 #include <memory>
 
-#include "infrared_sensor.hpp"
+#include "hal/infrared_sensor.hpp"
 #include "distance_sensor_model.hpp"
-#include "vector2.hpp"
+#include "common/vector2.hpp"
+#include "sim/simulation.hpp"
 
 namespace sim
 {
@@ -13,9 +14,8 @@ namespace sim
 class InfraredSensorSimImpl final : public hal::InfraredSensor
 {
 public:
-    InfraredSensorSimImpl(int id, DistanceSensorModel model, double fov, int samples);
+    InfraredSensorSimImpl(int id, sim::Simulation *simulation, DistanceSensorModel model, double fov, int samples);
 
-    void updateLocation(common::Vector2 position, double heading);
     int getID() const;
 
     double read() override;
@@ -23,12 +23,10 @@ public:
 private:
     int id;
 
+    sim::Simulation *simulation;
     DistanceSensorModel sensor_model;
     double fov;
     int samples;
-
-    common::Vector2 position;
-    double heading;
 };
 
 }

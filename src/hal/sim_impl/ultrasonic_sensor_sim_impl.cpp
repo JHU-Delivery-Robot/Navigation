@@ -3,13 +3,8 @@
 namespace sim
 {
 
-UltrasonicSensorSimImpl::UltrasonicSensorSimImpl(int id, DistanceSensorModel model, double fov, int samples)
-    : id(id), sensor_model(model), fov(fov), samples(samples), position(0.0, 0.0), heading(0.0) { }
-
-void UltrasonicSensorSimImpl::updateLocation(common::Vector2 position, double heading) {
-    this->position = position;
-    this->heading = heading;
-}
+UltrasonicSensorSimImpl::UltrasonicSensorSimImpl(int id, sim::Simulation *simulation, DistanceSensorModel model, double fov, int samples)
+    : id(id), simulation(simulation), sensor_model(model), fov(fov), samples(samples) { }
 
 int UltrasonicSensorSimImpl::getID() const {
     return id;
@@ -18,9 +13,11 @@ int UltrasonicSensorSimImpl::getID() const {
 double UltrasonicSensorSimImpl::read() {
     double shortest_distance = std::numeric_limits<double>::max();
 
+    auto [position, angle] = simulation->getPose();
+
     for (int i = -samples; i <= samples; i += 1) {
-        double angle = heading + i*fov/(2*samples);
-        common::Vector2 direction = common::Vector2::polar(angle, 1.0);
+        double sample_angle = angle + i * fov / (2 * samples);
+        common::Vector2 direction = common::Vector2::polar(sample_angle, 1.0);
         double distance = sensor_model.sample(position, direction);
 
         if (distance < shortest_distance) {

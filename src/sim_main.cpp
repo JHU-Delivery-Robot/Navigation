@@ -4,14 +4,14 @@
 #include <iostream>
 #include <optional>
 
-#include "config.hpp"
-#include "event_queue.hpp"
-#include "hal_provider_sim_impl.hpp"
-#include "obstacle_map.hpp"
-#include "physics_sim.hpp"
-#include "polygon.hpp"
-#include "recording.hpp"
-#include "robot.hpp"
+#include "events/event_queue.hpp"
+#include "hal/sim_impl/hal_provider_sim_impl.hpp"
+#include "robot/robot.hpp"
+#include "sim/config.hpp"
+#include "sim/obstacle_map.hpp"
+#include "sim/polygon.hpp"
+#include "sim/recording.hpp"
+#include "sim/simulation.hpp"
 
 int main(int argc, char* argv[]) {
     if (argc != 2) {
@@ -28,23 +28,17 @@ int main(int argc, char* argv[]) {
     sim::Config config;
     std::cout << "Loading config... ";
     if (auto config_opt = sim::Config::load(config_file_path)) {
-        config = config_opt.value();
         std::cout << "Config loaded successfully" << std::endl;
+        config = config_opt.value();
     } else {
         std::cerr << "Failed to load config" << std::endl;
         return 1;
     }
 
-    sim::HALProviderSimImpl sim_hal(config.obstacles);
-    sim::PhysicsSim physics = sim::PhysicsSim(&sim_hal);
-
-    // Initialize physics
-    physics.setPose(config.start_position, config.start_angle);
-    sim_hal.updatePose(config.start_position, config.start_angle);
-    sim_hal.motor_assembly()->reset_odometry();
-    physics.update();
-
+    sim::Simulation simulation(config);
+    sim::HALProviderSimImpl sim_hal(&simulation);
     events::EventQueue event_queue;
+
     robot::Robot robot = robot::Robot(&sim_hal, &event_queue);
     robot.setWaypoints(config.waypoints);
 
@@ -56,11 +50,10 @@ int main(int argc, char* argv[]) {
     int current_iteration = 0;
     while (current_iteration++ < config.iteration_limit) {
         robot.update();
+        sim_hal.update();
+        simulation.update();
 
-        sim_hal.motor_assembly()->update(config.time_step);
-        physics.update();
-        auto [position, heading] = physics.getPose();
-        sim_hal.updatePose(position, heading);
+        auto [position, heading] = simulation.getPose();
 
         double distance_to_goal = (position - config.waypoints[config.waypoints.size() - 1]).magnitude();
         if (distance_to_goal <= config.end_distance) {

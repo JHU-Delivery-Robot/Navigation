@@ -1,3 +1,4 @@
 hal_includes = include_directories('.')
 
-subdir('impl')
+subdir('robot_impl')
+subdir('sim_impl')

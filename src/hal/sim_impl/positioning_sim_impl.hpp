@@ -3,22 +3,19 @@
 
 #include <memory>
 
-#include "positioning.hpp"
+#include "hal/positioning.hpp"
+#include "sim/simulation.hpp"
 
 namespace sim {
 
 class PositioningSimImpl final : public hal::Positioning {
 public:
-    PositioningSimImpl();
-
-    void updateLocation(common::Vector2 position, double heading);
+    PositioningSimImpl(sim::Simulation *simulation);
 
     std::tuple<common::Vector2, double> getPose() override;
-    void setPose(common::Vector2 position, double heading) override;
 
 private:
-    common::Vector2 position;
-    double heading;
+    sim::Simulation *simulation;
 };
 
 }  // namespace sim

@@ -8,8 +8,8 @@
 #include <string>
 
 #include "asio.hpp"
-#include "error_reporting.hpp"
-#include "lidar_scanner.hpp"
+#include "events/error_reporting.hpp"
+#include "hal/lidar_scanner.hpp"
 
 namespace hal {
 

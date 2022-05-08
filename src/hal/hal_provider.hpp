@@ -4,7 +4,6 @@
 #include <memory>
 
 #include "positioning.hpp"
-#include "gyroscope.hpp"
 #include "infrared_sensor.hpp"
 #include "lidar_scanner.hpp"
 #include "motor.hpp"
@@ -63,7 +62,6 @@ public:
     virtual WheelInfraredAssembly* wheel_infrared() = 0;
     virtual UltrasonicAssembly* ultrasonic() = 0;
     virtual MotorAssembly* motor_assembly() = 0;
-    virtual Gyroscope* gyroscope() = 0;
     virtual Positioning* positioning() = 0;
 };
 

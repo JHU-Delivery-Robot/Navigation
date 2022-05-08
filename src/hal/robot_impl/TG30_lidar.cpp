@@ -6,7 +6,7 @@
 #include <vector>
 #include <string>
 
-#include "common.hpp"
+#include "common/common.hpp"
 
 namespace hal {
 

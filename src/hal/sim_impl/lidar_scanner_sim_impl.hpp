@@ -1,26 +1,24 @@
 #ifndef LIDAR_SCANNER_SIM_IMPL_HPP
 #define LIDAR_SCANNER_SIM_IMPL_HPP
 
-#include "lidar_scanner.hpp"
+#include "hal/lidar_scanner.hpp"
 #include "distance_sensor_model.hpp"
-#include "vector2.hpp"
+#include "common/vector2.hpp"
+#include "sim/simulation.hpp"
 
 namespace sim
 {
 
 class LidarScannerSimImpl final : public hal::LidarScanner {
 public:
-    LidarScannerSimImpl(DistanceSensorModel model, size_t points_per_scan);
-    void updateLocation(common::Vector2 position, double heading);
+    LidarScannerSimImpl(sim::Simulation *simulation, DistanceSensorModel model, size_t points_per_scan);
 
     Scan getLatestScan() override;
 
 private:
+    sim::Simulation *simulation;
     DistanceSensorModel sensor_model;
     size_t points_per_scan;
-
-    common::Vector2 position;
-    double heading;
 
     std::mt19937 gen;
 };

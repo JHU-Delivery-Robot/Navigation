@@ -1,6 +1,6 @@
 project('asio',
     'cpp',
-    version : '1.21.0',
+    version : '1.22.1',
     license : 'Boost'
 )
 
@@ -14,6 +14,6 @@ if build_machine.system() == 'windows'
 endif
 
 asio_dep = declare_dependency(
-    include_directories : include_directories('include'),
+    include_directories : include_directories('asio/include'),
     dependencies: asio_deps,
 )

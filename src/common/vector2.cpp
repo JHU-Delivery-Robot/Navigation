@@ -17,6 +17,10 @@ double Vector2::magnitude() const {
     return std::sqrt(x * x + y * y);
 }
 
+double Vector2::angle() const {
+    return std::atan2(y, x);
+}
+
 double Vector2::dot(const Vector2 rhs) const {
     return x * rhs.x + y * rhs.y;
 }

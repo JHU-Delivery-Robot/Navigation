@@ -5,9 +5,9 @@
 #include <vector>
 #include <string>
 
-#include "common.hpp"
-#include "error_reporting.hpp"
-#include "hal_provider.hpp"
+#include "common/common.hpp"
+#include "events/error_reporting.hpp"
+#include "hal/hal_provider.hpp"
 #include "TG30_lidar.hpp"
 
 namespace hal {
@@ -68,7 +68,6 @@ public:
     WheelInfraredAssembly* wheel_infrared() override;
     UltrasonicAssembly* ultrasonic() override;
     MotorAssembly* motor_assembly() override;
-    Gyroscope* gyroscope() override;
     Positioning* positioning() override;
 
 private:

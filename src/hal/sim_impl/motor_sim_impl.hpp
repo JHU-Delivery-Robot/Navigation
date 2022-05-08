@@ -1,7 +1,8 @@
 #ifndef MOTOR_SIM_IMPL_HPP
 #define MOTOR_SIM_IMPL_HPP
 
-#include "motor.hpp"
+#include "hal/motor.hpp"
+#include "sim/simulation.hpp"
 
 namespace sim {
 
@@ -10,15 +11,15 @@ public:
     MotorSimImpl();
     void update(double time_delta);
 
-    hal::Motor::Status status() override;
-    void set_speed(float speed) override;
-    float get_speed() override;
+    hal::Motor::Status status() const override;
+    void set_speed(double speed) override;
+    double get_speed() const override;
 
     void reset_odometry() override;
-    double odometry_distance() override;
+    double odometry_distance() const override;
 
 private:
-    float speed;
+    double speed;
     double total_distance;
 };
 

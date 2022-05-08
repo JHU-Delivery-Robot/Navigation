@@ -5,9 +5,9 @@
 #include <optional>
 #include <vector>
 
-#include "common.hpp"
+#include "common/common.hpp"
 #include "polygon.hpp"
-#include "vector2.hpp"
+#include "common/vector2.hpp"
 
 namespace sim {
 

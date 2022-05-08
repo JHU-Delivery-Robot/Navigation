@@ -7,7 +7,7 @@ hal_impl_src = files([
 hal_impl_lib = static_library(
     'hal_impl_lib',
     hal_impl_src + common_src + events_src,
-    include_directories : [common_includes, hal_includes, events_includes],
+    include_directories : navigation_includes,
     dependencies: [ asio_dep ],
 )
 
