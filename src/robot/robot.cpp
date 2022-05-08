@@ -4,11 +4,11 @@
 #include <iterator>
 #include <optional>
 
-#include "common.hpp"
-#include "error_event.hpp"
-#include "event.hpp"
-#include "route_update_event.hpp"
-#include "vector2.hpp"
+#include "common/common.hpp"
+#include "common/vector2.hpp"
+#include "events/error_event.hpp"
+#include "events/event.hpp"
+#include "events/route_update_event.hpp"
 
 namespace robot {
 

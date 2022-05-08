@@ -1,10 +1,10 @@
 #include <functional>
 #include <thread>
 
-#include "event_queue.hpp"
-#include "hal_provider_impl.hpp"
-#include "loop.hpp"
-#include "robot.hpp"
+#include "events/event_queue.hpp"
+#include "hal/robot_impl/hal_provider_impl.hpp"
+#include "robot/loop.hpp"
+#include "robot/robot.hpp"
 
 int main() {
     //Initialize configs

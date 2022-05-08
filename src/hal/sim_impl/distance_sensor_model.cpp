@@ -2,7 +2,7 @@
 
 namespace sim {
 
-DistanceSensorModel::DistanceSensorModel(ObstacleMap* map, BeamModel beam_model, double max_range) :
+DistanceSensorModel::DistanceSensorModel(const ObstacleMap* map, BeamModel beam_model, double max_range) :
     beam_model(beam_model),
     map(map),
     max_range(max_range) {}

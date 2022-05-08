@@ -4,7 +4,7 @@
 #include <vector>
 #include <tuple>
 
-#include "vector2.hpp"
+#include "common/vector2.hpp"
 #include "polygon.hpp"
 
 namespace sim {

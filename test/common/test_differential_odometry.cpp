@@ -1,8 +1,8 @@
 #include <tuple>
 
 #include "catch2/catch.hpp"
-#include "common.hpp"
-#include "differential_odometry.hpp"
+#include "common/common.hpp"
+#include "common/differential_odometry.hpp"
 
 using namespace common;
 

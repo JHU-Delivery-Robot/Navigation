@@ -99,10 +99,6 @@ HALProviderImpl::MotorAssembly* HALProviderImpl::motor_assembly() {
     return &motors;
 }
 
-Gyroscope* HALProviderImpl::gyroscope() {
-    return nullptr;
-}
-
 Positioning* HALProviderImpl::positioning() {
     return nullptr;
 }

@@ -4,9 +4,9 @@
 #include <memory>
 #include <vector>
 
-#include "common.hpp"
-#include "gyroscope_sim_impl.hpp"
-#include "hal_provider.hpp"
+#include "common/common.hpp"
+#include "hal/hal_provider.hpp"
+#include "sim/simulation.hpp"
 #include "infrared_sensor_sim_impl.hpp"
 #include "lidar_scanner_sim_impl.hpp"
 #include "motor_sim_impl.hpp"
@@ -19,17 +19,15 @@ class HALProviderSimImpl final : public hal::HALProvider {
 public:
     class CliffInfraredAssembly final : public hal::HALProvider::CliffInfraredAssembly {
     public:
-        CliffInfraredAssembly(ObstacleMap* obstacle_map);
+        CliffInfraredAssembly(sim::Simulation* simulation);
 
         InfraredSensorSimImpl* front() override;
         InfraredSensorSimImpl* left() override;
         InfraredSensorSimImpl* right() override;
         InfraredSensorSimImpl* back() override;
 
-        void updateLocation(common::Vector2 position, double heading);
-
     private:
-        static DistanceSensorModel construct_sensor_model(ObstacleMap* obstacle_map);
+        static DistanceSensorModel construct_sensor_model(sim::Simulation* simulation);
 
         static constexpr double max_range = 1;
         static constexpr double fov = PI / 6;
@@ -40,17 +38,15 @@ public:
 
     class WheelInfraredAssembly final : public hal::HALProvider::WheelInfraredAssembly {
     public:
-        WheelInfraredAssembly(ObstacleMap* obstacle_map);
+        WheelInfraredAssembly(sim::Simulation* simulation);
 
         InfraredSensorSimImpl* front_left() override;
         InfraredSensorSimImpl* front_right() override;
         InfraredSensorSimImpl* back_left() override;
         InfraredSensorSimImpl* back_right() override;
 
-        void updateLocation(common::Vector2 position, double heading);
-
     private:
-        static DistanceSensorModel construct_sensor_model(ObstacleMap* obstacle_map);
+        static DistanceSensorModel construct_sensor_model(sim::Simulation* simulation);
 
         static constexpr double max_range = 1;
         static constexpr double fov = PI / 6;
@@ -61,17 +57,15 @@ public:
 
     class UltrasonicAssembly final : public hal::HALProvider::UltrasonicAssembly {
     public:
-        UltrasonicAssembly(ObstacleMap* obstacle_map);
+        UltrasonicAssembly(sim::Simulation* simulation);
 
         UltrasonicSensorSimImpl* front() override;
         UltrasonicSensorSimImpl* left() override;
         UltrasonicSensorSimImpl* right() override;
         UltrasonicSensorSimImpl* back() override;
 
-        void updateLocation(common::Vector2 position, double heading);
-
     private:
-        static DistanceSensorModel construct_sensor_model(ObstacleMap* obstacle_map);
+        static DistanceSensorModel construct_sensor_model(sim::Simulation* simulation);
 
         static constexpr double max_range = 1;
         static constexpr double fov = PI / 6;
@@ -82,44 +76,42 @@ public:
 
     class MotorAssembly final : public hal::HALProvider::MotorAssembly {
     public:
-        MotorAssembly();
+        MotorAssembly(sim::Simulation *simulation);
 
         MotorSimImpl* front_left() override;
         MotorSimImpl* front_right() override;
         MotorSimImpl* back_left() override;
         MotorSimImpl* back_right() override;
 
-        void update(double time_delta);
+        void update();
         void reset_odometry() override;
 
     private:
         MotorSimImpl _front_left, _front_right, _back_left, _back_right;
+        sim::Simulation* simulation;
+        double last_update_time;
     };
 
-    HALProviderSimImpl(std::vector<Polygon> obstacles);
+    HALProviderSimImpl(sim::Simulation *simulation);
 
     LidarScannerSimImpl* lidar() override;
     CliffInfraredAssembly* cliff_infrared() override;
     WheelInfraredAssembly* wheel_infrared() override;
     UltrasonicAssembly* ultrasonic() override;
     MotorAssembly* motor_assembly() override;
-    GyroscopeSimImpl* gyroscope() override;
     PositioningSimImpl* positioning() override;
 
-    void updatePose(common::Vector2 position, double heading);
+    void update();
 
 private:
     static constexpr double lidar_max_range = 20.0;
     BeamModel lidar_beam_model;
-
-    ObstacleMap obstacle_map;
 
     LidarScannerSimImpl lidar_impl;
     CliffInfraredAssembly cliff_sensors;
     WheelInfraredAssembly wheel_sensors;
     UltrasonicAssembly ultrasonic_sensors;
     MotorAssembly motors;
-    GyroscopeSimImpl gyroscope_impl;
     PositioningSimImpl positioning_impl;
 };
 

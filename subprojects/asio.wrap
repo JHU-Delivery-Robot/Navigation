@@ -1,9 +1,7 @@
-[wrap-file]
-directory = asio-1.21.0
-source_url = https://sourceforge.net/projects/asio/files/asio/1.21.0%20%28Development%29/asio-1.21.0.zip/download
-source_filename = asio-1.21.0.zip
-source_hash = 87874120bb3d2efb24adf659149478b578c9a7b65004dc207503d5ce3c109cf2
-patch_directory = asio-1.21.0
+[wrap-git]
+url = https://github.com/chriskohlhoff/asio.git
+revision = asio-1-22-1
+patch_directory = asio-1.22.1
 
 [provide]
 asio = asio_dep

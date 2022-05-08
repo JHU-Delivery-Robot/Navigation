@@ -1,7 +1,7 @@
 #ifndef SPEED_CONTROLLER_HPP
 #define SPEED_CONTROLLER_HPP
 
-#include "hal_provider.hpp"
+#include "hal/hal_provider.hpp"
 
 namespace robot {
 
