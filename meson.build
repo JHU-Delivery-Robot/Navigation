@@ -4,13 +4,18 @@ project(
     version : '0.0.1',
     default_options: [
         'cpp_std=c++17',
-        'werror=true',
-        'warning_level=3',
+        'werror=false',
+        'warning_level=0',
     ]
 )
 
 # Meson will find correct threading library (i.e. pthreads or W32)
 thread_dep = dependency('threads')
+
+cpp_compiler = meson.get_compiler('cpp')
+bcrypt_dep = cpp_compiler.find_library('bcrypt', required : false)
+dbghelp_dep = cpp_compiler.find_library('dbghelp', required : false)
+dl_dep = cpp_compiler.find_library('dl', required: false)
 
 # External dependencies
 asio_dep = dependency('asio')
@@ -37,7 +42,8 @@ grpc_options.set_override_option('warning_level', '0')
 #grpc = cmake.subproject('grpc', options: grpc_options)
 #grpc_dep = grpc.dependency('grpc++')
 
-grpc_dep = dependency('gRPC')
+grpc_dep = dependency('gRPC', method: 'cmake', modules: ['gRPC::grpc++'])
+proto_dep = dependency('protobuf', method: 'cmake', modules: ['protobuf::libprotobuf'])
 
 subdir('src')
 subdir('test')

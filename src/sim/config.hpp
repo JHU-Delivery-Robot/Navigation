@@ -15,6 +15,8 @@ class Config {
 public:
     static std::optional<Config> load(const std::filesystem::path& config_file_path);
 
+    std::string control_server_url = "127.0.0.1:9000";
+
     double end_distance = 0.2;
     double time_step = 0.02;
     int iteration_limit = 60 * 50;

@@ -4,6 +4,7 @@
 #include <iostream>
 #include <optional>
 
+#include "comms/comms.hpp"
 #include "events/event_queue.hpp"
 #include "hal/sim_impl/hal_provider_sim_impl.hpp"
 #include "robot/robot.hpp"
@@ -39,6 +40,8 @@ int main(int argc, char* argv[]) {
     sim::HALProviderSimImpl sim_hal(&simulation);
     events::EventQueue event_queue;
 
+    comms::Comms comms(config.control_server_url, events::RouteControl(&event_queue), sim_hal.positioning());
+
     robot::Robot robot = robot::Robot(&sim_hal, &event_queue);
     robot.setWaypoints(config.waypoints);
 
@@ -46,6 +49,8 @@ int main(int argc, char* argv[]) {
     recording.add_config(config);
 
     std::cout << "Starting simulation..." << std::endl;
+
+    comms.open();
 
     int current_iteration = 0;
     while (current_iteration++ < config.iteration_limit) {
@@ -66,6 +71,8 @@ int main(int argc, char* argv[]) {
 
         recording.add_entry(position, heading, motor_speed);
     }
+
+    comms.close();
 
     std::filesystem::path output_file_path = std::filesystem::path("sim_output.json");
     recording.write(output_file_path);
