@@ -2,7 +2,6 @@
 
 #include <cmath>
 #include <iterator>
-#include <optional>
 
 #include "common/common.hpp"
 #include "common/vector2.hpp"
@@ -28,18 +27,18 @@ void Robot::setWaypoints(std::vector<common::Vector2> waypoints) {
 }
 
 void Robot::update() {
-    std::optional<events::Event> event = event_queue->remove();
-    while (event.has_value()) {
+    std::shared_ptr<events::Event> event = event_queue->remove();
+    while (event != nullptr) {
         // Handle events
         switch (event->getType()) {
             case events::Event::Type::FATAL_ERROR: {
                 e_stopped = true;
-                events::ErrorEvent* error = dynamic_cast<events::ErrorEvent*>(&event.value());
+                events::ErrorEvent* error = dynamic_cast<events::ErrorEvent*>(event.get());
                 std::cout << "Error from " << error->getOrigin() << ": " << error->getDetails() << std::endl;
             } break;
 
             case events::Event::Type::ROUTE_UPDATE: {
-                events::RouteUpdateEvent* route_update = dynamic_cast<events::RouteUpdateEvent*>(&event.value());
+                events::RouteUpdateEvent* route_update = dynamic_cast<events::RouteUpdateEvent*>(event.get());
                 setWaypoints(route_update->getRoute());
             } break;
 

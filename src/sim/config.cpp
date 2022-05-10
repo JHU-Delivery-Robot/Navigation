@@ -84,6 +84,8 @@ std::optional<Config> Config::load(const std::filesystem::path& config_file_path
             auto points = parse_point_list(value);
             auto polygon = sim::Polygon(points);
             config.obstacles.push_back(polygon);
+        } else if (key == "control_server_url") {
+            config.control_server_url = trim(value);
         } else {
             std::cerr << "Unrecognized sim config key: " << key << std::endl;
             return {};

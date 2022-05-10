@@ -1,10 +1,10 @@
 syntax = "proto3";
 
-option go_package = "github.com/JHU-Delivery-Robot/Server/spec";
+option go_package = "github.com/JHU-Delivery-Robot/Server/routing";
 
-package spec;
+package routing;
 
-service router {
+service Routing {
   rpc GetRoute(RobotStatus) returns (Route) {}
 }
 
@@ -20,9 +20,11 @@ message Route {
 message RobotStatus {
   enum Status {
     OK=0;
-    ERROR=1;
+    LOST=1;
+    STUCK=2;
+    BROKEN=3;
   }
 
-  Status id = 1;
+  Status status = 1;
   Point location = 3;
 }

@@ -1,1 +1,5 @@
-common_src = files([ 'differential_odometry.cpp', 'vector2.cpp' ])
+common_src = files([
+    'coordinates.cpp',
+    'differential_odometry.cpp',
+    'vector2.cpp',
+])
