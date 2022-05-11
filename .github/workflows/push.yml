@@ -10,6 +10,8 @@ jobs:
       - run: pip3 install --user ninja
       - run: pip3 install --user meson
       - uses: actions/checkout@v2
+        with:
+          submodules: recursive
       - name: vcpkg artifact cache
         uses: lukka/run-vcpkg@main
         id: runvcpkg
