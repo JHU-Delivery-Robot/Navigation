@@ -18,17 +18,17 @@ jobs:
         with:
           runVcpkgInstall: true
       - run: |
-          echo "${{ github.workspace }}/vcpkg_installed/x64-linux/lib" >> $GITHUB_PATH
+          echo "${{ github.workspace }}/vcpkg/vcpkg_installed/x64-linux/lib" >> $GITHUB_PATH
       - run: meson setup build -Db_coverage=true
         env:
           CC: gcc
           CXX: g++
-          CMAKE_PREFIX_PATH: '${{ github.workspace }}/vcpkg_installed/x64-linux'
+          CMAKE_PREFIX_PATH: '${{ github.workspace }}/vcpkg/vcpkg_installed/x64-linux'
       - run: meson setup build_clang -Db_coverage=true
         env:
           CC: clang
           CXX: clang++
-          CMAKE_PREFIX_PATH: '${{ github.workspace }}/vcpkg_installed/x64-linux'
+          CMAKE_PREFIX_PATH: '${{ github.workspace }}/vcpkg/vcpkg_installed/x64-linux'
       - run: meson compile -C build
       - run: meson compile -C build_clang
       - run: ./build/test/tests
