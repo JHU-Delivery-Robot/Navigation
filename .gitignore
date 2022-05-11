@@ -6,6 +6,7 @@
 # ignore all build files
 build/
 .cache/
+vcpkg_installed/
 
 # IDE stuff
 .vscode/

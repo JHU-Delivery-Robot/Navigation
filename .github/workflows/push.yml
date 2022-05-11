@@ -3,6 +3,8 @@ on: push
 jobs:
   build_and_test:
     runs-on: ubuntu-latest
+    env:
+      PATH: '${{ runner.workspace }}/vcpkg_installed/x64-linux/lib;$PATH'
     steps:
       - uses: actions/setup-python@v1
       - run: sudo apt-get install -y valgrind
@@ -10,14 +12,22 @@ jobs:
       - run: pip3 install --user ninja
       - run: pip3 install --user meson
       - uses: actions/checkout@v2
+      - name: vcpkg artifact cache
+        uses: lukka/run-vcpkg@main
+        id: runvcpkg
+        with:
+          runVcpkgInstall: true
+      - 
       - run: meson setup build -Db_coverage=true
         env:
           CC: gcc
           CXX: g++
+          CMAKE_PREFIX_PATH: '${{ runner.workspace }}/vcpkg_installed/x64-linux'
       - run: meson setup build_clang -Db_coverage=true
         env:
           CC: clang
           CXX: clang++
+          CMAKE_PREFIX_PATH: '${{ runner.workspace }}/vcpkg_installed/x64-linux'
       - run: meson compile -C build
       - run: meson compile -C build_clang
       - run: ./build/test/tests
