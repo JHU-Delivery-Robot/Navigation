@@ -19,6 +19,12 @@ jobs:
           runVcpkgInstall: true
       - run: |
           echo "${{ github.workspace }}/vcpkg/vcpkg_installed/x64-linux/lib" >> $GITHUB_PATH
+      - run: |
+          ls "${{ github.workspace }}"
+          ls "${{ github.workspace }}/vcpkg"
+          ls "${{ github.workspace }}/vcpkg/vcpkg_installed"
+          ls "${{ github.workspace }}/vcpkg_installed"
+          echo "$PATH"
       - run: meson setup build -Db_coverage=true
         env:
           CC: gcc
