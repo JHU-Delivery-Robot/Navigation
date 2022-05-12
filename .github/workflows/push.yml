@@ -20,20 +20,17 @@ jobs:
         env:
           VCPKG_INSTALLED_DIR: ${{ github.workspace }}/vcpkg_installed/
       - run: |
-          echo "${{ github.workspace }}/vcpkg_installed/$VCPKG_DEFAULT_TRIPLET/lib" >> $GITHUB_PATH
-      - run: |
-          echo "$PATH"
-          ls "${{ github.workspace }}/vcpkg_installed/$VCPKG_DEFAULT_TRIPLET/"
+          echo "${{ github.workspace }}/vcpkg_installed/${{ env.VCPKG_DEFAULT_TRIPLET }}/lib" >> $GITHUB_PATH
       - run: meson setup build -Db_coverage=true
         env:
           CC: gcc
           CXX: g++
-          CMAKE_PREFIX_PATH: '${{ github.workspace }}/vcpkg_installed/$VCPKG_DEFAULT_TRIPLET'
+          CMAKE_PREFIX_PATH: '${{ github.workspace }}/vcpkg_installed/${{ env.VCPKG_DEFAULT_TRIPLET }}'
       - run: meson setup build_clang -Db_coverage=true
         env:
           CC: clang
           CXX: clang++
-          CMAKE_PREFIX_PATH: '${{ github.workspace }}/vcpkg_installed/$VCPKG_DEFAULT_TRIPLET'
+          CMAKE_PREFIX_PATH: '${{ github.workspace }}/vcpkg_installed/${{ env.VCPKG_DEFAULT_TRIPLET }}'
       - run: meson compile -C build
       - run: meson compile -C build_clang
       - run: ./build/test/tests
