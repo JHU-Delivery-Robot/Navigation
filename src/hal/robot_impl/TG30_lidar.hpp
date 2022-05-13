@@ -163,7 +163,7 @@ private:
     // True when lidar is in scanning mode and asynchronous thread is
     // processing scanning data. Setting to false will stop the data
     // processing thread but won't stop the lidar unit from scanning.
-    bool is_scanning;
+    std::atomic<bool> is_scanning;
 
     // Storage for data read from lidar scan data packets.
     // Used as backing storage for read buffers that won't

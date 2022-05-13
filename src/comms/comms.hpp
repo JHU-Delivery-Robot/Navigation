@@ -12,6 +12,7 @@
 
 #include <google/protobuf/message.h>
 
+#include "common/periodic.hpp"
 #include "events/route_control.hpp"
 #include "hal/positioning.hpp"
 #include "routing.grpc.pb.h"
@@ -31,9 +32,9 @@ private:
     events::RouteControl route_control;
     hal::Positioning *positioning;
 
-    std::future<void> comms_executor;
-    bool comms_open;
+    static constexpr int poll_interval_ms = 2000;
 
+    common::Periodic poll_task;
     void poll();
 };
 
