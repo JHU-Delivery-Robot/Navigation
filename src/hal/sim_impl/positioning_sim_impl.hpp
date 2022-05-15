@@ -10,12 +10,14 @@ namespace sim {
 
 class PositioningSimImpl final : public hal::Positioning {
 public:
-    PositioningSimImpl(sim::Simulation *simulation);
+    PositioningSimImpl(sim::Simulation *simulation, common::CoordinateSystem coordinate_system);
 
-    std::tuple<common::Vector2, double> getPose() override;
+    std::tuple<common::Vector2, double> getPose() const override;
+    common::CoordinateSystem coordinateSystem() const override;
 
 private:
     sim::Simulation *simulation;
+    common::CoordinateSystem coordinate_system;
 };
 
 }  // namespace sim

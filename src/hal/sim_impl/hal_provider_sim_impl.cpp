@@ -4,13 +4,13 @@
 
 namespace sim {
 
-DistanceSensorModel HALProviderSimImpl::CliffInfraredAssembly::construct_sensor_model(sim::Simulation *simulation) {
+DistanceSensorModel HALProviderSimImpl::CliffInfraredAssembly::construct_sensor_model(sim::Simulation* simulation) {
     BeamModel beam_model = BeamModel(0.0, max_range, 0.0, 0.0);
 
     return DistanceSensorModel(simulation->obstacles(), beam_model, max_range);
 }
 
-HALProviderSimImpl::CliffInfraredAssembly::CliffInfraredAssembly(sim::Simulation *simulation)
+HALProviderSimImpl::CliffInfraredAssembly::CliffInfraredAssembly(sim::Simulation* simulation)
     : _front(0, simulation, construct_sensor_model(simulation), fov, samples),
       _left(1, simulation, construct_sensor_model(simulation), fov, samples),
       _right(2, simulation, construct_sensor_model(simulation), fov, samples),
@@ -32,13 +32,13 @@ InfraredSensorSimImpl* HALProviderSimImpl::CliffInfraredAssembly::back() {
     return &_back;
 }
 
-DistanceSensorModel HALProviderSimImpl::WheelInfraredAssembly::construct_sensor_model(sim::Simulation *simulation) {
+DistanceSensorModel HALProviderSimImpl::WheelInfraredAssembly::construct_sensor_model(sim::Simulation* simulation) {
     BeamModel beam_model = BeamModel(0.0, max_range, 0.0, 0.0);
 
     return DistanceSensorModel(simulation->obstacles(), beam_model, max_range);
 }
 
-HALProviderSimImpl::WheelInfraredAssembly::WheelInfraredAssembly(sim::Simulation *simulation)
+HALProviderSimImpl::WheelInfraredAssembly::WheelInfraredAssembly(sim::Simulation* simulation)
     : _front_left(0, simulation, construct_sensor_model(simulation), fov, samples),
       _front_right(1, simulation, construct_sensor_model(simulation), fov, samples),
       _back_left(2, simulation, construct_sensor_model(simulation), fov, samples),
@@ -60,13 +60,13 @@ InfraredSensorSimImpl* HALProviderSimImpl::WheelInfraredAssembly::back_right() {
     return &_back_right;
 }
 
-DistanceSensorModel HALProviderSimImpl::UltrasonicAssembly::construct_sensor_model(sim::Simulation *simulation) {
+DistanceSensorModel HALProviderSimImpl::UltrasonicAssembly::construct_sensor_model(sim::Simulation* simulation) {
     BeamModel beam_model = BeamModel(0.0, max_range, 0.0, 0.0);
 
     return DistanceSensorModel(simulation->obstacles(), beam_model, max_range);
 }
 
-HALProviderSimImpl::UltrasonicAssembly::UltrasonicAssembly(sim::Simulation *simulation)
+HALProviderSimImpl::UltrasonicAssembly::UltrasonicAssembly(sim::Simulation* simulation)
     : _front(0, simulation, construct_sensor_model(simulation), fov, samples),
       _left(1, simulation, construct_sensor_model(simulation), fov, samples),
       _right(2, simulation, construct_sensor_model(simulation), fov, samples),
@@ -155,14 +155,14 @@ PositioningSimImpl* HALProviderSimImpl::positioning() {
     return &positioning_impl;
 }
 
-HALProviderSimImpl::HALProviderSimImpl(sim::Simulation *simulation)
+HALProviderSimImpl::HALProviderSimImpl(sim::Simulation* simulation, common::CoordinateSystem coordinate_system)
     : lidar_beam_model(0.0, lidar_max_range, 0.0, 0.0),
       lidar_impl(simulation, DistanceSensorModel(simulation->obstacles(), lidar_beam_model, lidar_max_range), 1000),
       cliff_sensors(simulation),
       wheel_sensors(simulation),
       ultrasonic_sensors(simulation),
       motors(simulation),
-      positioning_impl(simulation) {}
+      positioning_impl(simulation, coordinate_system) {}
 
 void HALProviderSimImpl::update() {
     motors.update();

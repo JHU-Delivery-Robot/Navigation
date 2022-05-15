@@ -36,11 +36,12 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
+    common::CoordinateSystem coordinate_system(config.origin);
     sim::Simulation simulation(config);
-    sim::HALProviderSimImpl sim_hal(&simulation);
+    sim::HALProviderSimImpl sim_hal(&simulation, coordinate_system);
     events::EventQueue event_queue;
 
-    comms::Comms comms(config.control_server_url, events::RouteControl(&event_queue), sim_hal.positioning());
+    comms::Comms comms(config.control_server_url, events::RouteControl(&event_queue), events::ErrorReporting(&event_queue), sim_hal.positioning());
 
     robot::Robot robot = robot::Robot(&sim_hal, &event_queue);
     robot.setWaypoints(config.waypoints);
