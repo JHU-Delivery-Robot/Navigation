@@ -92,7 +92,7 @@ public:
         double last_update_time;
     };
 
-    HALProviderSimImpl(sim::Simulation *simulation);
+    HALProviderSimImpl(sim::Simulation *simulation, common::CoordinateSystem coordinate_system);
 
     LidarScannerSimImpl* lidar() override;
     CliffInfraredAssembly* cliff_infrared() override;

@@ -78,6 +78,9 @@ std::optional<Config> Config::load(const std::filesystem::path& config_file_path
             config.start_angle = std::stod(value) * PI / 180.0;
         } else if (key == "start_position") {
             config.start_position = parse_point(value);
+        } else if (key == "origin") {
+            common::Vector2 origin = parse_point(value);
+            config.origin = common::Coordinates(origin.x, origin.y);
         } else if (key == "waypoints") {
             config.waypoints = parse_point_list(value);
         } else if (key == "obstacles") {

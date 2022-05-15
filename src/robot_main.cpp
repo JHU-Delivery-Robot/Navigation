@@ -24,7 +24,7 @@ int main() {
 
     common::Periodic navigation(10, std::bind(&robot::Robot::update, &robot));
 
-    comms::Comms comms("127.0.0.1:9000", route_control, hal_provider.positioning());
+    comms::Comms comms("127.0.0.1:9000", route_control, error_reporting, hal_provider.positioning());
 
     // Start
     lidar->beginScanning();

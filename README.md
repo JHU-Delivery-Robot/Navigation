@@ -112,6 +112,7 @@ Simulation config parameters:
 - `time_step` &mdash; Increase in simulation time between iterations. Default is 0.02 s.
 - `iteration_limit` &mdash; Maximum iterations simulation will run for, must be an integer. Default is 3000.
 - `map_size` &mdash; Width/height of area that the replay frontend will display, centered on `(0,0)`. Must be an integer, default is 8 m.
+- `origin` &mdash; Location to center coordinate system at. Specified as `(lat, lon)`, the default is `(39.3289, -76.6215)` which corresponds to Gilman Hall on the Johns Hopkins Campus.
 - `start_position` &mdash; The position to start the robot at. Specified as a `point`, default is `(-3.0, -2.0)`.
 - `start_angle` &mdash; Angle (measured counterclockwise from standard x-axis) to start robot at. Specified in degrees, default is 90.0&deg;.
 - `goal_position` &mdash; The goal position for robot to try to drive to. Specified as a `point`, default is `(3.5, 3.0)`.

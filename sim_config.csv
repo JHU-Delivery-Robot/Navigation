@@ -6,6 +6,7 @@ iteration_limit, 5000
 map_size, 12.0
 
 start_position, (5.0, -1.5)
+origin, (39.3289, -76.6215)
 start_angle, 180
 waypoints, (-3.25, -5.0), (-5.0, -2.0), (-2.75, 5.0), (0.0, 3.0)
 
