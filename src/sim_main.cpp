@@ -44,7 +44,6 @@ int main(int argc, char* argv[]) {
     comms::Comms comms(config.control_server_url, events::RouteControl(&event_queue), events::ErrorReporting(&event_queue), sim_hal.positioning());
 
     robot::Robot robot = robot::Robot(&sim_hal, &event_queue);
-    robot.setWaypoints(config.waypoints);
 
     sim::Recording recording;
     recording.add_config(config);
