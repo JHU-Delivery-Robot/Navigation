@@ -39,7 +39,7 @@ void Comms::poll() {
             // Sometimes robot's WiFi signal is poor, it is ok if server is unavailable for a while.
             return;
         } else {
-            error_reporting.reportError("Comms", grpc_status.error_code() + ": " + grpc_status.error_message());
+            error_reporting.reportError("Comms", std::to_string(grpc_status.error_code()) + ": " + grpc_status.error_message());
         }
 
         return;
