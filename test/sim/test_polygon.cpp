@@ -1,8 +1,8 @@
 #include <cmath>
 
 #include "catch2/catch.hpp"
-#include "common.hpp"
-#include "polygon.hpp"
+#include "common/common.hpp"
+#include "sim/polygon.hpp"
 
 using namespace sim;
 using namespace common;

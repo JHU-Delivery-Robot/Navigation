@@ -2,19 +2,19 @@
 
 #include <cmath>
 #include <iterator>
-#include <optional>
 
-#include "common.hpp"
-#include "error_event.hpp"
-#include "event.hpp"
-#include "route_update_event.hpp"
-#include "vector2.hpp"
+#include "common/common.hpp"
+#include "common/vector2.hpp"
+#include "events/error_event.hpp"
+#include "events/event.hpp"
+#include "events/route_update_event.hpp"
 
 namespace robot {
 
 Robot::Robot(hal::HALProvider* hal, events::EventQueue* event_queue)
     : hal(hal),
       event_queue(event_queue),
+      current_waypoint(waypoints.end()),
       e_stopped(false),
       potential_map(q_star, potential_attractive_coefficient, potential_repulsive_coefficient, waypoint_transition_threshold),
       speed_controller(getWheelPositions(), 2 * wheel_radius, 2.0, hal) {
@@ -24,22 +24,25 @@ Robot::Robot(hal::HALProvider* hal, events::EventQueue* event_queue)
 void Robot::setWaypoints(std::vector<common::Vector2> waypoints) {
     this->waypoints = waypoints;
     current_waypoint = this->waypoints.begin();
-    potential_map.updateGoal(*current_waypoint);
+
+    if (current_waypoint != waypoints.end()) {
+        potential_map.updateGoal(*current_waypoint);
+    }
 }
 
 void Robot::update() {
-    std::optional<events::Event> event = event_queue->remove();
-    while (event.has_value()) {
+    std::shared_ptr<events::Event> event = event_queue->remove();
+    while (event != nullptr) {
         // Handle events
         switch (event->getType()) {
             case events::Event::Type::FATAL_ERROR: {
                 e_stopped = true;
-                events::ErrorEvent* error = dynamic_cast<events::ErrorEvent*>(&event.value());
+                events::ErrorEvent* error = dynamic_cast<events::ErrorEvent*>(event.get());
                 std::cout << "Error from " << error->getOrigin() << ": " << error->getDetails() << std::endl;
             } break;
 
             case events::Event::Type::ROUTE_UPDATE: {
-                events::RouteUpdateEvent* route_update = dynamic_cast<events::RouteUpdateEvent*>(&event.value());
+                events::RouteUpdateEvent* route_update = dynamic_cast<events::RouteUpdateEvent*>(event.get());
                 setWaypoints(route_update->getRoute());
             } break;
 
@@ -50,7 +53,7 @@ void Robot::update() {
         event = event_queue->remove();
     };
 
-    if (e_stopped) {
+    if (e_stopped || current_waypoint == waypoints.end()) {
         speed_controller.updateSpeed(common::Vector2(0.0, 0.0));
         return;
     }
@@ -62,9 +65,9 @@ void Robot::update() {
 
     // Once we are close enough to the current waypoint, set goal to the next waypoint
     if ((*current_waypoint - position).magnitude() < waypoint_transition_threshold) {
-        auto next_waypoint = std::next(current_waypoint);
-        if (next_waypoint != waypoints.end()) {
-            current_waypoint = next_waypoint;
+        current_waypoint = std::next(current_waypoint);
+
+        if (current_waypoint != waypoints.end()) {
             potential_map.updateGoal(*current_waypoint);
         }
     }

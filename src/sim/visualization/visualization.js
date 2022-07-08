@@ -12,6 +12,8 @@ let simRecording = {
 };
 
 let currentTimeIndex = 0;
+let timeElapsed = 0;
+let lastUpdate = null;
 let updateTimer = null;
 
 window.addEventListener('resize', resizeCanvas, false);
@@ -64,17 +66,23 @@ function play() {
 
     // Move replay forward one tick
     function tick() {
-        currentTimeIndex += 1;
+        if (lastUpdate == null) {
+            lastUpdate = Date.now();
+        }
+        timeElapsed += Date.now() - lastUpdate;
+        currentTimeIndex = Math.floor(timeElapsed / (1000.0 * simRecording.time_step));
 
         if (currentTimeIndex >= simRecording.positions.length) {
             currentTimeIndex = 0;
+            timeElapsed = 0.0;
             pause();
         } else {
             update();
         }
     }
 
-    updateTimer = setInterval(tick, simRecording.time_step * 1000);
+    lastUpdate = null;
+    updateTimer = setInterval(tick, 10);
 }
 
 // Pause replay
@@ -97,6 +105,7 @@ function restart() {
     }
 
     currentTimeIndex = 0;
+    timeElapsed = 0.0;
     update();
 }
 
@@ -111,6 +120,7 @@ function step() {
 
     if (currentTimeIndex < simRecording.positions.length) {
         currentTimeIndex += 1;
+        timeElapsed = currentTimeIndex * simRecording.time_step;
     }
 
     update();
@@ -127,6 +137,7 @@ function stepBack() {
 
     if (currentTimeIndex > 0) {
         currentTimeIndex -= 1;
+        timeElapsed = currentTimeIndex * simRecording.time_step;
     }
 
     update();

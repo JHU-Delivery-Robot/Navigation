@@ -4,7 +4,7 @@
 #include <vector>
 
 #include "event.hpp"
-#include "vector2.hpp"
+#include "common/vector2.hpp"
 
 namespace events {
 

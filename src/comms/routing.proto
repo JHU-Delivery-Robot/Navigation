@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+option go_package = "github.com/JHU-Delivery-Robot/Server/routing";
+
+package routing;
+
+service Routing {
+  rpc GetRoute(RobotStatus) returns (Route) {}
+}
+
+message Point {
+  double longitude = 1;
+  double latitude = 2;
+}
+
+message Route {
+  repeated Point waypoints = 1;
+}
+
+message RobotStatus {
+  enum Status {
+    OK=0;
+    LOST=1;
+    STUCK=2;
+    BROKEN=3;
+  }
+
+  Status status = 1;
+  Point location = 3;
+}

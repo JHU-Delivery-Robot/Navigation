@@ -5,7 +5,7 @@
 #include <tuple>
 #include <vector>
 
-#include "../common/vector2.hpp"
+#include "common/vector2.hpp"
 
 namespace sim {
 

@@ -1,7 +1,7 @@
 #include "catch2/catch.hpp"
 
-#include "common.hpp"
-#include "vector2.hpp"
+#include "common/common.hpp"
+#include "common/vector2.hpp"
 
 using namespace common;
 

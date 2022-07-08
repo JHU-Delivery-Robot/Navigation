@@ -1,7 +1,7 @@
 #include "catch2/catch.hpp"
 
-#include "common.hpp"
-#include "obstacle_map.hpp"
+#include "common/common.hpp"
+#include "sim/obstacle_map.hpp"
 
 using namespace sim;
 using namespace common;

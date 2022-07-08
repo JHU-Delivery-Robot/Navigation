@@ -3,7 +3,8 @@
 
 #include <tuple>
 
-#include "vector2.hpp"
+#include "common/coordinate_system.hpp"
+#include "common/vector2.hpp"
 
 namespace hal {
 
@@ -13,17 +14,15 @@ public:
 
     /**
      * Get the current pose of the robot,
-     * as position in meters and angle in radians
+     * as position in meters and angle in radians.
+     * Angle is anti-clockwise from x-axis
      */
-    virtual std::tuple<common::Vector2, double> getPose() = 0;
+    virtual std::tuple<common::Vector2, double> getPose() const = 0;
 
     /**
-     * Set the pose of the robot
-     * 
-     * @param position of the robot in meters
-     * @param heading of the robot in radians, measured counter-clockwise from x-axis
+     * Retrieve coordinate system used by positioning system.
      */
-    virtual void setPose(common::Vector2 position, double heading) = 0;
+    virtual common::CoordinateSystem coordinateSystem() const = 0;
 };
 
 }  // namespace hal

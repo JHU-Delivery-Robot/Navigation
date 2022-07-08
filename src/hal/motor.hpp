@@ -11,12 +11,12 @@ public:
 
     virtual ~Motor() { };
 
-    virtual Status status() = 0;
-    virtual void set_speed(float speed) = 0;
-    virtual float get_speed() = 0;
+    virtual Status status() const = 0;
+    virtual void set_speed(double speed) = 0;
+    virtual double get_speed() const = 0;
 
     virtual void reset_odometry() = 0;
-    virtual double odometry_distance() = 0;
+    virtual double odometry_distance() const = 0;
 };
 
 }

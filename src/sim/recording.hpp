@@ -6,7 +6,7 @@
 
 #include "config.hpp"
 #include "polygon.hpp"
-#include "vector2.hpp"
+#include "common/vector2.hpp"
 
 namespace sim {
 
