@@ -73,12 +73,11 @@ function play() {
         currentTimeIndex = Math.floor(timeElapsed / (1000.0 * simRecording.time_step));
 
         if (currentTimeIndex >= simRecording.positions.length) {
-            currentTimeIndex = 0;
-            timeElapsed = 0.0;
             pause();
-        } else {
-            update();
+            currentTimeIndex = simRecording.positions.length - 1;
         }
+
+        update();
     }
 
     lastUpdate = null;
@@ -118,11 +117,11 @@ function step() {
         updateTimer = null;
     }
 
-    if (currentTimeIndex < simRecording.positions.length) {
+    if (currentTimeIndex < simRecording.positions.length - 1) {
         currentTimeIndex += 1;
-        timeElapsed = currentTimeIndex * simRecording.time_step;
     }
 
+    timeElapsed = currentTimeIndex * 1000.0 * simRecording.time_step;
     update();
 }
 
@@ -137,9 +136,9 @@ function stepBack() {
 
     if (currentTimeIndex > 0) {
         currentTimeIndex -= 1;
-        timeElapsed = currentTimeIndex * simRecording.time_step;
     }
 
+    timeElapsed = currentTimeIndex * 1000.0 * simRecording.time_step;
     update();
 }
 
