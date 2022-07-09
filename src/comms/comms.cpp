@@ -14,7 +14,7 @@ Comms::Comms(std::string server_url, events::RouteControl route_control, events:
       error_reporting(error_reporting),
       route_control(route_control),
       positioning(positioning),
-      poll_task(poll_interval_ms, std::bind(&Comms::poll, this)) {}
+      poll_task("comms", poll_interval_ms, std::bind(&Comms::poll, this)) {}
 
 bool Comms::open() {
     poll_task.start();

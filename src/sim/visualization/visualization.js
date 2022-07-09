@@ -4,11 +4,13 @@ const simulationFileSelector = document.getElementById('simulationFileSelector')
 
 // Placeholders/defaults, data will be loaded from user-supplied file
 let simRecording = {
-    obstacles: [],
-    positions: [],
-    waypoints: [],
-    time_step: 0.1,
-    size: 8,
+    config: {
+        obstacles: [],
+        waypoints: [],
+        time_step: 0.1,
+        map_size: 8,
+    },
+    replay: [],
 };
 
 let currentTimeIndex = 0;
@@ -70,11 +72,11 @@ function play() {
             lastUpdate = Date.now();
         }
         timeElapsed += Date.now() - lastUpdate;
-        currentTimeIndex = Math.floor(timeElapsed / (1000.0 * simRecording.time_step));
+        currentTimeIndex = Math.floor(timeElapsed / (1000.0 * simRecording.config.time_step));
 
-        if (currentTimeIndex >= simRecording.positions.length) {
+        if (currentTimeIndex >= simRecording.replay.length) {
             pause();
-            currentTimeIndex = simRecording.positions.length - 1;
+            currentTimeIndex = simRecording.replay.length - 1;
         }
 
         update();
@@ -117,11 +119,11 @@ function step() {
         updateTimer = null;
     }
 
-    if (currentTimeIndex < simRecording.positions.length - 1) {
+    if (currentTimeIndex < simRecording.replay.length - 1) {
         currentTimeIndex += 1;
     }
 
-    timeElapsed = currentTimeIndex * 1000.0 * simRecording.time_step;
+    timeElapsed = currentTimeIndex * 1000.0 * simRecording.config.time_step;
     update();
 }
 
@@ -138,7 +140,7 @@ function stepBack() {
         currentTimeIndex -= 1;
     }
 
-    timeElapsed = currentTimeIndex * 1000.0 * simRecording.time_step;
+    timeElapsed = currentTimeIndex * 1000.0 * simRecording.config.time_step;
     update();
 }
 
@@ -162,14 +164,14 @@ function resizeCanvas() {
 // Get canvas x coordinate from point in sim-coordinate space
 function pointX(point) {
     let canvasSize = Math.min(canvas.width, canvas.height);
-    let size = simRecording.size;
+    let size = simRecording.config.map_size;
     return point[0] * (canvasSize / size) + 0.5 * canvas.width;
 }
 
 // Get canvas y coordinate from point in sim-coordinate space
 function pointY(point) {
     let canvasSize = Math.min(canvas.width, canvas.height);
-    let size = simRecording.size;
+    let size = simRecording.config.map_size;
     return 0.5 * canvas.height - point[1] * (canvasSize / size);
 }
 
@@ -178,8 +180,8 @@ function visualize() {
     drawObstacles();
     drawWaypoints();
 
-    if (simRecording.positions[currentTimeIndex]) {
-        drawRobot(simRecording.positions[currentTimeIndex]);
+    if (simRecording.replay[currentTimeIndex]) {
+        drawRobot(simRecording.replay[currentTimeIndex]);
     }
 }
 
@@ -189,7 +191,7 @@ function drawObstacles() {
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = '#000';
 
-    simRecording.obstacles.forEach(obstacle => {
+    simRecording.config.obstacles.forEach(obstacle => {
         if (obstacle.length == 0) {
             return;
         }
@@ -210,26 +212,26 @@ function drawWaypoints() {
     let ctx = canvas.getContext('2d');
     ctx.fillStyle = '#aa0099';
 
-    simRecording.waypoints.forEach(waypoint => {
+    simRecording.config.waypoints.forEach(waypoint => {
         ctx.beginPath();
         ctx.arc(pointX(waypoint), pointY(waypoint), 5, 0, 2 * Math.PI, false);
         ctx.fill();
     });
 }
 
-function drawRobot(position) {
+function drawRobot(robot_state) {
     let ctx = canvas.getContext('2d');
     let canvasSize = Math.min(canvas.width, canvas.height);
-    let size = simRecording.size;
+    let size = simRecording.config.map_size;
     let scale = canvasSize / size;
 
     ctx.save();
 
-    ctx.translate(pointX(position), pointY(position));
+    ctx.translate(pointX(robot_state.position), pointY(robot_state.position));
 
     ctx.save();
 
-    ctx.rotate(-position[2]);
+    ctx.rotate(-robot_state.angle[2]);
 
     // Body of robot
     ctx.rect(-0.25 * scale, -0.1 * scale, 0.5 * scale, 0.2 * scale);
@@ -237,7 +239,7 @@ function drawRobot(position) {
 
     ctx.restore();
 
-    ctx.translate(Math.cos(position[2]) * 0.25 * scale, -Math.sin(position[2]) * 0.25 * scale);
+    ctx.translate(Math.cos(robot_state.angle) * 0.25 * scale, -Math.sin(robot_state.angle) * 0.25 * scale);
 
     ctx.restore();
 }

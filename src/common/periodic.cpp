@@ -5,8 +5,8 @@
 
 namespace common {
 
-Periodic::Periodic(int interval_ms, std::function<void()> task)
-    : task(task), running(false), interval(interval_ms) {}
+Periodic::Periodic(std::string name, int interval_ms, std::function<void()> task)
+    : name(name), task(task), running(false), interval(interval_ms) {}
 
 void Periodic::start() {
     if (running) {
@@ -25,7 +25,7 @@ void Periodic::start() {
             if (clock.now() > next_execution) {
                 std::chrono::milliseconds overrun = std::chrono::duration_cast<std::chrono::milliseconds>(clock.now() - next_execution);
                 next_execution = clock.now();
-                std::cout << "Loop over-run by " << overrun.count() << " ms" << std::endl;
+                std::cout << "Loop \"" << name << "\" overrun by " << overrun.count() << " ms " << std::endl;
                 continue;
             }
 

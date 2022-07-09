@@ -7,6 +7,7 @@
 #include "config.hpp"
 #include "polygon.hpp"
 #include "common/vector2.hpp"
+#include "nlohmann/json.hpp"
 
 namespace sim {
 
@@ -18,11 +19,30 @@ public:
     bool write(std::filesystem::path output_file_path);
 
 private:
-    std::map<std::string, std::string> data;
-    std::vector<std::tuple<common::Vector2, double, common::Vector2>> replay_entries;
+    class RobotState {
+    public:
+        RobotState();
+        RobotState(common::Vector2 position, double angle, common::Vector2 motor_speeds);
 
-    std::string serialize_entries();
+        friend void to_json(nlohmann::ordered_json& json, const RobotState& entry);
+        friend void from_json(const nlohmann::ordered_json& json, RobotState& entry);
+
+        common::Vector2 position;
+        double angle;
+        common::Vector2 motor_speeds;
+    };
+
+    nlohmann::ordered_json to_json() const;
+
+    friend void to_json(nlohmann::ordered_json& json, const RobotState& entry);
+    friend void from_json(const nlohmann::ordered_json& json, RobotState& entry);
+
+    Config config;
+    std::vector<RobotState> replay_entries;
 };
+
+void to_json(nlohmann::ordered_json& json, const Recording::RobotState& entry);
+void from_json(const nlohmann::ordered_json& json, Recording::RobotState& entry);
 
 }  // namespace sim
 

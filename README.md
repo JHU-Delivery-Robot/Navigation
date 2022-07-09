@@ -115,7 +115,7 @@ Simulation config parameters:
 - `origin` &mdash; Location to center coordinate system at. Specified as `[lat, lon]`, the default is `[39.3289, -76.6215]` which corresponds to Gilman Hall on the Johns Hopkins Campus.
 - `start_position` &mdash; The position to start the robot at. Specified as a `point`, default is `[-3.0, -2.0]`.
 - `start_angle` &mdash; Angle (measured counterclockwise from standard x-axis) to start robot at. Specified in degrees, default is 90.0&deg;.
-- `goal_position` &mdash; The goal position for robot to try to drive to. Specified as a `point`, default is `[3.5, 3.0]`.
+- `waypoints` &mdash; List of goal positions for robot to try to drive to, should form a rough path from `start_position` to desired location. Specified as an array of `point`, default is `[[3.5, 3.0]]` - that is, by default the robot will try to drive directly from `[-3.0, -2.0]` to `[3.5, 3.0]`.
 - `obstacles` &mdash; A polygonal obstacle, specified as a list of lists of points. Each obstacle must specify at least three points. Do not close the shape (that is, do not specify start point again at end). Default is no obstacles.
 
 ## Project Structure

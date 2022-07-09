@@ -12,13 +12,13 @@ navigation_lib = static_library(
     'navigation_lib',
     common_src + comms_src + events_src + robot_src,
     include_directories : navigation_includes,
-    dependencies: [ dl_dep, bcrypt_dep, dbghelp_dep, proto_dep, grpc_dep ],
+    dependencies: [ dl_dep, bcrypt_dep, dbghelp_dep, proto_dep, grpc_dep, json_dep ],
 )
 
 navigation_dep = declare_dependency(
     link_with: navigation_lib,
     include_directories: navigation_includes,
-    dependencies: [ dl_dep, bcrypt_dep, dbghelp_dep, proto_dep, grpc_dep ],
+    dependencies: [ dl_dep, bcrypt_dep, dbghelp_dep, proto_dep, grpc_dep, json_dep ],
 )
 
 # Simulation-only code

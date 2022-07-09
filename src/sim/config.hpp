@@ -8,6 +8,7 @@
 #include "common/common.hpp"
 #include "common/coordinates.hpp"
 #include "common/vector2.hpp"
+#include "nlohmann/json.hpp"
 #include "polygon.hpp"
 
 namespace sim {
@@ -15,6 +16,9 @@ namespace sim {
 class Config {
 public:
     static std::optional<Config> load(const std::filesystem::path& config_file_path);
+
+    friend void to_json(nlohmann::ordered_json& json, const Config& config);
+    friend void from_json(const nlohmann::ordered_json& json, Config& config);
 
     std::string control_server_url = "127.0.0.1:9000";
 
@@ -30,6 +34,9 @@ public:
 
     std::vector<sim::Polygon> obstacles;
 };
+
+void to_json(nlohmann::ordered_json& json, const Config& config);
+void from_json(const nlohmann::ordered_json& json, Config& config);
 
 }  // namespace sim
 
