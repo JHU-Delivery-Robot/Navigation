@@ -68,10 +68,12 @@ function play() {
 
     // Move replay forward one tick
     function tick() {
+        currentTime = Date.now();
         if (lastUpdate == null) {
-            lastUpdate = Date.now();
+            lastUpdate = currentTime;
         }
-        timeElapsed += Date.now() - lastUpdate;
+        timeElapsed += currentTime - lastUpdate;
+        lastUpdate = currentTime;
         currentTimeIndex = Math.floor(timeElapsed / (1000.0 * simRecording.config.time_step));
 
         if (currentTimeIndex >= simRecording.replay.length) {
