@@ -35,7 +35,7 @@ private:
     constexpr double radians(double degrees) const;
     constexpr double degrees(double radians) const;
 
-     // mean radius from https://en.wikipedia.org/wiki/Earth
+    // mean radius from https://en.wikipedia.org/wiki/Earth
     static constexpr double earth_mean_radius_m = 6371000.0;
 
     Coordinates origin;

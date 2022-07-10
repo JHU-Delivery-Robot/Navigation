@@ -233,7 +233,7 @@ function drawRobot(robot_state) {
 
     ctx.save();
 
-    ctx.rotate(-robot_state.angle[2]);
+    ctx.rotate(-robot_state.angle);
 
     // Body of robot
     ctx.rect(-0.25 * scale, -0.1 * scale, 0.5 * scale, 0.2 * scale);
