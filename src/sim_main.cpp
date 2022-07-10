@@ -3,6 +3,8 @@
 #include <iomanip>
 #include <iostream>
 #include <optional>
+#include <chrono>
+#include <thread>
 
 #include "comms/comms.hpp"
 #include "events/event_queue.hpp"
@@ -50,7 +52,28 @@ int main(int argc, char* argv[]) {
 
     std::cout << "Starting simulation..." << std::endl;
 
-    comms.open();
+    bool ok = comms.open();
+    if (!ok) {
+        std::cout << "Failed to open server comms" << std::endl;
+        return -1;
+    }
+
+    std::vector<common::Coordinates> route;
+    for (auto& waypoint : config.waypoints) {
+        route.push_back(coordinate_system.project(waypoint));
+    }
+
+    ok = comms.overrideRoute(route);
+    if (!ok) {
+        std::cout << "Failed to set route override" << std::endl;
+        comms.close();
+        return -1;
+    }
+
+    // Allow server comms to start - small delays during simulation become much
+    // longer in replay since sim time runs much faster
+    // Also ensures simulation route overrides are in place
+    std::this_thread::sleep_for(std::chrono::milliseconds(2000));
 
     int current_iteration = 0;
     while (current_iteration++ < config.iteration_limit) {
@@ -72,10 +95,16 @@ int main(int argc, char* argv[]) {
         recording.add_entry(position, heading, motor_speed);
     }
 
-    comms.close();
+    ok = comms.close();
+    if (!ok) {
+        std::cout << "Failed to set route override" << std::endl;
+        return -1;
+    }
 
     std::filesystem::path output_file_path = std::filesystem::path("sim_output.json");
     recording.write(output_file_path);
 
     std::cout << "Simulation finished successfully, output written to " << output_file_path << std::endl;
+
+    return 0;
 }

@@ -10,7 +10,8 @@ namespace comms {
 
 Comms::Comms(std::string server_url, events::RouteControl route_control, events::ErrorReporting error_reporting, hal::Positioning* positioning)
     : channel(grpc::CreateChannel(server_url, grpc::InsecureChannelCredentials())),
-      stub(routing::Routing::NewStub(channel)),
+      routing_stub(protocols::routing::Routing::NewStub(channel)),
+      development_stub(protocols::development::Development::NewStub(channel)),
       error_reporting(error_reporting),
       route_control(route_control),
       positioning(positioning),
@@ -28,11 +29,27 @@ bool Comms::close() {
     return true;
 }
 
+bool Comms::overrideRoute(std::vector<common::Coordinates> route_override) const {
+    grpc::ClientContext context;
+
+    protocols::routing::Route route;
+    for (auto& coordinates : route_override) {
+        protocols::routing::Point* waypoint = route.add_waypoints();
+        waypoint->set_latitude(coordinates.latitude);
+        waypoint->set_longitude(coordinates.longitude);
+    }
+
+    protocols::development::RouteResponse response;
+    grpc::Status grpc_status = development_stub->SetRoute(&context, route, &response);
+
+    return grpc_status.ok();
+}
+
 void Comms::poll() {
     grpc::ClientContext context;
     
-    routing::Route route;
-    grpc::Status grpc_status = stub->GetRoute(&context, currentStatus(), &route);
+    protocols::routing::Route route;
+    grpc::Status grpc_status = routing_stub->GetRoute(&context, currentStatus(), &route);
 
     if (!grpc_status.ok()) {
         if (grpc_status.error_code() == grpc::StatusCode::UNAVAILABLE) {
@@ -49,26 +66,26 @@ void Comms::poll() {
     route_control.updateRoute(updated_route);
 }
 
-routing::RobotStatus Comms::currentStatus() const {
+protocols::routing::RobotStatus Comms::currentStatus() const {
     auto [position, orientation] = positioning->getPose();
     common::Coordinates current_location = positioning->coordinateSystem().project(position);
 
-    routing::Point location;
+    protocols::routing::Point location;
     location.set_latitude(current_location.latitude);
     location.set_longitude(current_location.longitude);
 
-    routing::RobotStatus status;
-    status.set_status(routing::RobotStatus::OK);
+    protocols::routing::RobotStatus status;
+    status.set_status(protocols::routing::RobotStatus::OK);
     status.mutable_location()->CopyFrom(location);
 
     return status;
 }
 
-std::vector<common::Vector2> Comms::translateRoute(routing::Route route) const {
+std::vector<common::Vector2> Comms::translateRoute(protocols::routing::Route route) const {
     std::vector<common::Vector2> waypoints = std::vector<common::Vector2>();
 
     for (int i = 0; i < route.waypoints_size(); i++) {
-        const routing::Point& waypoint = route.waypoints(i);
+        const protocols::routing::Point& waypoint = route.waypoints(i);
         const common::Coordinates coordinates = common::Coordinates(waypoint.latitude(), waypoint.longitude());
         const common::Vector2 waypoint_position = positioning->coordinateSystem().project(coordinates);
         waypoints.push_back(waypoint_position);

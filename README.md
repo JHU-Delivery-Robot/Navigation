@@ -94,6 +94,13 @@ Once you've got everything installed, you need to build and install some third-p
 
 Next, you need to create build directories for Meson. For example, to create a build configuration called `debug` with the default settings, run `meson setup debug`. To create a release configuration, run `meson setup release -Dbuildtype=release -Db_lto=true -Doptimization=2`. **NOTE**: In order to follow Meson to find our dependencies from vcpkg, _before running `meson setup`_ you must create an environment variable `CMAKE_PREFIX_PATH` and set it to `<navigation project>/vcpkg_installed/<triplet>` &mdash; make sure to use the full absolute path.
 
+To generate gRPC code from a `.proto` file, run the following commands (in the project root directory):
+```
+./vcpkg_installed/<triplet>/tools/protobuf/protoc.exe --proto_path="src/comms" --cpp_out="src/comms" <path to .proto>
+./vcpkg_installed/<triplet>/tools/protobuf/protoc.exe --proto_path="src/comms" --grpc_out="src/comms" --plugin=protoc-gen-grpc="./vcpkg_installed/<triplet>/tools/grpc/grpc_cpp_plugin.exe" <path to .proto>
+```
+Note that the triplet might be different here - for example, if you built vcpkg packages with the `x64-mingw-static` triplet, then `grpc_cpp_plugin` might instead be under the `x64-windows` triplet.
+
 To compile the project using a specific configuration, simply run `meson compile` within that folder. To clean, run `meson compile --clean`.
 
 ## Simulator

@@ -8,6 +8,10 @@
 #include <string>
 
 #include "asio.hpp"
+// header defines ERROR macro which is highly irritating,
+// so I'm undef'ing it as close to the source as I can
+#undef ERROR
+
 #include "events/error_reporting.hpp"
 #include "hal/lidar_scanner.hpp"
 
