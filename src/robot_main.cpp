@@ -22,7 +22,7 @@ int main() {
 
     robot::Robot robot(&hal_provider, &event_queue);
 
-    common::Periodic navigation(10, std::bind(&robot::Robot::update, &robot));
+    common::Periodic navigation("primary", 10, std::bind(&robot::Robot::update, &robot));
 
     comms::Comms comms("127.0.0.1:9000", route_control, error_reporting, hal_provider.positioning());
 

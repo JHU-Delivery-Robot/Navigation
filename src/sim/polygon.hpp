@@ -6,6 +6,7 @@
 #include <vector>
 
 #include "common/vector2.hpp"
+#include "nlohmann/json.hpp"
 
 namespace sim {
 
@@ -15,7 +16,9 @@ public:
 
     std::tuple<bool, double> intersect(common::Vector2 position, common::Vector2 direction) const;
 
-    friend std::ostream &operator<<(std::ostream &output, const Polygon &polygon);
+    friend std::ostream& operator<<(std::ostream& output, const Polygon& polygon);
+
+    friend nlohmann::adl_serializer<Polygon>;
 
 private:
     std::tuple<bool, double> intersect(common::Vector2 position, common::Vector2 direction, std::size_t side) const;
@@ -25,5 +28,15 @@ private:
 };
 
 }  // namespace sim
+
+namespace nlohmann {
+
+template <>
+struct adl_serializer<sim::Polygon> {
+    static void to_json(nlohmann::ordered_json& json, const sim::Polygon& polygon);
+    static sim::Polygon from_json(const nlohmann::ordered_json& json);
+};
+
+}  // namespace nlohmann
 
 #endif

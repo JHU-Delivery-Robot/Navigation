@@ -92,7 +92,14 @@ Now, use the following commands to build the executables:
 
 Once you've got everything installed, you need to build and install some third-party dependencies. From inside this project's folder, run `./vcpkg/vcpkg install --triplet <vcpkg-triplet>` where `<vcpkg-triplet>` is the vcpkg triplet identifier for your platform. For Linux, you should use the `x64-linux` triplet, for Windows with MinGW gcc use `x64-mingw-static`, and for MacOS use `x64-osx`. This make take some time to complete, but only needs to be done during the first install, or when we update our vcpkg dependencies.
 
-Next, you need to create build directories for Meson. For example, to create a build configuration called `debug` with the default settings, run `meson setup debug`. To create a release configuration, run `meson setup release -Dbuildtype=release -Db_lto=true -Doptimization=2`. In order to follow Meson to find our dependencies from vcpkg, create an environment variable `CMAKE_PREFIX_PATH` and set it to `<navigation project>/vcpkg_installed/<triplet>` &mdash; make sure to use the full absolute path.
+Next, you need to create build directories for Meson. For example, to create a build configuration called `debug` with the default settings, run `meson setup debug`. To create a release configuration, run `meson setup release -Dbuildtype=release -Db_lto=true -Doptimization=2`. **NOTE**: In order to follow Meson to find our dependencies from vcpkg, _before running `meson setup`_ you must create an environment variable `CMAKE_PREFIX_PATH` and set it to `<navigation project>/vcpkg_installed/<triplet>` &mdash; make sure to use the full absolute path.
+
+To generate gRPC code from a `.proto` file, run the following commands (in the project root directory):
+```
+./vcpkg_installed/<triplet>/tools/protobuf/protoc.exe --proto_path="src/comms" --cpp_out="src/comms" <path to .proto>
+./vcpkg_installed/<triplet>/tools/protobuf/protoc.exe --proto_path="src/comms" --grpc_out="src/comms" --plugin=protoc-gen-grpc="./vcpkg_installed/<triplet>/tools/grpc/grpc_cpp_plugin.exe" <path to .proto>
+```
+Note that the triplet might be different here - for example, if you built vcpkg packages with the `x64-mingw-static` triplet, then `grpc_cpp_plugin` might instead be under the `x64-windows` triplet.
 
 To compile the project using a specific configuration, simply run `meson compile` within that folder. To clean, run `meson compile --clean`.
 
@@ -100,23 +107,23 @@ To compile the project using a specific configuration, simply run `meson compile
 
 The simulation is split into two parts: a backend and a frontend. The backend runs the actual simulation and outputs a file called `sim_output.json` wherever it was run from that contains everything that happened during the simulation. The frontend is a local replay tool that can be used to replay and visualize the simulation output file. To use the frontend, open `./sim/visualization/index.html`.
 
-To use the simulation backend, run `/src/navigation_` and pass it the path of a simulation config file. A simple example is provided in `sim_config.csv`, which can be run with
+To use the simulation backend, run `/src/navigation_` and pass it the path of a simulation config file. A simple example is provided in `sim_config.json`, which can be run with
 ```
-> ./src/navigation_sim ../sim_config.csv
+> ./src/navigation_sim ../sim_config.json
 ```
-from within a build directory. Points are given as `(x, y)`, e.g. `(20.5, -34.23)`. Units are all in meters or seconds unless otherwise specified. Config is in CSV format, so each line is just `key, value`. Units are implied, don't include them with the value. All config parameters are optional, defaults are noted below.
+from within a build directory. Points are given as `[x, y]`, e.g. `[20.5, -34.23]`. Units are all in meters or seconds unless otherwise specified. Config is in JSON format, and units are implied, so don't include them with the value. All config parameters are optional, defaults are noted below.
 
 Simulation config parameters:
 - `control_server_url` &mdash; Control server URL address, default is `127.0.0.1:9000`.
 - `end_distance` &mdash; If the robot gets within this distance of the goal position, the simulation will end. Default is 0.2 m.
 - `time_step` &mdash; Increase in simulation time between iterations. Default is 0.02 s.
 - `iteration_limit` &mdash; Maximum iterations simulation will run for, must be an integer. Default is 3000.
-- `map_size` &mdash; Width/height of area that the replay frontend will display, centered on `(0,0)`. Must be an integer, default is 8 m.
-- `origin` &mdash; Location to center coordinate system at. Specified as `(lat, lon)`, the default is `(39.3289, -76.6215)` which corresponds to Gilman Hall on the Johns Hopkins Campus.
-- `start_position` &mdash; The position to start the robot at. Specified as a `point`, default is `(-3.0, -2.0)`.
+- `map_size` &mdash; Width/height of area that the replay frontend will display, centered on `[0,0]`. Must be an integer, default is 8 m.
+- `origin` &mdash; Location to center coordinate system at. Specified as `[lat, lon]`, the default is `[39.3289, -76.6215]` which corresponds to Gilman Hall on the Johns Hopkins Campus.
+- `start_position` &mdash; The position to start the robot at. Specified as a `point`, default is `[-3.0, -2.0]`.
 - `start_angle` &mdash; Angle (measured counterclockwise from standard x-axis) to start robot at. Specified in degrees, default is 90.0&deg;.
-- `goal_position` &mdash; The goal position for robot to try to drive to. Specified as a `point`, default is `(3.5, 3.0)`.
-- `obstacles` &mdash; A polygonal obstacle, specified as a comma separated list of points all on the same line. This key can be specified multiple times to add multiple obstacles. Must specify at least three points, do not close (specify start point again at end). Default is no obstacles.
+- `waypoints` &mdash; List of goal positions for robot to try to drive to, should form a rough path from `start_position` to desired location. Specified as an array of `point`, default is `[[3.5, 3.0]]` - that is, by default the robot will try to drive directly from `[-3.0, -2.0]` to `[3.5, 3.0]`.
+- `obstacles` &mdash; A polygonal obstacle, specified as a list of lists of points. Each obstacle must specify at least three points. Do not close the shape (that is, do not specify start point again at end). Default is no obstacles.
 
 ## Project Structure
 

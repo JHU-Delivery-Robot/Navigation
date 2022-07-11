@@ -60,3 +60,18 @@ std::ostream& operator<<(std::ostream& output, const Vector2& vector) {
 }
 
 }  // namespace common
+
+namespace nlohmann {
+
+void adl_serializer<common::Vector2>::to_json(nlohmann::ordered_json& json, const common::Vector2& vector) {
+    json = nlohmann::ordered_json::array({vector.x, vector.y});
+}
+
+common::Vector2 adl_serializer<common::Vector2>::from_json(const nlohmann::ordered_json& json) {
+    double x = json.at(0).get<double>();
+    double y = json.at(1).get<double>();
+
+    return common::Vector2(x, y);
+}
+
+}  // namespace nlohmann

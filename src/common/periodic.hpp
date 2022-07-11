@@ -5,6 +5,7 @@
 #include <chrono>
 #include <functional>
 #include <future>
+#include <string>
 
 namespace common {
 
@@ -20,7 +21,7 @@ public:
 
       NOTE: doesn't start running until start() is called
      */
-    Periodic(int interval_ms, std::function<void()> task);
+    Periodic(std::string name, int interval_ms, std::function<void()> task);
 
     /**
      Starts running task at specified intervals in a new thread.
@@ -40,6 +41,7 @@ public:
     bool isRunning();
 
 private:
+    std::string name;
     std::function<void()> task;
     std::future<void> executor;
     std::atomic<bool> running;

@@ -12,26 +12,26 @@ navigation_lib = static_library(
     'navigation_lib',
     common_src + comms_src + events_src + robot_src,
     include_directories : navigation_includes,
-    dependencies: [ dl_dep, bcrypt_dep, dbghelp_dep, proto_dep, grpc_dep ],
+    dependencies: [ dl_dep, bcrypt_dep, dbghelp_dep, proto_dep, grpc_dep, json_dep ],
 )
 
 navigation_dep = declare_dependency(
     link_with: navigation_lib,
     include_directories: navigation_includes,
-    dependencies: [ dl_dep, bcrypt_dep, dbghelp_dep, proto_dep, grpc_dep ],
+    dependencies: [ dl_dep, bcrypt_dep, dbghelp_dep, proto_dep, grpc_dep, json_dep ],
 )
 
 # Simulation-only code
 sim_lib = static_library(
     'sim_lib', sim_hal_impl_src + sim_src,
     include_directories : navigation_includes,
-    dependencies: [ navigation_dep ],
+    dependencies: [ navigation_dep, json_dep ],
 )
 
 sim_dep = declare_dependency(
     link_with: sim_lib,
     include_directories: [ sim_hal_impl_includes ],
-    dependencies: [ navigation_dep ],
+    dependencies: [ navigation_dep, json_dep ],
 )
 
 # Actual hardware-only code
