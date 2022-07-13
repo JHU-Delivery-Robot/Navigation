@@ -1,0 +1,76 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Robot Simulation Visualizer</title>
+    <meta name="description" content="A visualizer to play-back recorded robot simulations">
+
+    <link rel="stylesheet" href="../../base_style.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="sidebar-container">
+        <div class="header">
+            <h1 class="title">
+                <span class="leading">R</span>obot <br>
+                <span class="leading">S</span>imulation <br>
+                <span class="leading">V</span>isualizer
+            </h1>
+        </div>
+        <nav>
+            <hr class="sidebar-divider" />
+            <a href="../../index.html">Home</a>
+            <hr class="sidebar-divider" />
+            <a href="../config_creator/index.html">Config creator</a>
+            <hr class="sidebar-divider" />
+            <a href="./index.html" class="current">Replay tool</a>
+            <hr class="sidebar-divider" />
+        </nav>
+        <div class="sidebar">
+            <div class="control">
+                <span class="file-picker">
+                    <input hidden type="file" id="simulationFileSelector" name="simulationFile" accept=".json">
+                    <label class="file-name" for="simulationFile" id="simulationFileDisplay">
+                        Simulation file
+                    </label>
+                    <button class="btn" onclick="selectFile()">Browse</button>
+                </span>
+            </div>
+            <div class="control-group">
+                <button class="btn" onclick="play()" id="play" title="Play">
+                    <img src="../../icons/play.svg" alt="Play icon" />
+                </button>
+                <button class="btn" onclick="pause()" id="pause" title="Pause">
+                    <img src="../../icons/pause.svg" alt="Pause icon" />
+                </button>
+                <button class="btn" onclick="restart()" id="restart" title="Restart">
+                    <img src="../../icons/restart.svg" alt="Restart icon" />
+                </button>
+            </div>
+            <div class="control-group">
+                <button class="btn" onclick="stepBack()" id="stepBack" title="Step backward">
+                    <img src="../../icons/step-backward.svg" alt="Step backward icon" />
+                </button>
+                <button class="btn" onclick="step()" id="step" title="Step forward">
+                    <img src="../../icons/step-forward.svg" alt="Step forward icon" />
+                </button>
+            </div>
+            <div class="timestep-display">
+                Timestep: <span class="timestep-counter">0</span>
+            </div>
+        </div>
+    </div>
+    <div id="visualization-container">
+        <canvas width="100" height="100" id="visualizationCanvas">
+            Your browser does not support HTML5 Canvas, which is need to visualize the simulation.
+        </canvas>
+    </div>
+    <script src="replay.js"></script>
+</body>
+
+</html>

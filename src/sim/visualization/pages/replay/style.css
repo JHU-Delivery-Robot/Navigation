@@ -1,0 +1,8 @@
+.timestep-display {
+    display: flex;
+    flex-direction: row;
+}
+
+.timestep-counter {
+    margin-left: 0.5rem;
+}

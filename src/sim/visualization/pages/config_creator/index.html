@@ -3,13 +3,14 @@
 <html lang="en">
 
 <head>
-   <meta charset="utf-8">
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>Robot Simulation Visualizer</title>
     <meta name="description" content="A visualizer to play-back recorded robot simulations">
- 
-    <link rel="stylesheet" href="base_style.css">
+
+    <link rel="stylesheet" href="../../base_style.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
@@ -23,14 +24,26 @@
         </div>
         <nav>
             <hr class="sidebar-divider" />
-            <a href="index.html" class="current">Home</a>
+            <a href="../../index.html">Home</a>
             <hr class="sidebar-divider" />
-            <a href="pages/config_creator/index.html">Config creator</a>
+            <a href="./index.html" class="current">Config creator</a>
             <hr class="sidebar-divider" />
-            <a href="pages/replay/index.html">Replay tool</a>
+            <a href="../replay/index.html">Replay tool</a>
             <hr class="sidebar-divider" />
         </nav>
         <div class="sidebar">
+            <div class="control">
+                <button type="button" class="btn" onclick="set_startpoint()" id="set_startpoint">Set startpoint</button>
+            </div>
+            <div class="control">
+                <button type="button" class="btn" onclick="add_waypoint()" id="add_waypoint">Add waypoint</button>
+            </div>
+            <div class="control">
+                <button type="button" class="btn" onclick="start_polygon()" id="start_polygon">Draw polygon</button>
+            </div>
+            <div class="control">
+                <button type="button" class="btn" onclick="close_polygon()" id="close_polygon">Finish drawing</button>
+            </div>
         </div>
     </div>
     <div id="visualization-container">
@@ -38,6 +51,7 @@
             Your browser does not support HTML5 Canvas, which is need to visualize the simulation.
         </canvas>
     </div>
+    <script src="drawer.js"></script>
 </body>
 
 </html>
