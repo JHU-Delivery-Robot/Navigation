@@ -1,2 +1,7 @@
-common_includes = include_directories('.')
-common_src = files([ 'differential_odometry.cpp', 'vector2.cpp' ])
+common_src = files([
+    'coordinates.cpp',
+    'coordinate_system.cpp',
+    'differential_odometry.cpp',
+    'periodic.cpp',
+    'vector2.cpp',
+])

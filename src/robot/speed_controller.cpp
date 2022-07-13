@@ -2,9 +2,9 @@
 
 #include <cmath>
 
-#include "common.hpp"
+#include "common/common.hpp"
+#include "common/vector2.hpp"
 #include "potential_map.hpp"
-#include "vector2.hpp"
 
 namespace robot {
 

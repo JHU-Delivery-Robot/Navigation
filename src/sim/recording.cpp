@@ -6,63 +6,38 @@
 
 namespace sim {
 
+Recording::RobotState::RobotState() : position(0, 0), angle(0), motor_speeds(0, 0) {}
+Recording::RobotState::RobotState(common::Vector2 position, double angle, common::Vector2 motor_speeds) : position(position), angle(angle), motor_speeds(motor_speeds) {}
+
+void to_json(nlohmann::ordered_json& json, const Recording::RobotState& RobotState) {
+    json["position"] = RobotState.position;
+    json["angle"] = RobotState.angle;
+    json["motor_speeds"] = RobotState.motor_speeds;
+}
+
+void from_json(const nlohmann::ordered_json& json, Recording::RobotState& RobotState) {
+    RobotState.position = json.at("position").get<common::Vector2>();
+    RobotState.angle = json.at("angle").get<double>();
+    RobotState.motor_speeds = json.at("motor_speeds").get<common::Vector2>();
+}
+
 void Recording::add_config(sim::Config config) {
-    data["size"] = std::to_string(config.map_size);
-    data["time_step"] = std::to_string(config.time_step);
-
-    std::stringstream waypoints_ss;
-    waypoints_ss << "[";
-
-    for (std::size_t i = 0; i < config.waypoints.size(); i++) {
-        auto waypoint = config.waypoints[i];
-        waypoints_ss << "[" << std::to_string(waypoint.x) << ", " << std::to_string(waypoint.y) << "]";
-
-        if (i < config.waypoints.size() - 1) {
-            waypoints_ss << ", ";
-        }
-    }
-
-    waypoints_ss << "]";
-    data["waypoints"] = waypoints_ss.str();
-
-    std::stringstream obstacles_ss;
-    obstacles_ss << "[";
-
-    for (std::size_t i = 0; i < config.obstacles.size(); i++) {
-        obstacles_ss << config.obstacles[i];
-
-        if (i < config.obstacles.size() - 1) {
-            obstacles_ss << ", ";
-        }
-    }
-
-    obstacles_ss << "]";
-    data["obstacles"] = obstacles_ss.str();
-
+    this->config = config;
     add_entry(config.start_position, config.start_angle, common::Vector2(0, 0));
 }
 
-void Recording::add_entry(common::Vector2 robot_position, double robot_angle, common::Vector2 motor_speed) {
-    replay_entries.push_back({robot_position, robot_angle, motor_speed});
+void Recording::add_entry(common::Vector2 robot_position, double robot_angle, common::Vector2 motor_speeds) {
+    Recording::RobotState RobotState(robot_position, robot_angle, motor_speeds);
+    replay_entries.push_back(RobotState);
 }
 
-std::string Recording::serialize_entries() {
-    std::stringstream ss;
-    ss << "[";
+nlohmann::ordered_json Recording::to_json() const {
+    nlohmann::ordered_json json;
 
-    for (std::size_t i = 0; i < replay_entries.size(); i++) {
-        const auto& [robot_position, robot_angle, motor_speed] = replay_entries[i];
-
-        ss << "[" << robot_position.x << ", " << robot_position.y << ", " << robot_angle << ", "
-           << motor_speed.x << ", " << motor_speed.y << "]";
-
-        if (i < replay_entries.size() - 1) {
-            ss << ", \n";
-        }
-    }
-
-    ss << "]";
-    return ss.str();
+    json["config"] = config;
+    json["replay"] = replay_entries;
+    
+    return json;
 }
 
 bool Recording::write(std::filesystem::path output_file_path) {
@@ -71,15 +46,7 @@ bool Recording::write(std::filesystem::path output_file_path) {
         return false;
     }
 
-    output_file << "{\n";
-
-    for (const auto& [key, value] : data) {
-        output_file << R"(")" << key << R"(": )" << value << ",\n";
-    }
-
-    output_file << R"("positions": )" << serialize_entries() << "\n";
-
-    output_file << "}\n";
+    output_file << to_json() << std::endl;
 
     return true;
 }

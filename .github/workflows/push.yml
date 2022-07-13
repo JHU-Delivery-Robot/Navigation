@@ -10,14 +10,27 @@ jobs:
       - run: pip3 install --user ninja
       - run: pip3 install --user meson
       - uses: actions/checkout@v2
+        with:
+          submodules: recursive
+      - name: vcpkg artifact cache
+        uses: lukka/run-vcpkg@main
+        id: runvcpkg
+        with:
+          runVcpkgInstall: true
+        env:
+          VCPKG_INSTALLED_DIR: ${{ github.workspace }}/vcpkg_installed/
+      - run: |
+          echo "${{ github.workspace }}/vcpkg_installed/${{ env.VCPKG_DEFAULT_TRIPLET }}/lib" >> $GITHUB_PATH
       - run: meson setup build -Db_coverage=true
         env:
           CC: gcc
           CXX: g++
+          CMAKE_PREFIX_PATH: '${{ github.workspace }}/vcpkg_installed/${{ env.VCPKG_DEFAULT_TRIPLET }}'
       - run: meson setup build_clang -Db_coverage=true
         env:
           CC: clang
           CXX: clang++
+          CMAKE_PREFIX_PATH: '${{ github.workspace }}/vcpkg_installed/${{ env.VCPKG_DEFAULT_TRIPLET }}'
       - run: meson compile -C build
       - run: meson compile -C build_clang
       - run: ./build/test/tests

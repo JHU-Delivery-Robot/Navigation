@@ -72,3 +72,16 @@ std::ostream &operator<<(std::ostream &output, const Polygon &polygon) {
 }
 
 }  // namespace sim
+
+namespace nlohmann {
+
+void adl_serializer<sim::Polygon>::to_json(nlohmann::ordered_json& json, const sim::Polygon& polygon) {
+    json = polygon.points;
+}
+
+sim::Polygon adl_serializer<sim::Polygon>::from_json(const nlohmann::ordered_json& json) {
+    auto points = json.get<std::vector<common::Vector2>>();
+    return sim::Polygon(points);
+}
+
+}  // namespace nlohmann

@@ -3,8 +3,8 @@
 
 #include <array>
 
-#include "lidar_scanner.hpp"
-#include "vector2.hpp"
+#include "hal/lidar_scanner.hpp"
+#include "common/vector2.hpp"
 
 namespace robot {
 

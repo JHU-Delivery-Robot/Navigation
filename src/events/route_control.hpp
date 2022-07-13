@@ -5,7 +5,7 @@
 #include <vector>
 
 #include "event_queue.hpp"
-#include "vector2.hpp"
+#include "common/vector2.hpp"
 
 namespace events {
 
