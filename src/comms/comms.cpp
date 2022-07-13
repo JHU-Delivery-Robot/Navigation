@@ -8,8 +8,66 @@
 
 namespace comms {
 
+std::shared_ptr<grpc::ChannelCredentials> Comms::getCredentials() {
+    std::ifstream ca_cert_ifs("certs/deliverbot_ca.crt");
+    if (!ca_cert_ifs.is_open()) {
+        std::cout << "Failed to open ca cert" << std::endl; 
+        return nullptr;
+    }
+
+    std::string ca_cert((std::istreambuf_iterator<char>(ca_cert_ifs)),
+                        (std::istreambuf_iterator<char>()));
+
+    std::ifstream robot_cert_ifs("certs/deliverbot_robot.crt");
+    if (!robot_cert_ifs.is_open()) {
+        std::cout << "Failed to open robot cert" << std::endl;
+        return nullptr;
+    }
+
+    std::string robot_cert((std::istreambuf_iterator<char>(robot_cert_ifs)),
+                        (std::istreambuf_iterator<char>()));
+
+    std::ifstream robot_key_ifs("certs/deliverbot_robot.key");
+    if (!robot_key_ifs.is_open()) {
+        std::cout << "Failed to open rbbot key" << std::endl;
+        return nullptr;
+    }
+
+    std::string robot_key((std::istreambuf_iterator<char>(robot_key_ifs)),
+                        (std::istreambuf_iterator<char>()));
+
+    /*std::vector<grpc::experimental::IdentityKeyCertPair> certPairs;
+    grpc::experimental::IdentityKeyCertPair certPair;
+    certPair.private_key = robot_key;
+    certPair.certificate_chain = robot_cert;
+    certPairs.push_back(certPair);
+    auto provider = std::make_shared<grpc::experimental::StaticDataCertificateProvider>(ca_cert, certPairs);
+    grpc::experimental::TlsChannelCredentialsOptions tlsOpts{
+
+    };
+    tlsOpts.set_certificate_provider(provider);
+    tlsOpts.set_verify_server_certs(false);*/
+
+    grpc::SslCredentialsOptions ssl_opts;
+    ssl_opts.pem_root_certs = ca_cert;
+    ssl_opts.pem_private_key = robot_key;
+    ssl_opts.pem_cert_chain = robot_cert;
+
+    return grpc::SslCredentials(ssl_opts);
+}
+
+grpc::ChannelArguments Comms::getChannelArguments() {
+    grpc::ChannelArguments arguments;
+
+    // channel_arguments.SetMaxReceiveMessageSize(MAX_MESSAGE_SIZE);
+    // channel_arguments.SetMaxSendMessageSize(MAX_MESSAGE_SIZE);
+    //arguments.SetSslTargetNameOverride("localhost");
+
+    return arguments;
+}
+
 Comms::Comms(std::string server_url, events::RouteControl route_control, events::ErrorReporting error_reporting, hal::Positioning* positioning)
-    : channel(grpc::CreateChannel(server_url, grpc::InsecureChannelCredentials())),
+    : channel(grpc::CreateChannel(server_url, Comms::getCredentials())),
       routing_stub(protocols::routing::Routing::NewStub(channel)),
       development_stub(protocols::development::Development::NewStub(channel)),
       error_reporting(error_reporting),
@@ -29,7 +87,7 @@ bool Comms::close() {
     return true;
 }
 
-bool Comms::overrideRoute(std::vector<common::Coordinates> route_override) const {
+bool Comms::overrideRoute(std::vector<common::Coordinates> route_override) {
     grpc::ClientContext context;
 
     protocols::routing::Route route;
@@ -40,7 +98,21 @@ bool Comms::overrideRoute(std::vector<common::Coordinates> route_override) const
     }
 
     protocols::development::RouteResponse response;
-    grpc::Status grpc_status = development_stub->SetRoute(&context, route, &response);
+    grpc::Status grpc_status;
+
+    try {
+        grpc_status = development_stub->SetRoute(&context, route, &response);
+    } catch (const std::exception& ex) {
+        std::cout << ex.what() << std::endl;
+    } catch (const std::string& ex) {
+        std::cout << ex << std::endl;
+    } catch (...) {
+        std::cout << "Uhhhhh" << std::endl;
+    }
+
+    if (!grpc_status.ok()) {
+        std::cout << "Comms error: " << std::to_string(grpc_status.error_code()) << ": " << grpc_status.error_message() << std::endl;
+    }
 
     return grpc_status.ok();
 }

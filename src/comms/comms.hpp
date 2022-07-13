@@ -9,7 +9,9 @@
 #include <grpcpp/channel.h>
 #include <grpcpp/client_context.h>
 #include <grpcpp/create_channel.h>
+#include <grpcpp/security/credentials.h>
 
+#include <fstream>
 #include <future>
 #include <memory>
 #include <string>
@@ -36,9 +38,12 @@ public:
     bool open();
     bool close();
 
-    bool overrideRoute(std::vector<common::Coordinates> route_override) const;
+    bool overrideRoute(std::vector<common::Coordinates> route_override);
 
 private:
+    static std::shared_ptr<grpc::ChannelCredentials> getCredentials();
+    static grpc::ChannelArguments getChannelArguments();
+
     protocols::routing::RobotStatus currentStatus() const;
     std::vector<common::Vector2> translateRoute(protocols::routing::Route route) const;
 
