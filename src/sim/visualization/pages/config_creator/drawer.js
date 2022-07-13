@@ -111,8 +111,8 @@ function set_startpoint() {
 
 function close_polygon() {
     if (coordinates.length != 0) {
-        pol = new DrawObject(ctx, "p", [...coordinates]);
-        allObjects.push(pol);
+        poly = new DrawObject("p", [...coordinates]);
+        allObjects.push(poly);
         redrawAll();
         coordinates = [];
         redoElements = [];
@@ -133,15 +133,13 @@ function onCanvasClick(event) {
     if (drawing == "p") {
         coordinates.push({ x: mouseX, y: mouseY });
         drawPolygon(coordinates);
-    }
-    else if (drawing == "w") {
+    } else if (drawing == "w") {
         coordinates.push({ x: mouseX, y: mouseY });
-        waypoint = new DrawObject(ctx, "w", [...coordinates]);
+        waypoint = new DrawObject("w", [...coordinates]);
         allObjects.push(waypoint);
         waypoint.draw();
         coordinates = [];
-    }
-    else if (drawing == "s") {
+    } else if (drawing == "s") {
         coordinates.push({ x: mouseX, y: mouseY });
         startPoint.coords = [...coordinates];
         redrawAll();
@@ -164,7 +162,6 @@ function resizeCanvas() {
 
     redrawAll();
 }
-
 
 //---------------------
 
