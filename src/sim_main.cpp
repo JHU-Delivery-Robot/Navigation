@@ -63,12 +63,16 @@ int main(int argc, char* argv[]) {
         route.push_back(coordinate_system.project(waypoint));
     }
 
+    std::cout << "Route prepared, beginning override" << std::endl;
+
     ok = comms.overrideRoute(route);
     if (!ok) {
         std::cout << "Failed to set route override" << std::endl;
         comms.close();
         return -1;
     }
+
+    std::cout << "Route override set" << std::endl;
 
     // Allow server comms to start - small delays during simulation become much
     // longer in replay since sim time runs much faster
@@ -97,14 +101,16 @@ int main(int argc, char* argv[]) {
 
     ok = comms.close();
     if (!ok) {
-        std::cout << "Failed to set route override" << std::endl;
+        std::cout << "Failed to set close comms" << std::endl;
         return -1;
     }
+
+    std::cout << "Simulation complete" << std::endl;
 
     std::filesystem::path output_file_path = std::filesystem::path("sim_output.json");
     recording.write(output_file_path);
 
-    std::cout << "Simulation finished successfully, output written to " << output_file_path << std::endl;
+    std::cout << "Simulation output written to " << output_file_path << std::endl;
 
     return 0;
 }
