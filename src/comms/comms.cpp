@@ -8,8 +8,11 @@
 
 namespace comms {
 
-Comms::Comms(std::string server_url, events::RouteControl route_control, events::ErrorReporting error_reporting, hal::Positioning* positioning)
+Comms::Credentials::Credentials(std::string root_ca_cert, std::string robot_cert, std::string robot_key) : root_ca_cert(root_ca_cert), robot_cert(robot_cert), robot_key(robot_key) {}
+
+Comms::Comms(std::string server_url, Comms::Credentials credentials, events::RouteControl route_control, events::ErrorReporting error_reporting, hal::Positioning* positioning)
     : server_url(server_url),
+      credentials(credentials),
       error_reporting(error_reporting),
       route_control(route_control),
       positioning(positioning),
@@ -41,7 +44,7 @@ bool Comms::close() {
 }
 
 std::shared_ptr<grpc::ChannelCredentials> Comms::constructSSLCredentials() const {
-    std::ifstream ca_cert_ifs("certs/deliverbot_ca.crt");
+    std::ifstream ca_cert_ifs(credentials.root_ca_cert);
     if (!ca_cert_ifs.is_open()) {
         std::cout << "Failed to open CA cert" << std::endl;
         return nullptr;
@@ -50,7 +53,7 @@ std::shared_ptr<grpc::ChannelCredentials> Comms::constructSSLCredentials() const
     std::string ca_cert((std::istreambuf_iterator<char>(ca_cert_ifs)),
                         (std::istreambuf_iterator<char>()));
 
-    std::ifstream robot_cert_ifs("certs/deliverbot_robot.crt");
+    std::ifstream robot_cert_ifs(credentials.robot_cert);
     if (!robot_cert_ifs.is_open()) {
         std::cout << "Failed to open robot cert" << std::endl;
         return nullptr;
@@ -59,7 +62,7 @@ std::shared_ptr<grpc::ChannelCredentials> Comms::constructSSLCredentials() const
     std::string robot_cert((std::istreambuf_iterator<char>(robot_cert_ifs)),
                            (std::istreambuf_iterator<char>()));
 
-    std::ifstream robot_key_ifs("certs/deliverbot_robot.key");
+    std::ifstream robot_key_ifs(credentials.robot_key);
     if (!robot_key_ifs.is_open()) {
         std::cout << "Failed to open robot key" << std::endl;
         return nullptr;
