@@ -16,6 +16,10 @@ jobs:
         id: vcpkg_baseline
         run: |
           JSON=`cat ./vcpkg.json`
+          # Escape multiline variable
+          JSON="${JSON//'%'/'%25'}"
+          JSON="${JSON//$'\n'/'%0A'}"
+          JSON="${JSON//$'\r'/'%0D'}"
           echo "::set-output name=vcpkg_json::${JSON}"
       - name: vcpkg artifact cache
         uses: lukka/run-vcpkg@main
