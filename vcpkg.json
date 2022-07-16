@@ -1,7 +1,11 @@
 {
-   "name": "deliverbot-navigation",
+    "name": "deliverbot-navigation",
     "version": "0.1.0",
     "dependencies": [
-        "grpc"
-    ]
+        {
+            "name": "grpc",
+            "version>=": "1.46.3"
+        }
+    ],
+    "builtin-baseline": "8b62d95a81afcb9efe74bebeb62f04c1e0e2a003"
 }

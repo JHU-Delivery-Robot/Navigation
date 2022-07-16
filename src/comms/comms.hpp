@@ -41,11 +41,11 @@ public:
     bool overrideRoute(std::vector<common::Coordinates> route_override);
 
 private:
-    static std::shared_ptr<grpc::ChannelCredentials> getCredentials();
-    static grpc::ChannelArguments getChannelArguments();
-
+    std::shared_ptr<grpc::ChannelCredentials> constructSSLCredentials() const;
     protocols::routing::RobotStatus currentStatus() const;
     std::vector<common::Vector2> translateRoute(protocols::routing::Route route) const;
+
+    std::string server_url;
 
     std::shared_ptr<grpc::ChannelInterface> channel;
     std::unique_ptr<protocols::routing::Routing::Stub> routing_stub;
