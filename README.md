@@ -27,6 +27,8 @@ Contains the primary robot navigation software for the JHU Deliverbot project, a
 
 ## Installing
 
+VCPKG instructions!
+
 After completing the relevant installation instructions for your platform, see the [Building](#building) instructions next to make sure your installation works. The following instructions use GCC compilers, however MSVC and (recent versions of) Clang should also work.
 
 ### Windows

@@ -101,7 +101,7 @@ int main(int argc, char* argv[]) {
 
     ok = comms.close();
     if (!ok) {
-        std::cout << "Failed to set close comms" << std::endl;
+        std::cout << "Failed to close comms" << std::endl;
         return -1;
     }
 

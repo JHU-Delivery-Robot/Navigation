@@ -16,24 +16,28 @@
 #include <google/protobuf/port_def.inc>
 
 PROTOBUF_PRAGMA_INIT_SEG
+
+namespace _pb = ::PROTOBUF_NAMESPACE_ID;
+namespace _pbi = _pb::internal;
+
 namespace protocols {
 namespace development {
-constexpr RouteResponse::RouteResponse(
-  ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized){}
+PROTOBUF_CONSTEXPR RouteResponse::RouteResponse(
+    ::_pbi::ConstantInitialized) {}
 struct RouteResponseDefaultTypeInternal {
-  constexpr RouteResponseDefaultTypeInternal()
-    : _instance(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized{}) {}
+  PROTOBUF_CONSTEXPR RouteResponseDefaultTypeInternal()
+      : _instance(::_pbi::ConstantInitialized{}) {}
   ~RouteResponseDefaultTypeInternal() {}
   union {
     RouteResponse _instance;
   };
 };
-PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT RouteResponseDefaultTypeInternal _RouteResponse_default_instance_;
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 RouteResponseDefaultTypeInternal _RouteResponse_default_instance_;
 }  // namespace development
 }  // namespace protocols
-static ::PROTOBUF_NAMESPACE_ID::Metadata file_level_metadata_development_2eproto[1];
-static constexpr ::PROTOBUF_NAMESPACE_ID::EnumDescriptor const** file_level_enum_descriptors_development_2eproto = nullptr;
-static constexpr ::PROTOBUF_NAMESPACE_ID::ServiceDescriptor const** file_level_service_descriptors_development_2eproto = nullptr;
+static ::_pb::Metadata file_level_metadata_development_2eproto[1];
+static constexpr ::_pb::EnumDescriptor const** file_level_enum_descriptors_development_2eproto = nullptr;
+static constexpr ::_pb::ServiceDescriptor const** file_level_service_descriptors_development_2eproto = nullptr;
 
 const uint32_t TableStruct_development_2eproto::offsets[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
   ~0u,  // no _has_bits_
@@ -43,12 +47,12 @@ const uint32_t TableStruct_development_2eproto::offsets[] PROTOBUF_SECTION_VARIA
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
 };
-static const ::PROTOBUF_NAMESPACE_ID::internal::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
+static const ::_pbi::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
   { 0, -1, -1, sizeof(::protocols::development::RouteResponse)},
 };
 
-static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] = {
-  reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::protocols::development::_RouteResponse_default_instance_),
+static const ::_pb::Message* const file_default_instances[] = {
+  &::protocols::development::_RouteResponse_default_instance_._instance,
 };
 
 const char descriptor_table_protodef_development_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) =
@@ -59,22 +63,24 @@ const char descriptor_table_protodef_development_2eproto[] PROTOBUF_SECTION_VARI
   "ponse\"\000B0Z.github.com/JHU-Delivery-Robot"
   "/Server/protocolsb\006proto3"
   ;
-static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable*const descriptor_table_development_2eproto_deps[1] = {
+static const ::_pbi::DescriptorTable* const descriptor_table_development_2eproto_deps[1] = {
   &::descriptor_table_routing_2eproto,
 };
-static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_development_2eproto_once;
-const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_development_2eproto = {
-  false, false, 225, descriptor_table_protodef_development_2eproto, "development.proto", 
-  &descriptor_table_development_2eproto_once, descriptor_table_development_2eproto_deps, 1, 1,
-  schemas, file_default_instances, TableStruct_development_2eproto::offsets,
-  file_level_metadata_development_2eproto, file_level_enum_descriptors_development_2eproto, file_level_service_descriptors_development_2eproto,
+static ::_pbi::once_flag descriptor_table_development_2eproto_once;
+const ::_pbi::DescriptorTable descriptor_table_development_2eproto = {
+    false, false, 225, descriptor_table_protodef_development_2eproto,
+    "development.proto",
+    &descriptor_table_development_2eproto_once, descriptor_table_development_2eproto_deps, 1, 1,
+    schemas, file_default_instances, TableStruct_development_2eproto::offsets,
+    file_level_metadata_development_2eproto, file_level_enum_descriptors_development_2eproto,
+    file_level_service_descriptors_development_2eproto,
 };
-PROTOBUF_ATTRIBUTE_WEAK const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable* descriptor_table_development_2eproto_getter() {
+PROTOBUF_ATTRIBUTE_WEAK const ::_pbi::DescriptorTable* descriptor_table_development_2eproto_getter() {
   return &descriptor_table_development_2eproto;
 }
 
 // Force running AddDescriptors() at dynamic initialization time.
-PROTOBUF_ATTRIBUTE_INIT_PRIORITY static ::PROTOBUF_NAMESPACE_ID::internal::AddDescriptorsRunner dynamic_init_dummy_development_2eproto(&descriptor_table_development_2eproto);
+PROTOBUF_ATTRIBUTE_INIT_PRIORITY2 static ::_pbi::AddDescriptorsRunner dynamic_init_dummy_development_2eproto(&descriptor_table_development_2eproto);
 namespace protocols {
 namespace development {
 
@@ -91,6 +97,7 @@ RouteResponse::RouteResponse(::PROTOBUF_NAMESPACE_ID::Arena* arena,
 }
 RouteResponse::RouteResponse(const RouteResponse& from)
   : ::PROTOBUF_NAMESPACE_ID::internal::ZeroFieldsBase() {
+  RouteResponse* const _this = this; (void)_this;
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
   // @@protoc_insertion_point(copy_constructor:protocols.development.RouteResponse)
 }
@@ -112,7 +119,7 @@ const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*RouteResponse::GetClassData() 
 
 
 ::PROTOBUF_NAMESPACE_ID::Metadata RouteResponse::GetMetadata() const {
-  return ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(
+  return ::_pbi::AssignDescriptors(
       &descriptor_table_development_2eproto_getter, &descriptor_table_development_2eproto_once,
       file_level_metadata_development_2eproto[0]);
 }
@@ -121,7 +128,8 @@ const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*RouteResponse::GetClassData() 
 }  // namespace development
 }  // namespace protocols
 PROTOBUF_NAMESPACE_OPEN
-template<> PROTOBUF_NOINLINE ::protocols::development::RouteResponse* Arena::CreateMaybeMessage< ::protocols::development::RouteResponse >(Arena* arena) {
+template<> PROTOBUF_NOINLINE ::protocols::development::RouteResponse*
+Arena::CreateMaybeMessage< ::protocols::development::RouteResponse >(Arena* arena) {
   return Arena::CreateMessageInternal< ::protocols::development::RouteResponse >(arena);
 }
 PROTOBUF_NAMESPACE_CLOSE

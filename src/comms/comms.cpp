@@ -8,10 +8,42 @@
 
 namespace comms {
 
-std::shared_ptr<grpc::ChannelCredentials> Comms::getCredentials() {
+Comms::Comms(std::string server_url, events::RouteControl route_control, events::ErrorReporting error_reporting, hal::Positioning* positioning)
+    : server_url(server_url),
+      error_reporting(error_reporting),
+      route_control(route_control),
+      positioning(positioning),
+      poll_task("comms", poll_interval_ms, std::bind(&Comms::poll, this)) {}
+
+bool Comms::open() {
+    auto credentials = constructSSLCredentials();
+    if (credentials == nullptr) {
+        return false;
+    }
+
+    channel = grpc::CreateChannel(server_url, credentials);
+    if (channel->GetState(false) == grpc_connectivity_state::GRPC_CHANNEL_SHUTDOWN) {
+        return false;
+    }
+
+    routing_stub = protocols::routing::Routing::NewStub(channel);
+    development_stub = protocols::development::Development::NewStub(channel);
+
+    poll_task.start();
+
+    return true;
+}
+
+bool Comms::close() {
+    poll_task.stop();
+
+    return true;
+}
+
+std::shared_ptr<grpc::ChannelCredentials> Comms::constructSSLCredentials() const {
     std::ifstream ca_cert_ifs("certs/deliverbot_ca.crt");
     if (!ca_cert_ifs.is_open()) {
-        std::cout << "Failed to open ca cert" << std::endl; 
+        std::cout << "Failed to open CA cert" << std::endl;
         return nullptr;
     }
 
@@ -25,28 +57,15 @@ std::shared_ptr<grpc::ChannelCredentials> Comms::getCredentials() {
     }
 
     std::string robot_cert((std::istreambuf_iterator<char>(robot_cert_ifs)),
-                        (std::istreambuf_iterator<char>()));
+                           (std::istreambuf_iterator<char>()));
 
     std::ifstream robot_key_ifs("certs/deliverbot_robot.key");
     if (!robot_key_ifs.is_open()) {
-        std::cout << "Failed to open rbbot key" << std::endl;
+        std::cout << "Failed to open robot key" << std::endl;
         return nullptr;
     }
 
-    std::string robot_key((std::istreambuf_iterator<char>(robot_key_ifs)),
-                        (std::istreambuf_iterator<char>()));
-
-    /*std::vector<grpc::experimental::IdentityKeyCertPair> certPairs;
-    grpc::experimental::IdentityKeyCertPair certPair;
-    certPair.private_key = robot_key;
-    certPair.certificate_chain = robot_cert;
-    certPairs.push_back(certPair);
-    auto provider = std::make_shared<grpc::experimental::StaticDataCertificateProvider>(ca_cert, certPairs);
-    grpc::experimental::TlsChannelCredentialsOptions tlsOpts{
-
-    };
-    tlsOpts.set_certificate_provider(provider);
-    tlsOpts.set_verify_server_certs(false);*/
+    std::string robot_key(std::istreambuf_iterator<char>(robot_key_ifs), (std::istreambuf_iterator<char>()));
 
     grpc::SslCredentialsOptions ssl_opts;
     ssl_opts.pem_root_certs = ca_cert;
@@ -55,38 +74,6 @@ std::shared_ptr<grpc::ChannelCredentials> Comms::getCredentials() {
 
     return grpc::SslCredentials(ssl_opts);
 }
-
-grpc::ChannelArguments Comms::getChannelArguments() {
-    grpc::ChannelArguments arguments;
-
-    // channel_arguments.SetMaxReceiveMessageSize(MAX_MESSAGE_SIZE);
-    // channel_arguments.SetMaxSendMessageSize(MAX_MESSAGE_SIZE);
-    //arguments.SetSslTargetNameOverride("localhost");
-
-    return arguments;
-}
-
-Comms::Comms(std::string server_url, events::RouteControl route_control, events::ErrorReporting error_reporting, hal::Positioning* positioning)
-    : channel(grpc::CreateChannel(server_url, Comms::getCredentials())),
-      routing_stub(protocols::routing::Routing::NewStub(channel)),
-      development_stub(protocols::development::Development::NewStub(channel)),
-      error_reporting(error_reporting),
-      route_control(route_control),
-      positioning(positioning),
-      poll_task("comms", poll_interval_ms, std::bind(&Comms::poll, this)) {}
-
-bool Comms::open() {
-    poll_task.start();
-
-    return true;
-}
-
-bool Comms::close() {
-    poll_task.stop();
-
-    return true;
-}
-
 bool Comms::overrideRoute(std::vector<common::Coordinates> route_override) {
     grpc::ClientContext context;
 
