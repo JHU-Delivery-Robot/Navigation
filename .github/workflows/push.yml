@@ -22,7 +22,7 @@ jobs:
         id: runvcpkg
         with:
           runVcpkgInstall: true
-          vcpkgGitCommitId: "${{fromJson(steps.vcpkg_baseline.outputs.vcpkg_json).builtin-baseline}}"
+          vcpkgGitCommitId: '${{fromJson(steps.vcpkg_baseline.outputs.vcpkg_json).builtin-baseline}}'
         env:
           VCPKG_INSTALLED_DIR: ${{ github.workspace }}/vcpkg_installed/
       - run: |
