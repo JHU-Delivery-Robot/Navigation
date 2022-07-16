@@ -18,8 +18,8 @@
 #include "sim/simulation.hpp"
 
 int main(int argc, char* argv[]) {
-    if (argc != 3) {
-        std::cerr << "Usage: " << argv[0] << " <robot config> <sim config>" << std::endl;
+    if (argc != 4) {
+        std::cerr << "Usage: " << argv[0] << " <robot config> <sim config> <output_file>" << std::endl;
         return 1;
     }
 
@@ -112,8 +112,19 @@ int main(int argc, char* argv[]) {
 
     std::cout << "Simulation complete" << std::endl;
 
-    std::filesystem::path output_file_path = std::filesystem::path("sim_output.json");
-    recording.write(output_file_path);
+    std::filesystem::path output_file_path = std::filesystem::path(argv[3]);
+    std::error_code err;
+    std::filesystem::create_directory(output_file_path.parent_path(), err);
+    if (err) {
+        std::cout << "Failed to create simulation output directory" << std::endl;
+        return -1;
+    }
+        
+    ok = recording.write(output_file_path);
+    if (!ok) {
+        std::cout << "Failed to save simulation output" << std::endl;
+        return -1;
+    }
 
     std::cout << "Simulation output written to " << output_file_path << std::endl;
 

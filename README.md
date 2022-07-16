@@ -23,11 +23,9 @@ Contains the primary robot navigation software for the JHU Deliverbot project, a
 | Run build for meson build target named `build` | `meson compile -C build` |
 | Clean build target named `build` | `meson compile -C build --clean` |
 | Run unit tests in `build` target | `./build/test/tests` |
-| Run simulator using config `sim_config.csv` | `./build/src/navigation_sim ./sim_config.csv` |
+| Run simulator using config `sim_config.csv` | `./build/src/navigation_sim ./robot_config.json ./sim_config.json ./sim_output/output.json` |
 
 ## Installing
-
-VCPKG instructions!
 
 After completing the relevant installation instructions for your platform, see the [Building](#building) instructions next to make sure your installation works. The following instructions use GCC compilers, however MSVC and (recent versions of) Clang should also work.
 
@@ -42,6 +40,8 @@ Next, install Git, Python 3, the Ninja build system, and the GCC compiler suite.
 scoop install git python ninja gcc
 ```
 
+Next, [install vcpkg](https://vcpkg.io/en/getting-started.html).
+
 Next, clone this repository by navigating to the folder you want to keep Deliverbot software in and then running `git clone --recurse-submodules https://github.com/JHU-Delivery-Robot/Navigation.git`.
 
 Next, we install the Meson build system. This should just be `pip install meson`. Run `meson --version` to make sure it is installed properly &mdash; if meson cannot be found your Python scripts are likely not in your PATH. If you are using an existing installation of Python and run into this issue, just uninstall Python, re-install it using scoop, and then install Meson again. 
@@ -54,6 +54,9 @@ Use your system package manager to acquire Git, the GCC compiler suite, a recent
 ```
 sudo apt install git gcc python3 ninja-build cmake
 ```
+
+Next, [install vcpkg](https://vcpkg.io/en/getting-started.html).
+
 Next, clone this repository into the folder of your choice using `git clone --recurse-submodules https://github.com/JHU-Delivery-Robot/Navigation.git`.
 
 Next, we install meson. This should just be `pip install meson`. Run `meson --version` to make sure it is installed properly, if meson cannot be found you need to place Python package scripts onto your PATH.
@@ -77,6 +80,8 @@ Next, enable python certs by doing the following:
 1. Open your finder and go to **Applications** in the left panel
 2. Find and open the Python 3.xx folder
 3. Double-click the *Install Certificates.command* file. Let its terminal run to completion, and input whatever you need to in order to let it run
+
+Next, [install vcpkg](https://vcpkg.io/en/getting-started.html).
 
 Clone this repository using `git clone --recurse-submodules https://github.com/JHU-Delivery-Robot/Navigation.git` and open the Navigation directory in a terminal. Next, we install the vcpkg package manager by running `./vcpkg/bootstrap-vcpkg.sh` from the root directory of this project.
 
@@ -111,7 +116,7 @@ The simulation is split into two parts: a backend and a frontend. The backend ru
 
 To use the simulation backend, run `/src/navigation_` and pass it the path of a simulation config file. A simple example is provided in `sim_config.json`, which can be run with
 ```
-> ./src/navigation_sim ../sim_config.json
+> .<build folder>/src/navigation_sim robot_config.json sim_config.json sim_output/output.json
 ```
 from within a build directory. Points are given as `[x, y]`, e.g. `[20.5, -34.23]`. Units are all in meters or seconds unless otherwise specified. Config is in JSON format, and units are implied, so don't include them with the value. All config parameters are optional, defaults are noted below.
 

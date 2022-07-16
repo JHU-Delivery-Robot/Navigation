@@ -65,14 +65,19 @@ void Robot::update() {
 
     // Once we are close enough to the current waypoint, set goal to the next waypoint
     if ((*current_waypoint - position).magnitude() < waypoint_transition_threshold) {
-        current_waypoint = std::next(current_waypoint);
+        auto next_waypoint = std::next(current_waypoint);
 
-        if (current_waypoint != waypoints.end()) {
+        if (next_waypoint != waypoints.end()) {
+            current_waypoint = next_waypoint;
             potential_map.updateGoal(*current_waypoint);
         }
     }
 
     common::Vector2 gradient = potential_map.getGradient(position + common::Vector2::polar(heading, 0.5 * length));
+    if (gradient.magnitude() < 1e-2) {
+        speed_controller.updateSpeed(common::Vector2(0.0, 0.0));
+        return;
+    }
 
     speed_controller.updateSpeed(gradient);
 }
