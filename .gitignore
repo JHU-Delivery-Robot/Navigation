@@ -20,6 +20,9 @@ robosim
 roboctrl
 simtests
 
+# mTLS certs
+/certs/
+
 # coverage stuff
 *.gcno
 *.gcda

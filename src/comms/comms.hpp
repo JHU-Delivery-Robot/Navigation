@@ -33,7 +33,16 @@ namespace comms {
 
 class Comms {
 public:
-    Comms(std::string server_url, events::RouteControl route_control, events::ErrorReporting error_reporting, hal::Positioning *positioning);
+    class Credentials {
+    public:
+        Credentials(std::string root_ca_cert, std::string robot_cert, std::string robot_key);
+
+        std::string root_ca_cert;
+        std::string robot_cert;
+        std::string robot_key;
+    };
+
+    Comms(std::string server_url, Credentials credentials, events::RouteControl route_control, events::ErrorReporting error_reporting, hal::Positioning *positioning);
 
     bool open();
     bool close();
@@ -46,6 +55,7 @@ private:
     std::vector<common::Vector2> translateRoute(protocols::routing::Route route) const;
 
     std::string server_url;
+    Credentials credentials;
 
     std::shared_ptr<grpc::ChannelInterface> channel;
     std::unique_ptr<protocols::routing::Routing::Stub> routing_stub;

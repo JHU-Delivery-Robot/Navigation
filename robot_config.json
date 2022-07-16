@@ -1,0 +1,7 @@
+{
+    "control_server_url": "todo",
+    "root_ca_cert": "./certs/local_test_ca.crt",
+    "robot_cert": "./certs/local_test_robot.crt",
+    "robot_key": "./certs/local_test_robot.key",
+    "lidar_port": "COM3"
+}
