@@ -48,7 +48,7 @@ int main(int argc, char* argv[]) {
     events::EventQueue event_queue;
 
     comms::Comms::Credentials server_credentials(robot_config.root_ca_cert, robot_config.robot_cert, robot_config.robot_key);
-    comms::Comms comms(sim_config.control_server_url, server_credentials, events::RouteControl(&event_queue), events::ErrorReporting(&event_queue), sim_hal.positioning());
+    comms::Comms comms(robot_config.control_server_url, server_credentials, events::RouteControl(&event_queue), events::ErrorReporting(&event_queue), sim_hal.positioning());
 
     robot::Robot robot = robot::Robot(&sim_hal, &event_queue);
 

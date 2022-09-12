@@ -40,7 +40,6 @@ std::optional<Config> Config::load(const std::filesystem::path& config_file_path
 }
 
 void to_json(nlohmann::ordered_json& json, const Config& config) {
-    json["control_server_url"] = config.control_server_url;
     json["end_distance"] = config.end_distance;
     json["time_step"] = config.time_step;
     json["iteration_limit"] = config.iteration_limit;
@@ -52,7 +51,6 @@ void to_json(nlohmann::ordered_json& json, const Config& config) {
 }
 
 void from_json(const nlohmann::ordered_json& json, Config& config) {
-    config.control_server_url = json.value("control_server_url", config.control_server_url);
     config.end_distance = json.value("end_distance", config.end_distance);
     config.time_step = json.value("time_step", config.time_step);
     config.iteration_limit = json.value("iteration_limit", config.iteration_limit);
