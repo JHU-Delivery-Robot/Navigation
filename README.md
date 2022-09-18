@@ -35,10 +35,12 @@ These instructions will use the [scoop package manager](https://scoop.sh). Howev
 
 Install `scoop` by following the instructions at https://scoop.sh &mdash; pay attention to the instructions about what to do if you see an error.
 
-Next, install Git, Python 3, the Ninja build system, and the GCC compiler suite. Using scoop, this is simply:
+Next, install Git, Python 3, the Ninja build system, CMAke, and the GCC compiler suite. Using scoop, this is simply:
 ```
-scoop install git python ninja gcc
+scoop install git python ninja gcc cmake
 ```
+
+You will also need to either have a recent version of Visual Studio already installed (*not* VS Code). If you do not, please install the Visual Studio Build Tools. Go to [https://visualstudio.microsoft.com/downloads/](https://visualstudio.microsoft.com/downloads/), scroll down to "All Downloads", then > Tools for Visual Studio, and download and install "Build Tools for Visual Studio \<year\>".
 
 Next, [install vcpkg](https://vcpkg.io/en/getting-started.html).
 
@@ -48,7 +50,7 @@ Next, we install the Meson build system. This should just be `pip install meson`
 
 ### Linux
 
-Use your system package manager to acquire Git, the GCC compiler suite, a recent version of Python 3, and the Ninja build system. If you are using Ubuntu/Debian, this is simply
+Use your system package manager to acquire Git, the GCC compiler suite, CMake, a recent version of Python 3, and the Ninja build system. If you are using Ubuntu/Debian, this is simply
 ```
 sudo apt install git gcc python3 ninja-build cmake
 ```
@@ -61,7 +63,7 @@ Next, we install meson. This should just be `pip install meson`. Run `meson --ve
 
 ### Mac
 
-#### Intel Mac (x86-64)
+Please check whether your Mac has an Intel CPU, or an ARM M1 (aka "Apple Silicon").
 
 First, install brew from [here](https://brew.sh/)
 
@@ -71,6 +73,8 @@ Install the following by running the associated commands:
 - GCC: `brew install gcc`
 - Meson: `pip install meson`
 - Ninja: `brew install ninja`
+- pkg-config: `brew install pkg-config`
+- CMake: `brew install cmake`
 
 Next, enable python certs by doing the following:
 1. Open your finder and go to **Applications** in the left panel
@@ -81,28 +85,26 @@ Next, [install vcpkg](https://vcpkg.io/en/getting-started.html).
 
 Clone this repository using `git clone --recurse-submodules https://github.com/JHU-Delivery-Robot/Navigation.git` and open the Navigation directory in a terminal.
 
-Now, use the following commands to build the executables:
-1. First, you create your *build* folder by running: `CC=/usr/local/opt/gcc/bin/gcc-11 CXX=/usr/local/opt/gcc/bin/g++-11 meson setup build`
-2. Then, you compile the code by running: `meson compile -C build`. Re-compile as needed
-3. Finally, when you want to clean out your binaries, use this command: `meson compile -C build --clean`. You may re-run step 2 to re-compile everything
-4. If you want to do a full cleaning of all your binaries and libraries, delete your build folder. You may re-run steps 1 and 2 to bring back libraries and binaries
-
-#### M1 Mac (ARM)
-
-(WORK IN PROGRESS)
-
 ## Building
 
-Once you've got everything installed, you need to build and install some third-party dependencies. From *inside this project's folder*, run `<path to vcpkg install>/vcpkg install --triplet <vcpkg-triplet>` where `<vcpkg-triplet>` is the vcpkg triplet identifier for your platform. For Linux, you should use the `x64-linux` triplet, for Windows with MinGW gcc use `x64-mingw-static`, and for MacOS use `x64-osx`. This make take some time to complete, but only needs to be done during the first install, or when we update our vcpkg dependencies.
+Once you've got everything installed, you need to build and install some third-party dependencies. From *inside this project's folder* (aka the "Navigation" folder), run `<path to vcpkg install>/vcpkg install --triplet <vcpkg-triplet>` where `<vcpkg-triplet>` is the vcpkg triplet identifier for your platform. For Linux, you should use the `x64-linux` triplet, for Windows with MinGW gcc use `x64-mingw-static`, and for MacOS use `x64-osx` for Intel Macs and `arm64-osx` for ARM M1 Macs. *Note* This make take a while to complete, but this only needs to be done once during the first install, or when we update our vcpkg dependencies.
+
+*Note* If you are using Mac, before doing the next step first run
+```
+export CC="/usr/local/opt/gcc/bin/gcc-11"
+export CXX="/usr/local/opt/gcc/bin/g++-11"
+```
 
 Next, you will need to create build directories for Meson. First, you must create an environment variable `CMAKE_PREFIX_PATH` and set it to `<navigation project>/vcpkg_installed/<triplet>` &mdash; make sure to use the *full* absolute path. Then, to create a build configuration called `build` with the default settings, run `meson setup build`. If you want to create a release configuration, run `meson setup release -Dbuildtype=release -Db_lto=true -Doptimization=2`. For development purposes, you should use a default debug configuration.
 
-You will also need to generate gRPC stubs for both `development.proto` and `routing.proto`. To generate gRPC stubs from a `.proto` file, run the following commands (in the project root directory):
+You will also need to generate gRPC stubs for both `src/comms/development.proto` and `src/comms/routing.proto`. To generate gRPC stubs from a `.proto` file, run the following commands (in the project root directory):
 ```
-./vcpkg_installed/<triplet>/tools/protobuf/protoc.exe --proto_path="src/comms" --cpp_out="src/comms" <path to .proto>
-./vcpkg_installed/<triplet>/tools/protobuf/protoc.exe --proto_path="src/comms" --grpc_out="src/comms" --plugin=protoc-gen-grpc="./vcpkg_installed/<triplet>/tools/grpc/grpc_cpp_plugin.exe" <path to .proto>
+./vcpkg_installed/<triplet>/tools/protobuf/protoc --proto_path="src/comms" --cpp_out="src/comms" <path to .proto>
+./vcpkg_installed/<triplet>/tools/protobuf/protoc --proto_path="src/comms" --grpc_out="src/comms" --plugin=protoc-gen-grpc="./vcpkg_installed/<triplet>/tools/grpc/grpc_cpp_plugin" <path to .proto>
 ```
-Note that the triplet might be different here - for example, if you built vcpkg packages with the `x64-mingw-static` triplet, then `grpc_cpp_plugin` might instead be under the `x64-windows` triplet.
+*Note* If you are using Windows, replace "grpc_cpp_plugin" with "grpc_cpp_plugin.exe" when running the second command.
+
+*Note* the triplet might be different here - for example, if you built vcpkg packages with the `x64-mingw-static` triplet, then `grpc_cpp_plugin` might instead be under the `x64-windows` triplet.
 
 To compile the project using a specific configuration, simply run `meson compile` within that folder. To clean, run `meson compile --clean`.
 
