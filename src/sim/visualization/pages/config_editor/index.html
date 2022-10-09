@@ -33,6 +33,18 @@
         </nav>
         <div class="sidebar">
             <div class="control">
+                <span class="file-picker">
+                    <input hidden type="file" id="configFileSelector" name="configFile" accept=".json">
+                    <label class="file-name" for="configFile" id="configFileDisplay">
+                        Load config file
+                    </label>
+                    <button class="btn" onclick="selectFile()">Browse</button>
+                </span>
+            </div>
+            <div class="control">
+                <button type="button" class="btn" onclick="save()" id="save">Save config</button>
+            </div>
+            <div class="control">
                 <button type="button" class="btn" onclick="set_startpoint()" id="set_startpoint">Set startpoint</button>
             </div>
             <div class="control">
