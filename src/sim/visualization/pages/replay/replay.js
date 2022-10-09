@@ -131,7 +131,7 @@ function scrub(position) {
 function update() {
     visualize();
     document.querySelector('.timestep-counter').innerText = currentTimeIndex;
-    document.querySelector('#replayPosition').value = currentTimeIndex;
+    document.getElementById('replayPosition').value = currentTimeIndex;
 }
 
 // Resize canvas to fit current window

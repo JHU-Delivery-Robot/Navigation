@@ -1,5 +1,6 @@
 const canvas = document.getElementById('visualizationCanvas');
 const container = document.getElementById('visualization-container');
+const configFileSelector = document.getElementById('configFileSelector');
 
 var drawing = false;
 const offsetX = canvas.offsetLeft;
@@ -9,6 +10,30 @@ var allObjects = [];
 var coordinates = [];
 var redoElements = [];
 var coordsRedo = [];
+
+let config = {};
+
+// Triggers file selection dialog
+function selectFile() {
+    configFileSelector.click();
+}
+
+// File selection callback
+function onFileInput(event) {
+    const files = event.target.files;
+
+    if (files.length == 1) {
+        let file = files[0];
+        event.target.value = null;
+        document.getElementById('configFileDisplay').innerText = file.name;
+
+        // Load/parse sim recording and display first frame
+        file.text().then(text => {
+            config = JSON.parse(text);
+            redrawAll();
+        });
+    }
+}
 
 //DEFINE DRAWING OBJECT-------------------
 class DrawObject {
@@ -54,9 +79,6 @@ class DrawObject {
 
 var startPoint = new DrawObject("s", []);
 
-//---------------------------------
-
-//CLEAR AND REDRAW ALL OBJECTS
 function redrawAll() {
     let ctx = canvas.getContext('2d');
     ctx.fillStyle = '#ddd';
@@ -146,6 +168,7 @@ function onCanvasClick(event) {
         coordinates = [];
     }
 }
+
 canvas.addEventListener("click", onCanvasClick);
 window.addEventListener("resize", resizeCanvas, false);
 
@@ -162,8 +185,6 @@ function resizeCanvas() {
 
     redrawAll();
 }
-
-//---------------------
 
 function drawPolygon(coords) {
     let ctx = canvas.getContext('2d');
