@@ -53,12 +53,9 @@
                 </button>
             </div>
             <div class="control-group">
-                <button class="btn" onclick="stepBack()" id="stepBack" title="Step backward">
-                    <img src="../../icons/step-backward.svg" alt="Step backward icon" />
-                </button>
-                <button class="btn" onclick="step()" id="step" title="Step forward">
-                    <img src="../../icons/step-forward.svg" alt="Step forward icon" />
-                </button>
+                <div class="slider-container">
+                    <input type="range" class="slider" oninput="scrub(this.value)" min="0" max="100" value="0" id="replayPosition">
+                </div>
             </div>
             <div class="timestep-display">
                 Timestep: <span class="timestep-counter">0</span>
