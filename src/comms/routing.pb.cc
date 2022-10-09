@@ -16,52 +16,58 @@
 #include <google/protobuf/port_def.inc>
 
 PROTOBUF_PRAGMA_INIT_SEG
+
+namespace _pb = ::PROTOBUF_NAMESPACE_ID;
+namespace _pbi = _pb::internal;
+
 namespace protocols {
 namespace routing {
-constexpr Point::Point(
-  ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized)
-  : longitude_(0)
-  , latitude_(0){}
+PROTOBUF_CONSTEXPR Point::Point(
+    ::_pbi::ConstantInitialized): _impl_{
+    /*decltype(_impl_.longitude_)*/0
+  , /*decltype(_impl_.latitude_)*/0
+  , /*decltype(_impl_._cached_size_)*/{}} {}
 struct PointDefaultTypeInternal {
-  constexpr PointDefaultTypeInternal()
-    : _instance(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized{}) {}
+  PROTOBUF_CONSTEXPR PointDefaultTypeInternal()
+      : _instance(::_pbi::ConstantInitialized{}) {}
   ~PointDefaultTypeInternal() {}
   union {
     Point _instance;
   };
 };
-PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PointDefaultTypeInternal _Point_default_instance_;
-constexpr Route::Route(
-  ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized)
-  : waypoints_(){}
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 PointDefaultTypeInternal _Point_default_instance_;
+PROTOBUF_CONSTEXPR Route::Route(
+    ::_pbi::ConstantInitialized): _impl_{
+    /*decltype(_impl_.waypoints_)*/{}
+  , /*decltype(_impl_._cached_size_)*/{}} {}
 struct RouteDefaultTypeInternal {
-  constexpr RouteDefaultTypeInternal()
-    : _instance(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized{}) {}
+  PROTOBUF_CONSTEXPR RouteDefaultTypeInternal()
+      : _instance(::_pbi::ConstantInitialized{}) {}
   ~RouteDefaultTypeInternal() {}
   union {
     Route _instance;
   };
 };
-PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT RouteDefaultTypeInternal _Route_default_instance_;
-constexpr RobotStatus::RobotStatus(
-  ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized)
-  : location_(nullptr)
-  , status_(0)
-{}
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 RouteDefaultTypeInternal _Route_default_instance_;
+PROTOBUF_CONSTEXPR RobotStatus::RobotStatus(
+    ::_pbi::ConstantInitialized): _impl_{
+    /*decltype(_impl_.location_)*/nullptr
+  , /*decltype(_impl_.status_)*/0
+  , /*decltype(_impl_._cached_size_)*/{}} {}
 struct RobotStatusDefaultTypeInternal {
-  constexpr RobotStatusDefaultTypeInternal()
-    : _instance(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized{}) {}
+  PROTOBUF_CONSTEXPR RobotStatusDefaultTypeInternal()
+      : _instance(::_pbi::ConstantInitialized{}) {}
   ~RobotStatusDefaultTypeInternal() {}
   union {
     RobotStatus _instance;
   };
 };
-PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT RobotStatusDefaultTypeInternal _RobotStatus_default_instance_;
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 RobotStatusDefaultTypeInternal _RobotStatus_default_instance_;
 }  // namespace routing
 }  // namespace protocols
-static ::PROTOBUF_NAMESPACE_ID::Metadata file_level_metadata_routing_2eproto[3];
-static const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* file_level_enum_descriptors_routing_2eproto[1];
-static constexpr ::PROTOBUF_NAMESPACE_ID::ServiceDescriptor const** file_level_service_descriptors_routing_2eproto = nullptr;
+static ::_pb::Metadata file_level_metadata_routing_2eproto[3];
+static const ::_pb::EnumDescriptor* file_level_enum_descriptors_routing_2eproto[1];
+static constexpr ::_pb::ServiceDescriptor const** file_level_service_descriptors_routing_2eproto = nullptr;
 
 const uint32_t TableStruct_routing_2eproto::offsets[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
   ~0u,  // no _has_bits_
@@ -70,34 +76,34 @@ const uint32_t TableStruct_routing_2eproto::offsets[] PROTOBUF_SECTION_VARIABLE(
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
-  PROTOBUF_FIELD_OFFSET(::protocols::routing::Point, longitude_),
-  PROTOBUF_FIELD_OFFSET(::protocols::routing::Point, latitude_),
+  PROTOBUF_FIELD_OFFSET(::protocols::routing::Point, _impl_.longitude_),
+  PROTOBUF_FIELD_OFFSET(::protocols::routing::Point, _impl_.latitude_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::protocols::routing::Route, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
-  PROTOBUF_FIELD_OFFSET(::protocols::routing::Route, waypoints_),
+  PROTOBUF_FIELD_OFFSET(::protocols::routing::Route, _impl_.waypoints_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::protocols::routing::RobotStatus, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
-  PROTOBUF_FIELD_OFFSET(::protocols::routing::RobotStatus, status_),
-  PROTOBUF_FIELD_OFFSET(::protocols::routing::RobotStatus, location_),
+  PROTOBUF_FIELD_OFFSET(::protocols::routing::RobotStatus, _impl_.status_),
+  PROTOBUF_FIELD_OFFSET(::protocols::routing::RobotStatus, _impl_.location_),
 };
-static const ::PROTOBUF_NAMESPACE_ID::internal::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
+static const ::_pbi::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
   { 0, -1, -1, sizeof(::protocols::routing::Point)},
   { 8, -1, -1, sizeof(::protocols::routing::Route)},
   { 15, -1, -1, sizeof(::protocols::routing::RobotStatus)},
 };
 
-static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] = {
-  reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::protocols::routing::_Point_default_instance_),
-  reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::protocols::routing::_Route_default_instance_),
-  reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::protocols::routing::_RobotStatus_default_instance_),
+static const ::_pb::Message* const file_default_instances[] = {
+  &::protocols::routing::_Point_default_instance_._instance,
+  &::protocols::routing::_Route_default_instance_._instance,
+  &::protocols::routing::_RobotStatus_default_instance_._instance,
 };
 
 const char descriptor_table_protodef_routing_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) =
@@ -113,19 +119,21 @@ const char descriptor_table_protodef_routing_2eproto[] PROTOBUF_SECTION_VARIABLE
   "\000B0Z.github.com/JHU-Delivery-Robot/Serve"
   "r/protocolsb\006proto3"
   ;
-static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_routing_2eproto_once;
-const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_routing_2eproto = {
-  false, false, 419, descriptor_table_protodef_routing_2eproto, "routing.proto", 
-  &descriptor_table_routing_2eproto_once, nullptr, 0, 3,
-  schemas, file_default_instances, TableStruct_routing_2eproto::offsets,
-  file_level_metadata_routing_2eproto, file_level_enum_descriptors_routing_2eproto, file_level_service_descriptors_routing_2eproto,
+static ::_pbi::once_flag descriptor_table_routing_2eproto_once;
+const ::_pbi::DescriptorTable descriptor_table_routing_2eproto = {
+    false, false, 419, descriptor_table_protodef_routing_2eproto,
+    "routing.proto",
+    &descriptor_table_routing_2eproto_once, nullptr, 0, 3,
+    schemas, file_default_instances, TableStruct_routing_2eproto::offsets,
+    file_level_metadata_routing_2eproto, file_level_enum_descriptors_routing_2eproto,
+    file_level_service_descriptors_routing_2eproto,
 };
-PROTOBUF_ATTRIBUTE_WEAK const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable* descriptor_table_routing_2eproto_getter() {
+PROTOBUF_ATTRIBUTE_WEAK const ::_pbi::DescriptorTable* descriptor_table_routing_2eproto_getter() {
   return &descriptor_table_routing_2eproto;
 }
 
 // Force running AddDescriptors() at dynamic initialization time.
-PROTOBUF_ATTRIBUTE_INIT_PRIORITY static ::PROTOBUF_NAMESPACE_ID::internal::AddDescriptorsRunner dynamic_init_dummy_routing_2eproto(&descriptor_table_routing_2eproto);
+PROTOBUF_ATTRIBUTE_INIT_PRIORITY2 static ::_pbi::AddDescriptorsRunner dynamic_init_dummy_routing_2eproto(&descriptor_table_routing_2eproto);
 namespace protocols {
 namespace routing {
 const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* RobotStatus_Status_descriptor() {
@@ -159,47 +167,50 @@ class Point::_Internal {
 Point::Point(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
   : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
-  SharedCtor();
-  if (!is_message_owned) {
-    RegisterArenaDtor(arena);
-  }
+  SharedCtor(arena, is_message_owned);
   // @@protoc_insertion_point(arena_constructor:protocols.routing.Point)
 }
 Point::Point(const Point& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
+  Point* const _this = this; (void)_this;
+  new (&_impl_) Impl_{
+      decltype(_impl_.longitude_){}
+    , decltype(_impl_.latitude_){}
+    , /*decltype(_impl_._cached_size_)*/{}};
+
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  ::memcpy(&longitude_, &from.longitude_,
-    static_cast<size_t>(reinterpret_cast<char*>(&latitude_) -
-    reinterpret_cast<char*>(&longitude_)) + sizeof(latitude_));
+  ::memcpy(&_impl_.longitude_, &from._impl_.longitude_,
+    static_cast<size_t>(reinterpret_cast<char*>(&_impl_.latitude_) -
+    reinterpret_cast<char*>(&_impl_.longitude_)) + sizeof(_impl_.latitude_));
   // @@protoc_insertion_point(copy_constructor:protocols.routing.Point)
 }
 
-inline void Point::SharedCtor() {
-::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
-    reinterpret_cast<char*>(&longitude_) - reinterpret_cast<char*>(this)),
-    0, static_cast<size_t>(reinterpret_cast<char*>(&latitude_) -
-    reinterpret_cast<char*>(&longitude_)) + sizeof(latitude_));
+inline void Point::SharedCtor(
+    ::_pb::Arena* arena, bool is_message_owned) {
+  (void)arena;
+  (void)is_message_owned;
+  new (&_impl_) Impl_{
+      decltype(_impl_.longitude_){0}
+    , decltype(_impl_.latitude_){0}
+    , /*decltype(_impl_._cached_size_)*/{}
+  };
 }
 
 Point::~Point() {
   // @@protoc_insertion_point(destructor:protocols.routing.Point)
-  if (GetArenaForAllocation() != nullptr) return;
+  if (auto *arena = _internal_metadata_.DeleteReturnArena<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>()) {
+  (void)arena;
+    return;
+  }
   SharedDtor();
-  _internal_metadata_.Delete<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
 inline void Point::SharedDtor() {
   GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
 }
 
-void Point::ArenaDtor(void* object) {
-  Point* _this = reinterpret_cast< Point* >(object);
-  (void)_this;
-}
-void Point::RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena*) {
-}
 void Point::SetCachedSize(int size) const {
-  _cached_size_.Set(size);
+  _impl_._cached_size_.Set(size);
 }
 
 void Point::Clear() {
@@ -208,22 +219,22 @@ void Point::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  ::memset(&longitude_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&latitude_) -
-      reinterpret_cast<char*>(&longitude_)) + sizeof(latitude_));
+  ::memset(&_impl_.longitude_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&_impl_.latitude_) -
+      reinterpret_cast<char*>(&_impl_.longitude_)) + sizeof(_impl_.latitude_));
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
-const char* Point::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
+const char* Point::_InternalParse(const char* ptr, ::_pbi::ParseContext* ctx) {
 #define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
   while (!ctx->Done(&ptr)) {
     uint32_t tag;
-    ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
+    ptr = ::_pbi::ReadTag(ptr, &tag);
     switch (tag >> 3) {
       // double longitude = 1;
       case 1:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 9)) {
-          longitude_ = ::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<double>(ptr);
+          _impl_.longitude_ = ::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<double>(ptr);
           ptr += sizeof(double);
         } else
           goto handle_unusual;
@@ -231,7 +242,7 @@ const char* Point::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::inte
       // double latitude = 2;
       case 2:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 17)) {
-          latitude_ = ::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<double>(ptr);
+          _impl_.latitude_ = ::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<double>(ptr);
           ptr += sizeof(double);
         } else
           goto handle_unusual;
@@ -272,7 +283,7 @@ uint8_t* Point::_InternalSerialize(
   memcpy(&raw_longitude, &tmp_longitude, sizeof(tmp_longitude));
   if (raw_longitude != 0) {
     target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(1, this->_internal_longitude(), target);
+    target = ::_pbi::WireFormatLite::WriteDoubleToArray(1, this->_internal_longitude(), target);
   }
 
   // double latitude = 2;
@@ -282,11 +293,11 @@ uint8_t* Point::_InternalSerialize(
   memcpy(&raw_latitude, &tmp_latitude, sizeof(tmp_latitude));
   if (raw_latitude != 0) {
     target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(2, this->_internal_latitude(), target);
+    target = ::_pbi::WireFormatLite::WriteDoubleToArray(2, this->_internal_latitude(), target);
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
+    target = ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
   }
   // @@protoc_insertion_point(serialize_to_array_end:protocols.routing.Point)
@@ -319,25 +330,21 @@ size_t Point::ByteSizeLong() const {
     total_size += 1 + 8;
   }
 
-  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData Point::_class_data_ = {
-    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
     Point::MergeImpl
 };
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*Point::GetClassData() const { return &_class_data_; }
 
-void Point::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
-                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-  static_cast<Point *>(to)->MergeFrom(
-      static_cast<const Point &>(from));
-}
 
-
-void Point::MergeFrom(const Point& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:protocols.routing.Point)
-  GOOGLE_DCHECK_NE(&from, this);
+void Point::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+  auto* const _this = static_cast<Point*>(&to_msg);
+  auto& from = static_cast<const Point&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:protocols.routing.Point)
+  GOOGLE_DCHECK_NE(&from, _this);
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
@@ -346,16 +353,16 @@ void Point::MergeFrom(const Point& from) {
   uint64_t raw_longitude;
   memcpy(&raw_longitude, &tmp_longitude, sizeof(tmp_longitude));
   if (raw_longitude != 0) {
-    _internal_set_longitude(from._internal_longitude());
+    _this->_internal_set_longitude(from._internal_longitude());
   }
   static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
   double tmp_latitude = from._internal_latitude();
   uint64_t raw_latitude;
   memcpy(&raw_latitude, &tmp_latitude, sizeof(tmp_latitude));
   if (raw_latitude != 0) {
-    _internal_set_latitude(from._internal_latitude());
+    _this->_internal_set_latitude(from._internal_latitude());
   }
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void Point::CopyFrom(const Point& from) {
@@ -373,15 +380,15 @@ void Point::InternalSwap(Point* other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(Point, latitude_)
-      + sizeof(Point::latitude_)
-      - PROTOBUF_FIELD_OFFSET(Point, longitude_)>(
-          reinterpret_cast<char*>(&longitude_),
-          reinterpret_cast<char*>(&other->longitude_));
+      PROTOBUF_FIELD_OFFSET(Point, _impl_.latitude_)
+      + sizeof(Point::_impl_.latitude_)
+      - PROTOBUF_FIELD_OFFSET(Point, _impl_.longitude_)>(
+          reinterpret_cast<char*>(&_impl_.longitude_),
+          reinterpret_cast<char*>(&other->_impl_.longitude_));
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata Point::GetMetadata() const {
-  return ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(
+  return ::_pbi::AssignDescriptors(
       &descriptor_table_routing_2eproto_getter, &descriptor_table_routing_2eproto_once,
       file_level_metadata_routing_2eproto[0]);
 }
@@ -394,43 +401,47 @@ class Route::_Internal {
 
 Route::Route(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
-  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned),
-  waypoints_(arena) {
-  SharedCtor();
-  if (!is_message_owned) {
-    RegisterArenaDtor(arena);
-  }
+  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
+  SharedCtor(arena, is_message_owned);
   // @@protoc_insertion_point(arena_constructor:protocols.routing.Route)
 }
 Route::Route(const Route& from)
-  : ::PROTOBUF_NAMESPACE_ID::Message(),
-      waypoints_(from.waypoints_) {
+  : ::PROTOBUF_NAMESPACE_ID::Message() {
+  Route* const _this = this; (void)_this;
+  new (&_impl_) Impl_{
+      decltype(_impl_.waypoints_){from._impl_.waypoints_}
+    , /*decltype(_impl_._cached_size_)*/{}};
+
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
   // @@protoc_insertion_point(copy_constructor:protocols.routing.Route)
 }
 
-inline void Route::SharedCtor() {
+inline void Route::SharedCtor(
+    ::_pb::Arena* arena, bool is_message_owned) {
+  (void)arena;
+  (void)is_message_owned;
+  new (&_impl_) Impl_{
+      decltype(_impl_.waypoints_){arena}
+    , /*decltype(_impl_._cached_size_)*/{}
+  };
 }
 
 Route::~Route() {
   // @@protoc_insertion_point(destructor:protocols.routing.Route)
-  if (GetArenaForAllocation() != nullptr) return;
+  if (auto *arena = _internal_metadata_.DeleteReturnArena<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>()) {
+  (void)arena;
+    return;
+  }
   SharedDtor();
-  _internal_metadata_.Delete<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
 inline void Route::SharedDtor() {
   GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
+  _impl_.waypoints_.~RepeatedPtrField();
 }
 
-void Route::ArenaDtor(void* object) {
-  Route* _this = reinterpret_cast< Route* >(object);
-  (void)_this;
-}
-void Route::RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena*) {
-}
 void Route::SetCachedSize(int size) const {
-  _cached_size_.Set(size);
+  _impl_._cached_size_.Set(size);
 }
 
 void Route::Clear() {
@@ -439,15 +450,15 @@ void Route::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  waypoints_.Clear();
+  _impl_.waypoints_.Clear();
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
-const char* Route::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
+const char* Route::_InternalParse(const char* ptr, ::_pbi::ParseContext* ctx) {
 #define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
   while (!ctx->Done(&ptr)) {
     uint32_t tag;
-    ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
+    ptr = ::_pbi::ReadTag(ptr, &tag);
     switch (tag >> 3) {
       // repeated .protocols.routing.Point waypoints = 1;
       case 1:
@@ -492,15 +503,15 @@ uint8_t* Route::_InternalSerialize(
   (void) cached_has_bits;
 
   // repeated .protocols.routing.Point waypoints = 1;
-  for (unsigned int i = 0,
-      n = static_cast<unsigned int>(this->_internal_waypoints_size()); i < n; i++) {
-    target = stream->EnsureSpace(target);
+  for (unsigned i = 0,
+      n = static_cast<unsigned>(this->_internal_waypoints_size()); i < n; i++) {
+    const auto& repfield = this->_internal_waypoints(i);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
-      InternalWriteMessage(1, this->_internal_waypoints(i), target, stream);
+        InternalWriteMessage(1, repfield, repfield.GetCachedSize(), target, stream);
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
+    target = ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
   }
   // @@protoc_insertion_point(serialize_to_array_end:protocols.routing.Route)
@@ -517,35 +528,31 @@ size_t Route::ByteSizeLong() const {
 
   // repeated .protocols.routing.Point waypoints = 1;
   total_size += 1UL * this->_internal_waypoints_size();
-  for (const auto& msg : this->waypoints_) {
+  for (const auto& msg : this->_impl_.waypoints_) {
     total_size +=
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(msg);
   }
 
-  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData Route::_class_data_ = {
-    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
     Route::MergeImpl
 };
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*Route::GetClassData() const { return &_class_data_; }
 
-void Route::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
-                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-  static_cast<Route *>(to)->MergeFrom(
-      static_cast<const Route &>(from));
-}
 
-
-void Route::MergeFrom(const Route& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:protocols.routing.Route)
-  GOOGLE_DCHECK_NE(&from, this);
+void Route::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+  auto* const _this = static_cast<Route*>(&to_msg);
+  auto& from = static_cast<const Route&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:protocols.routing.Route)
+  GOOGLE_DCHECK_NE(&from, _this);
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
-  waypoints_.MergeFrom(from.waypoints_);
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  _this->_impl_.waypoints_.MergeFrom(from._impl_.waypoints_);
+  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void Route::CopyFrom(const Route& from) {
@@ -562,11 +569,11 @@ bool Route::IsInitialized() const {
 void Route::InternalSwap(Route* other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
-  waypoints_.InternalSwap(&other->waypoints_);
+  _impl_.waypoints_.InternalSwap(&other->_impl_.waypoints_);
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata Route::GetMetadata() const {
-  return ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(
+  return ::_pbi::AssignDescriptors(
       &descriptor_table_routing_2eproto_getter, &descriptor_table_routing_2eproto_once,
       file_level_metadata_routing_2eproto[1]);
 }
@@ -580,56 +587,57 @@ class RobotStatus::_Internal {
 
 const ::protocols::routing::Point&
 RobotStatus::_Internal::location(const RobotStatus* msg) {
-  return *msg->location_;
+  return *msg->_impl_.location_;
 }
 RobotStatus::RobotStatus(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
   : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
-  SharedCtor();
-  if (!is_message_owned) {
-    RegisterArenaDtor(arena);
-  }
+  SharedCtor(arena, is_message_owned);
   // @@protoc_insertion_point(arena_constructor:protocols.routing.RobotStatus)
 }
 RobotStatus::RobotStatus(const RobotStatus& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
+  RobotStatus* const _this = this; (void)_this;
+  new (&_impl_) Impl_{
+      decltype(_impl_.location_){nullptr}
+    , decltype(_impl_.status_){}
+    , /*decltype(_impl_._cached_size_)*/{}};
+
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
   if (from._internal_has_location()) {
-    location_ = new ::protocols::routing::Point(*from.location_);
-  } else {
-    location_ = nullptr;
+    _this->_impl_.location_ = new ::protocols::routing::Point(*from._impl_.location_);
   }
-  status_ = from.status_;
+  _this->_impl_.status_ = from._impl_.status_;
   // @@protoc_insertion_point(copy_constructor:protocols.routing.RobotStatus)
 }
 
-inline void RobotStatus::SharedCtor() {
-::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
-    reinterpret_cast<char*>(&location_) - reinterpret_cast<char*>(this)),
-    0, static_cast<size_t>(reinterpret_cast<char*>(&status_) -
-    reinterpret_cast<char*>(&location_)) + sizeof(status_));
+inline void RobotStatus::SharedCtor(
+    ::_pb::Arena* arena, bool is_message_owned) {
+  (void)arena;
+  (void)is_message_owned;
+  new (&_impl_) Impl_{
+      decltype(_impl_.location_){nullptr}
+    , decltype(_impl_.status_){0}
+    , /*decltype(_impl_._cached_size_)*/{}
+  };
 }
 
 RobotStatus::~RobotStatus() {
   // @@protoc_insertion_point(destructor:protocols.routing.RobotStatus)
-  if (GetArenaForAllocation() != nullptr) return;
+  if (auto *arena = _internal_metadata_.DeleteReturnArena<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>()) {
+  (void)arena;
+    return;
+  }
   SharedDtor();
-  _internal_metadata_.Delete<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
 inline void RobotStatus::SharedDtor() {
   GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
-  if (this != internal_default_instance()) delete location_;
+  if (this != internal_default_instance()) delete _impl_.location_;
 }
 
-void RobotStatus::ArenaDtor(void* object) {
-  RobotStatus* _this = reinterpret_cast< RobotStatus* >(object);
-  (void)_this;
-}
-void RobotStatus::RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena*) {
-}
 void RobotStatus::SetCachedSize(int size) const {
-  _cached_size_.Set(size);
+  _impl_._cached_size_.Set(size);
 }
 
 void RobotStatus::Clear() {
@@ -638,19 +646,19 @@ void RobotStatus::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  if (GetArenaForAllocation() == nullptr && location_ != nullptr) {
-    delete location_;
+  if (GetArenaForAllocation() == nullptr && _impl_.location_ != nullptr) {
+    delete _impl_.location_;
   }
-  location_ = nullptr;
-  status_ = 0;
+  _impl_.location_ = nullptr;
+  _impl_.status_ = 0;
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
-const char* RobotStatus::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
+const char* RobotStatus::_InternalParse(const char* ptr, ::_pbi::ParseContext* ctx) {
 #define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
   while (!ctx->Done(&ptr)) {
     uint32_t tag;
-    ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
+    ptr = ::_pbi::ReadTag(ptr, &tag);
     switch (tag >> 3) {
       // .protocols.routing.RobotStatus.Status status = 1;
       case 1:
@@ -701,20 +709,19 @@ uint8_t* RobotStatus::_InternalSerialize(
   // .protocols.routing.RobotStatus.Status status = 1;
   if (this->_internal_status() != 0) {
     target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteEnumToArray(
+    target = ::_pbi::WireFormatLite::WriteEnumToArray(
       1, this->_internal_status(), target);
   }
 
   // .protocols.routing.Point location = 3;
   if (this->_internal_has_location()) {
-    target = stream->EnsureSpace(target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
-      InternalWriteMessage(
-        3, _Internal::location(this), target, stream);
+      InternalWriteMessage(3, _Internal::location(this),
+        _Internal::location(this).GetCachedSize(), target, stream);
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
+    target = ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
   }
   // @@protoc_insertion_point(serialize_to_array_end:protocols.routing.RobotStatus)
@@ -733,44 +740,41 @@ size_t RobotStatus::ByteSizeLong() const {
   if (this->_internal_has_location()) {
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
-        *location_);
+        *_impl_.location_);
   }
 
   // .protocols.routing.RobotStatus.Status status = 1;
   if (this->_internal_status() != 0) {
     total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::EnumSize(this->_internal_status());
+      ::_pbi::WireFormatLite::EnumSize(this->_internal_status());
   }
 
-  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData RobotStatus::_class_data_ = {
-    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
     RobotStatus::MergeImpl
 };
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*RobotStatus::GetClassData() const { return &_class_data_; }
 
-void RobotStatus::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
-                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-  static_cast<RobotStatus *>(to)->MergeFrom(
-      static_cast<const RobotStatus &>(from));
-}
 
-
-void RobotStatus::MergeFrom(const RobotStatus& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:protocols.routing.RobotStatus)
-  GOOGLE_DCHECK_NE(&from, this);
+void RobotStatus::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+  auto* const _this = static_cast<RobotStatus*>(&to_msg);
+  auto& from = static_cast<const RobotStatus&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:protocols.routing.RobotStatus)
+  GOOGLE_DCHECK_NE(&from, _this);
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
   if (from._internal_has_location()) {
-    _internal_mutable_location()->::protocols::routing::Point::MergeFrom(from._internal_location());
+    _this->_internal_mutable_location()->::protocols::routing::Point::MergeFrom(
+        from._internal_location());
   }
   if (from._internal_status() != 0) {
-    _internal_set_status(from._internal_status());
+    _this->_internal_set_status(from._internal_status());
   }
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void RobotStatus::CopyFrom(const RobotStatus& from) {
@@ -788,15 +792,15 @@ void RobotStatus::InternalSwap(RobotStatus* other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(RobotStatus, status_)
-      + sizeof(RobotStatus::status_)
-      - PROTOBUF_FIELD_OFFSET(RobotStatus, location_)>(
-          reinterpret_cast<char*>(&location_),
-          reinterpret_cast<char*>(&other->location_));
+      PROTOBUF_FIELD_OFFSET(RobotStatus, _impl_.status_)
+      + sizeof(RobotStatus::_impl_.status_)
+      - PROTOBUF_FIELD_OFFSET(RobotStatus, _impl_.location_)>(
+          reinterpret_cast<char*>(&_impl_.location_),
+          reinterpret_cast<char*>(&other->_impl_.location_));
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata RobotStatus::GetMetadata() const {
-  return ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(
+  return ::_pbi::AssignDescriptors(
       &descriptor_table_routing_2eproto_getter, &descriptor_table_routing_2eproto_once,
       file_level_metadata_routing_2eproto[2]);
 }
@@ -805,13 +809,16 @@ void RobotStatus::InternalSwap(RobotStatus* other) {
 }  // namespace routing
 }  // namespace protocols
 PROTOBUF_NAMESPACE_OPEN
-template<> PROTOBUF_NOINLINE ::protocols::routing::Point* Arena::CreateMaybeMessage< ::protocols::routing::Point >(Arena* arena) {
+template<> PROTOBUF_NOINLINE ::protocols::routing::Point*
+Arena::CreateMaybeMessage< ::protocols::routing::Point >(Arena* arena) {
   return Arena::CreateMessageInternal< ::protocols::routing::Point >(arena);
 }
-template<> PROTOBUF_NOINLINE ::protocols::routing::Route* Arena::CreateMaybeMessage< ::protocols::routing::Route >(Arena* arena) {
+template<> PROTOBUF_NOINLINE ::protocols::routing::Route*
+Arena::CreateMaybeMessage< ::protocols::routing::Route >(Arena* arena) {
   return Arena::CreateMessageInternal< ::protocols::routing::Route >(arena);
 }
-template<> PROTOBUF_NOINLINE ::protocols::routing::RobotStatus* Arena::CreateMaybeMessage< ::protocols::routing::RobotStatus >(Arena* arena) {
+template<> PROTOBUF_NOINLINE ::protocols::routing::RobotStatus*
+Arena::CreateMaybeMessage< ::protocols::routing::RobotStatus >(Arena* arena) {
   return Arena::CreateMessageInternal< ::protocols::routing::RobotStatus >(arena);
 }
 PROTOBUF_NAMESPACE_CLOSE

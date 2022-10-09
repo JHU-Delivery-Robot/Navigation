@@ -23,7 +23,7 @@ Contains the primary robot navigation software for the JHU Deliverbot project, a
 | Run build for meson build target named `build` | `meson compile -C build` |
 | Clean build target named `build` | `meson compile -C build --clean` |
 | Run unit tests in `build` target | `./build/test/tests` |
-| Run simulator using config `sim_config.csv` | `./build/src/navigation_sim ./sim_config.csv` |
+| Run simulator using config `sim_config.csv` | `./build/src/navigation_sim ./robot_config.json ./sim_config.json ./sim_output/output.json` |
 
 ## Installing
 
@@ -35,32 +35,35 @@ These instructions will use the [scoop package manager](https://scoop.sh). Howev
 
 Install `scoop` by following the instructions at https://scoop.sh &mdash; pay attention to the instructions about what to do if you see an error.
 
-Next, install Git, Python 3, the Ninja build system, and the GCC compiler suite. Using scoop, this is simply:
+Next, install Git, Python 3, the Ninja build system, CMAke, and the GCC compiler suite. Using scoop, this is simply:
 ```
-scoop install git python ninja gcc
+scoop install git python ninja gcc cmake
 ```
+
+You will also need to either have a recent version of Visual Studio already installed (*not* VS Code). If you do not, please install the Visual Studio Build Tools. Go to [https://visualstudio.microsoft.com/downloads/](https://visualstudio.microsoft.com/downloads/), scroll down to "All Downloads", then > Tools for Visual Studio, and download and install "Build Tools for Visual Studio \<year\>".
+
+Next, [install vcpkg](https://vcpkg.io/en/getting-started.html).
 
 Next, clone this repository by navigating to the folder you want to keep Deliverbot software in and then running `git clone --recurse-submodules https://github.com/JHU-Delivery-Robot/Navigation.git`.
 
 Next, we install the Meson build system. This should just be `pip install meson`. Run `meson --version` to make sure it is installed properly &mdash; if meson cannot be found your Python scripts are likely not in your PATH. If you are using an existing installation of Python and run into this issue, just uninstall Python, re-install it using scoop, and then install Meson again. 
 
-Next, we install the vcpkg package manager by running `.\vcpkg\bootstrap-vcpkg.bat` from the root directory of this project.
-
 ### Linux
 
-Use your system package manager to acquire Git, the GCC compiler suite, a recent version of Python 3, and the Ninja build system. If you are using Ubuntu/Debian, this is simply
+Use your system package manager to acquire Git, the GCC compiler suite, CMake, a recent version of Python 3, and the Ninja build system. If you are using Ubuntu/Debian, this is simply
 ```
 sudo apt install git gcc python3 ninja-build cmake
 ```
+
+Next, [install vcpkg](https://vcpkg.io/en/getting-started.html).
+
 Next, clone this repository into the folder of your choice using `git clone --recurse-submodules https://github.com/JHU-Delivery-Robot/Navigation.git`.
 
 Next, we install meson. This should just be `pip install meson`. Run `meson --version` to make sure it is installed properly, if meson cannot be found you need to place Python package scripts onto your PATH.
 
-Next, we install the vcpkg package manager by running `./vcpkg/bootstrap-vcpkg.sh` from the root directory of this project.
-
 ### Mac
 
-#### Intel Mac (x86-64)
+Please check whether your Mac has an Intel CPU, or an ARM M1 (aka "Apple Silicon").
 
 First, install brew from [here](https://brew.sh/)
 
@@ -70,51 +73,63 @@ Install the following by running the associated commands:
 - GCC: `brew install gcc`
 - Meson: `pip install meson`
 - Ninja: `brew install ninja`
+- pkg-config: `brew install pkg-config`
+- CMake: `brew install cmake`
 
 Next, enable python certs by doing the following:
 1. Open your finder and go to **Applications** in the left panel
 2. Find and open the Python 3.xx folder
 3. Double-click the *Install Certificates.command* file. Let its terminal run to completion, and input whatever you need to in order to let it run
 
-Clone this repository using `git clone --recurse-submodules https://github.com/JHU-Delivery-Robot/Navigation.git` and open the Navigation directory in a terminal. Next, we install the vcpkg package manager by running `./vcpkg/bootstrap-vcpkg.sh` from the root directory of this project.
+Next, [install vcpkg](https://vcpkg.io/en/getting-started.html).
 
-Now, use the following commands to build the executables:
-1. First, you create your *build* folder by running: `CC=/usr/local/opt/gcc/bin/gcc-11 CXX=/usr/local/opt/gcc/bin/g++-11 meson setup build`
-2. Then, you compile the code by running: `meson compile -C build`. Re-compile as needed
-3. Finally, when you want to clean out your binaries, use this command: `meson compile -C build --clean`. You may re-run step 2 to re-compile everything
-4. If you want to do a full cleaning of all your binaries and libraries, delete your build folder. You may re-run steps 1 and 2 to bring back libraries and binaries
-
-#### M1 Mac (ARM)
-
-(WORK IN PROGRESS)
+Clone this repository using `git clone --recurse-submodules https://github.com/JHU-Delivery-Robot/Navigation.git` and open the Navigation directory in a terminal.
 
 ## Building
 
-Once you've got everything installed, you need to build and install some third-party dependencies. From inside this project's folder, run `./vcpkg/vcpkg install --triplet <vcpkg-triplet>` where `<vcpkg-triplet>` is the vcpkg triplet identifier for your platform. For Linux, you should use the `x64-linux` triplet, for Windows with MinGW gcc use `x64-mingw-static`, and for MacOS use `x64-osx`. This make take some time to complete, but only needs to be done during the first install, or when we update our vcpkg dependencies.
+Once you've got everything installed, you need to build and install some third-party dependencies. From *inside this project's folder* (aka the "Navigation" folder), run `<path to vcpkg install>/vcpkg install --triplet <vcpkg-triplet>` where `<vcpkg-triplet>` is the vcpkg triplet identifier for your platform. For Linux, you should use the `x64-linux` triplet, for Windows with MinGW gcc use `x64-mingw-static`, and for MacOS use `x64-osx` for Intel Macs and `arm64-osx` for ARM M1 Macs. *Note* This make take a while to complete, but this only needs to be done once during the first install, or when we update our vcpkg dependencies.
 
-Next, you need to create build directories for Meson. For example, to create a build configuration called `debug` with the default settings, run `meson setup debug`. To create a release configuration, run `meson setup release -Dbuildtype=release -Db_lto=true -Doptimization=2`. **NOTE**: In order to follow Meson to find our dependencies from vcpkg, _before running `meson setup`_ you must create an environment variable `CMAKE_PREFIX_PATH` and set it to `<navigation project>/vcpkg_installed/<triplet>` &mdash; make sure to use the full absolute path.
+*Note* If you are using Mac, before doing the next step first run
+```
+export CC="/usr/local/opt/gcc/bin/gcc-11"
+export CXX="/usr/local/opt/gcc/bin/g++-11"
+```
 
-To generate gRPC code from a `.proto` file, run the following commands (in the project root directory):
+Next, you will need to create build directories for Meson. First, you must create an environment variable `CMAKE_PREFIX_PATH` and set it to `<navigation project>/vcpkg_installed/<triplet>` &mdash; make sure to use the *full* absolute path. Then, to create a build configuration called `build` with the default settings, run `meson setup build`. If you want to create a release configuration, run `meson setup release -Dbuildtype=release -Db_lto=true -Doptimization=2`. For development purposes, you should use a default debug configuration.
+
+You will also need to generate gRPC stubs for both `src/comms/development.proto` and `src/comms/routing.proto`. To generate gRPC stubs from a `.proto` file, run the following commands (in the project root directory):
 ```
-./vcpkg_installed/<triplet>/tools/protobuf/protoc.exe --proto_path="src/comms" --cpp_out="src/comms" <path to .proto>
-./vcpkg_installed/<triplet>/tools/protobuf/protoc.exe --proto_path="src/comms" --grpc_out="src/comms" --plugin=protoc-gen-grpc="./vcpkg_installed/<triplet>/tools/grpc/grpc_cpp_plugin.exe" <path to .proto>
+./vcpkg_installed/<triplet>/tools/protobuf/protoc --proto_path="src/comms" --cpp_out="src/comms" <path to .proto>
+./vcpkg_installed/<triplet>/tools/protobuf/protoc --proto_path="src/comms" --grpc_out="src/comms" --plugin=protoc-gen-grpc="./vcpkg_installed/<triplet>/tools/grpc/grpc_cpp_plugin" <path to .proto>
 ```
-Note that the triplet might be different here - for example, if you built vcpkg packages with the `x64-mingw-static` triplet, then `grpc_cpp_plugin` might instead be under the `x64-windows` triplet.
+*Note* If you are using Windows, replace "grpc_cpp_plugin" with "grpc_cpp_plugin.exe" when running the second command.
+
+*Note* the triplet might be different here - for example, if you built vcpkg packages with the `x64-mingw-static` triplet, then `grpc_cpp_plugin` might instead be under the `x64-windows` triplet.
 
 To compile the project using a specific configuration, simply run `meson compile` within that folder. To clean, run `meson compile --clean`.
+
+## Robot Config
+
+To run, the robot software must be provided with a JSON config file. See [Server/Certificates](https://github.com/JHU-Delivery-Robot/Server#certificates) for help setting up certificates for local testing.
+
+Parameters:
+- `control_server_url` &mdash; Control server URL address, for local testing use `localhost:443`.
+- `root_ca_cert` &mdash; File path to root CA certificate, for local testing use "./certs/local_test_ca.crt" or similar.
+- `robot_cert` &mdash; File path to robot certificate, for local testing use "./certs/local_test_robot.crt" or similar.
+- `robot_key` &mdash; File path to robot certificate key, for local testing use `./certs/local_test_robot.key` or similar.
+- `lidar_port` &mdash; LiDAR device port, e.g. `COM3`.
 
 ## Simulator
 
 The simulation is split into two parts: a backend and a frontend. The backend runs the actual simulation and outputs a file called `sim_output.json` wherever it was run from that contains everything that happened during the simulation. The frontend is a local replay tool that can be used to replay and visualize the simulation output file. To use the frontend, open `./sim/visualization/index.html`.
 
-To use the simulation backend, run `/src/navigation_` and pass it the path of a simulation config file. A simple example is provided in `sim_config.json`, which can be run with
+To use the simulation backend, run `<build folder>/src/navigation_sim` and pass it the path of a simulation config file. A simple example is provided in `sim_config.json`, which can be run with
 ```
-> ./src/navigation_sim ../sim_config.json
+> .<build folder>/src/navigation_sim robot_config.json sim_config.json sim_output/output.json
 ```
 from within a build directory. Points are given as `[x, y]`, e.g. `[20.5, -34.23]`. Units are all in meters or seconds unless otherwise specified. Config is in JSON format, and units are implied, so don't include them with the value. All config parameters are optional, defaults are noted below.
 
 Simulation config parameters:
-- `control_server_url` &mdash; Control server URL address, default is `127.0.0.1:9000`.
 - `end_distance` &mdash; If the robot gets within this distance of the goal position, the simulation will end. Default is 0.2 m.
 - `time_step` &mdash; Increase in simulation time between iterations. Default is 0.02 s.
 - `iteration_limit` &mdash; Maximum iterations simulation will run for, must be an integer. Default is 3000.

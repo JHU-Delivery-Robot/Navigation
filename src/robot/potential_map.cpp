@@ -30,7 +30,8 @@ common::Vector2 PotentialMap::getAttractivePotential(common::Vector2 position) {
         return attractive_coefficient * delta;
     } else {
         // Conical/linear potential away from goal
-        return threshold_distance * attractive_coefficient * delta * (1 / distance);
+        common::Vector2 direction = delta * (1 / distance);
+        return threshold_distance * attractive_coefficient * direction;
     }
 }
 

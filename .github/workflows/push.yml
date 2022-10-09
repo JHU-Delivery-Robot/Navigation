@@ -12,11 +12,21 @@ jobs:
       - uses: actions/checkout@v2
         with:
           submodules: recursive
+      - name: get vcpkg version baseline
+        id: vcpkg_baseline
+        run: |
+          JSON=`cat ./vcpkg.json`
+          # Escape multiline variable
+          JSON="${JSON//'%'/'%25'}"
+          JSON="${JSON//$'\n'/'%0A'}"
+          JSON="${JSON//$'\r'/'%0D'}"
+          echo "::set-output name=vcpkg_json::${JSON}"
       - name: vcpkg artifact cache
         uses: lukka/run-vcpkg@main
         id: runvcpkg
         with:
           runVcpkgInstall: true
+          vcpkgGitCommitId: '${{fromJson(steps.vcpkg_baseline.outputs.vcpkg_json).builtin-baseline}}'
         env:
           VCPKG_INSTALLED_DIR: ${{ github.workspace }}/vcpkg_installed/
       - run: |

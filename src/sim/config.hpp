@@ -3,6 +3,7 @@
 
 #include <filesystem>
 #include <optional>
+#include <string>
 #include <vector>
 
 #include "common/common.hpp"
@@ -19,8 +20,6 @@ public:
 
     friend void to_json(nlohmann::ordered_json& json, const Config& config);
     friend void from_json(const nlohmann::ordered_json& json, Config& config);
-
-    std::string control_server_url = "127.0.0.1:9000";
 
     double end_distance = 0.2;
     double time_step = 0.02;

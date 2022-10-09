@@ -9,6 +9,7 @@
 #include "comms/comms.hpp"
 #include "events/event_queue.hpp"
 #include "hal/sim_impl/hal_provider_sim_impl.hpp"
+#include "robot/config.hpp"
 #include "robot/robot.hpp"
 #include "sim/config.hpp"
 #include "sim/obstacle_map.hpp"
@@ -17,38 +18,42 @@
 #include "sim/simulation.hpp"
 
 int main(int argc, char* argv[]) {
-    if (argc != 2) {
-        std::cerr << "Please specify config file path as only argument" << std::endl;
+    if (argc != 4) {
+        std::cerr << "Usage: " << argv[0] << " <robot config> <sim config> <output_file>" << std::endl;
         return 1;
     }
 
-    std::filesystem::path config_file_path = std::filesystem::path(argv[1]);
-    if (!std::filesystem::exists(config_file_path)) {
-        std::cerr << "Can't find specified config file, please double-check path" << std::endl;
-        return 1;
-    }
-
-    sim::Config config;
-    std::cout << "Loading config... ";
-    if (auto config_opt = sim::Config::load(config_file_path)) {
-        std::cout << "Config loaded successfully" << std::endl;
-        config = config_opt.value();
+    std::cout << "Loading configs... \n";
+    robot::Config robot_config;
+    if (auto config_opt = robot::Config::load(argv[1])) {
+        std::cout << "    Robot config loaded successfully" << std::endl;
+        robot_config = config_opt.value();
     } else {
-        std::cerr << "Failed to load config" << std::endl;
+        std::cerr << "Failed to load robot config" << std::endl;
         return 1;
     }
 
-    common::CoordinateSystem coordinate_system(config.origin);
-    sim::Simulation simulation(config);
+    sim::Config sim_config;
+    if (auto config_opt = sim::Config::load(argv[2])) {
+        std::cout << "    Sim config loaded successfully" << std::endl;
+        sim_config = config_opt.value();
+    } else {
+        std::cerr << "Failed to load sim config" << std::endl;
+        return 1;
+    }
+
+    common::CoordinateSystem coordinate_system(sim_config.origin);
+    sim::Simulation simulation(sim_config);
     sim::HALProviderSimImpl sim_hal(&simulation, coordinate_system);
     events::EventQueue event_queue;
 
-    comms::Comms comms(config.control_server_url, events::RouteControl(&event_queue), events::ErrorReporting(&event_queue), sim_hal.positioning());
+    comms::Comms::Credentials server_credentials(robot_config.root_ca_cert, robot_config.robot_cert, robot_config.robot_key);
+    comms::Comms comms(robot_config.control_server_url, server_credentials, events::RouteControl(&event_queue), events::ErrorReporting(&event_queue), sim_hal.positioning());
 
     robot::Robot robot = robot::Robot(&sim_hal, &event_queue);
 
     sim::Recording recording;
-    recording.add_config(config);
+    recording.add_config(sim_config);
 
     std::cout << "Starting simulation..." << std::endl;
 
@@ -59,9 +64,11 @@ int main(int argc, char* argv[]) {
     }
 
     std::vector<common::Coordinates> route;
-    for (auto& waypoint : config.waypoints) {
+    for (auto& waypoint : sim_config.waypoints) {
         route.push_back(coordinate_system.project(waypoint));
     }
+
+    std::cout << "Route prepared, beginning override" << std::endl;
 
     ok = comms.overrideRoute(route);
     if (!ok) {
@@ -70,21 +77,23 @@ int main(int argc, char* argv[]) {
         return -1;
     }
 
+    std::cout << "Route override set" << std::endl;
+
     // Allow server comms to start - small delays during simulation become much
     // longer in replay since sim time runs much faster
     // Also ensures simulation route overrides are in place
     std::this_thread::sleep_for(std::chrono::milliseconds(2000));
 
     int current_iteration = 0;
-    while (current_iteration++ < config.iteration_limit) {
+    while (current_iteration++ < sim_config.iteration_limit) {
         robot.update();
         sim_hal.update();
         simulation.update();
 
         auto [position, heading] = simulation.getPose();
 
-        double distance_to_goal = (position - config.waypoints[config.waypoints.size() - 1]).magnitude();
-        if (distance_to_goal <= config.end_distance) {
+        double distance_to_goal = (position - sim_config.waypoints[sim_config.waypoints.size() - 1]).magnitude();
+        if (distance_to_goal <= sim_config.end_distance) {
             break;
         }
 
@@ -97,14 +106,27 @@ int main(int argc, char* argv[]) {
 
     ok = comms.close();
     if (!ok) {
-        std::cout << "Failed to set route override" << std::endl;
+        std::cout << "Failed to close comms" << std::endl;
         return -1;
     }
 
-    std::filesystem::path output_file_path = std::filesystem::path("sim_output.json");
-    recording.write(output_file_path);
+    std::cout << "Simulation complete" << std::endl;
 
-    std::cout << "Simulation finished successfully, output written to " << output_file_path << std::endl;
+    std::filesystem::path output_file_path = std::filesystem::path(argv[3]);
+    std::error_code err;
+    std::filesystem::create_directory(output_file_path.parent_path(), err);
+    if (err) {
+        std::cout << "Failed to create simulation output directory" << std::endl;
+        return -1;
+    }
+        
+    ok = recording.write(output_file_path);
+    if (!ok) {
+        std::cout << "Failed to save simulation output" << std::endl;
+        return -1;
+    }
+
+    std::cout << "Simulation output written to " << output_file_path << std::endl;
 
     return 0;
 }

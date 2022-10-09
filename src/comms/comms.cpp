@@ -8,16 +8,30 @@
 
 namespace comms {
 
-Comms::Comms(std::string server_url, events::RouteControl route_control, events::ErrorReporting error_reporting, hal::Positioning* positioning)
-    : channel(grpc::CreateChannel(server_url, grpc::InsecureChannelCredentials())),
-      routing_stub(protocols::routing::Routing::NewStub(channel)),
-      development_stub(protocols::development::Development::NewStub(channel)),
+Comms::Credentials::Credentials(std::string root_ca_cert, std::string robot_cert, std::string robot_key) : root_ca_cert(root_ca_cert), robot_cert(robot_cert), robot_key(robot_key) {}
+
+Comms::Comms(std::string server_url, Comms::Credentials credentials, events::RouteControl route_control, events::ErrorReporting error_reporting, hal::Positioning* positioning)
+    : server_url(server_url),
+      credentials(credentials),
       error_reporting(error_reporting),
       route_control(route_control),
       positioning(positioning),
       poll_task("comms", poll_interval_ms, std::bind(&Comms::poll, this)) {}
 
 bool Comms::open() {
+    auto credentials = constructSSLCredentials();
+    if (credentials == nullptr) {
+        return false;
+    }
+
+    channel = grpc::CreateChannel(server_url, credentials);
+    if (channel->GetState(false) == grpc_connectivity_state::GRPC_CHANNEL_SHUTDOWN) {
+        return false;
+    }
+
+    routing_stub = protocols::routing::Routing::NewStub(channel);
+    development_stub = protocols::development::Development::NewStub(channel);
+
     poll_task.start();
 
     return true;
@@ -29,7 +43,41 @@ bool Comms::close() {
     return true;
 }
 
-bool Comms::overrideRoute(std::vector<common::Coordinates> route_override) const {
+std::shared_ptr<grpc::ChannelCredentials> Comms::constructSSLCredentials() const {
+    std::ifstream ca_cert_ifs(credentials.root_ca_cert);
+    if (!ca_cert_ifs.is_open()) {
+        std::cout << "Failed to open CA cert" << std::endl;
+        return nullptr;
+    }
+
+    std::string ca_cert((std::istreambuf_iterator<char>(ca_cert_ifs)),
+                        (std::istreambuf_iterator<char>()));
+
+    std::ifstream robot_cert_ifs(credentials.robot_cert);
+    if (!robot_cert_ifs.is_open()) {
+        std::cout << "Failed to open robot cert" << std::endl;
+        return nullptr;
+    }
+
+    std::string robot_cert((std::istreambuf_iterator<char>(robot_cert_ifs)),
+                           (std::istreambuf_iterator<char>()));
+
+    std::ifstream robot_key_ifs(credentials.robot_key);
+    if (!robot_key_ifs.is_open()) {
+        std::cout << "Failed to open robot key" << std::endl;
+        return nullptr;
+    }
+
+    std::string robot_key(std::istreambuf_iterator<char>(robot_key_ifs), (std::istreambuf_iterator<char>()));
+
+    grpc::SslCredentialsOptions ssl_opts;
+    ssl_opts.pem_root_certs = ca_cert;
+    ssl_opts.pem_private_key = robot_key;
+    ssl_opts.pem_cert_chain = robot_cert;
+
+    return grpc::SslCredentials(ssl_opts);
+}
+bool Comms::overrideRoute(std::vector<common::Coordinates> route_override) {
     grpc::ClientContext context;
 
     protocols::routing::Route route;
@@ -40,7 +88,21 @@ bool Comms::overrideRoute(std::vector<common::Coordinates> route_override) const
     }
 
     protocols::development::RouteResponse response;
-    grpc::Status grpc_status = development_stub->SetRoute(&context, route, &response);
+    grpc::Status grpc_status;
+
+    try {
+        grpc_status = development_stub->SetRoute(&context, route, &response);
+    } catch (const std::exception& ex) {
+        std::cout << ex.what() << std::endl;
+    } catch (const std::string& ex) {
+        std::cout << ex << std::endl;
+    } catch (...) {
+        std::cout << "Uhhhhh" << std::endl;
+    }
+
+    if (!grpc_status.ok()) {
+        std::cout << "Comms error: " << std::to_string(grpc_status.error_code()) << ": " << grpc_status.error_message() << std::endl;
+    }
 
     return grpc_status.ok();
 }

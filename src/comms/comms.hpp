@@ -9,7 +9,9 @@
 #include <grpcpp/channel.h>
 #include <grpcpp/client_context.h>
 #include <grpcpp/create_channel.h>
+#include <grpcpp/security/credentials.h>
 
+#include <fstream>
 #include <future>
 #include <memory>
 #include <string>
@@ -31,16 +33,29 @@ namespace comms {
 
 class Comms {
 public:
-    Comms(std::string server_url, events::RouteControl route_control, events::ErrorReporting error_reporting, hal::Positioning *positioning);
+    class Credentials {
+    public:
+        Credentials(std::string root_ca_cert, std::string robot_cert, std::string robot_key);
+
+        std::string root_ca_cert;
+        std::string robot_cert;
+        std::string robot_key;
+    };
+
+    Comms(std::string server_url, Credentials credentials, events::RouteControl route_control, events::ErrorReporting error_reporting, hal::Positioning *positioning);
 
     bool open();
     bool close();
 
-    bool overrideRoute(std::vector<common::Coordinates> route_override) const;
+    bool overrideRoute(std::vector<common::Coordinates> route_override);
 
 private:
+    std::shared_ptr<grpc::ChannelCredentials> constructSSLCredentials() const;
     protocols::routing::RobotStatus currentStatus() const;
     std::vector<common::Vector2> translateRoute(protocols::routing::Route route) const;
+
+    std::string server_url;
+    Credentials credentials;
 
     std::shared_ptr<grpc::ChannelInterface> channel;
     std::unique_ptr<protocols::routing::Routing::Stub> routing_stub;
