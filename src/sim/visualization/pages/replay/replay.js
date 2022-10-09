@@ -41,6 +41,7 @@ function onFileInput(event) {
         // Load/parse sim recording and display first frame
         file.text().then(text => {
             simRecording = JSON.parse(text);
+            document.getElementById('replayPosition').max = simRecording.replay.length - 1;
             visualize();
         });
     }
@@ -51,8 +52,7 @@ function updateActiveControl(activeControl) {
     document.getElementById('play').classList.remove('active');
     document.getElementById('pause').classList.remove('active');
     document.getElementById('restart').classList.remove('active');
-    document.getElementById('stepBack').classList.remove('active');
-    document.getElementById('step').classList.remove('active');
+    document.getElementById('replayPosition').classList.remove('active');
 
     document.getElementById(activeControl).classList.add('active');
 }
@@ -112,36 +112,17 @@ function restart() {
     update();
 }
 
-// Step forward one tick and pause if playing and 
-function step() {
-    updateActiveControl('step');
+// Scrub replay position
+function scrub(position) {
+    updateActiveControl('replayPosition');
 
+    // pause if playing
     if (updateTimer) {
         clearInterval(updateTimer);
         updateTimer = null;
     }
 
-    if (currentTimeIndex < simRecording.replay.length - 1) {
-        currentTimeIndex += 1;
-    }
-
-    timeElapsed = currentTimeIndex * 1000.0 * simRecording.config.time_step;
-    update();
-}
-
-// Step back one tick and pause if playing
-function stepBack() {
-    updateActiveControl('stepBack');
-
-    if (updateTimer) {
-        clearInterval(updateTimer);
-        updateTimer = null;
-    }
-
-    if (currentTimeIndex > 0) {
-        currentTimeIndex -= 1;
-    }
-
+    currentTimeIndex = position;
     timeElapsed = currentTimeIndex * 1000.0 * simRecording.config.time_step;
     update();
 }
@@ -150,6 +131,7 @@ function stepBack() {
 function update() {
     visualize();
     document.querySelector('.timestep-counter').innerText = currentTimeIndex;
+    document.querySelector('#replayPosition').value = currentTimeIndex;
 }
 
 // Resize canvas to fit current window
