@@ -42,19 +42,23 @@
                 </span>
             </div>
             <div class="control">
-                <button type="button" class="btn" onclick="save()" id="save">Save config</button>
+                <button type="button" class="btn" onclick="save_config()" id="save">Save config</button>
+            </div>
+            <div class="drawing-mode control-group">
+                <button type="button" class="btn" onclick="polygon_mode()" id="polygon_mode" title="Add obstacles">
+                    Add obstacles
+                </button>
+                <button type="button" class="btn" onclick="waypoint_mode()" id="waypoint_mode" title="Add waypoints">
+                    Add waypoints
+                </button>
             </div>
             <div class="control">
-                <button type="button" class="btn" onclick="set_startpoint()" id="set_startpoint">Set startpoint</button>
+                <label for="time_step">Time step</label>
+                <input type="number" id="time_step" value="0.02">
             </div>
             <div class="control">
-                <button type="button" class="btn" onclick="add_waypoint()" id="add_waypoint">Add waypoint</button>
-            </div>
-            <div class="control">
-                <button type="button" class="btn" onclick="start_polygon()" id="start_polygon">Draw polygon</button>
-            </div>
-            <div class="control">
-                <button type="button" class="btn" onclick="close_polygon()" id="close_polygon">Finish drawing</button>
+                <label for="iteration_limit">Max iterations</label>
+                <input type="number" id="iteration_limit" value="5000">
             </div>
         </div>
     </div>
@@ -63,7 +67,7 @@
             Your browser does not support HTML5 Canvas, which is need to visualize the simulation.
         </canvas>
     </div>
-    <script src="drawer.js"></script>
+    <script src="editor.js"></script>
 </body>
 
 </html>

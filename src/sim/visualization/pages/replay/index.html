@@ -26,7 +26,7 @@
             <hr class="sidebar-divider" />
             <a href="../../index.html">Home</a>
             <hr class="sidebar-divider" />
-            <a href="../config_creator/index.html">Config creator</a>
+            <a href="../config_editor/index.html">Config creator</a>
             <hr class="sidebar-divider" />
             <a href="./index.html" class="current">Replay tool</a>
             <hr class="sidebar-divider" />
@@ -42,17 +42,17 @@
                 </span>
             </div>
             <div class="control-group">
-                <button class="btn" onclick="play()" id="play" title="Play">
+                <button type="button" class="btn icon" onclick="play()" id="play" title="Play">
                     <img src="../../icons/play.svg" alt="Play icon" />
                 </button>
-                <button class="btn" onclick="pause()" id="pause" title="Pause">
+                <button type="button" class="btn icon" onclick="pause()" id="pause" title="Pause">
                     <img src="../../icons/pause.svg" alt="Pause icon" />
                 </button>
-                <button class="btn" onclick="restart()" id="restart" title="Restart">
+                <button type="button" class="btn icon" onclick="restart()" id="restart" title="Restart">
                     <img src="../../icons/restart.svg" alt="Restart icon" />
                 </button>
             </div>
-            <div class="control-group">
+            <div class="control">
                 <div class="slider-container">
                     <input type="range" class="slider" oninput="scrub(this.value)" min="0" max="100" value="0" id="replayPosition">
                 </div>

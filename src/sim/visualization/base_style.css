@@ -46,7 +46,7 @@ body {
     background: black;
     margin: 0;
     padding: 0;
-    height: 0.2rem;
+    height: 2px;
     border: none;
 }
 
@@ -67,7 +67,6 @@ body {
 
 .control-group .btn {
     background-color: #ccc;
-    display: flex;
 }
 
 .control-group .btn.active {
@@ -129,6 +128,10 @@ nav {
 .btn img {
     width: 1em;
     height: 1em;
+}
+
+.icon {
+    display: flex;
 }
 
 .file-picker {
