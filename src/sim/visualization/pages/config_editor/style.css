@@ -1,0 +1,9 @@
+canvas {
+    touch-action: pinch-zoom;
+}
+
+.drawing-mode {
+    flex-direction: column;
+    row-gap: 0.75rem;
+    margin: 2rem 0;
+}
