@@ -127,6 +127,12 @@ class Robot extends Drawable {
 
         ctx.restore();
     }
+
+    load(position, angle) {
+        this.position = { x: position[0], y: position[1] };
+        this.angle = angle;
+        this.rotation_handle.update_position(this.handle_position());
+    }
 }
 
 class Polygon extends Drawable {
@@ -242,6 +248,15 @@ class Polygon extends Drawable {
 
         ctx.fill();
         ctx.stroke();
+    }
+
+    load(polygon_config) {
+        this.vertices = [];
+        for (var i = 0; i < polygon_config.length; i++) {
+            let vertex_point = { x: polygon_config[i][0], y: polygon_config[i][1] };
+            let vertex = new Point(this.scene, this, vertex_point, this.vertex_size);
+            this.vertices.push(vertex);
+        }
     }
 }
 
@@ -360,6 +375,15 @@ class Waypoints extends Drawable {
         }
 
         ctx.stroke();
+    }
+
+    load(waypoints_config) {
+        this.waypoints = [];
+        for (var i = 0; i < waypoints_config.length; i++) {
+            let point = { x: waypoints_config[i][0], y: waypoints_config[i][1] };
+            let waypoint = new Point(this.scene, this, point, this.waypoint_size);
+            this.waypoints.push(waypoint);
+        }
     }
 }
 
@@ -616,6 +640,27 @@ class Scene {
             this.actions.push(action);
         }
     }
+
+    load(config) {
+        this.actions = [];
+        this.undone_actions = [];
+        this.objects = [];
+        this.active_object = null;
+
+        let robot = new Robot(this);
+        robot.load(config.start_position, config.start_angle);
+        this.objects.push(robot);
+
+        let waypoints = new Waypoints(this);
+        waypoints.load(config.waypoints);
+        this.objects.push(waypoints);
+
+        for (var i = 0; i < config.obstacles.length; i++) {
+            let polygon = new Polygon(this, true);
+            polygon.load(config.obstacles[i]);
+            this.objects.push(polygon);
+        }
+    }
 }
 
 let scene = new Scene();
@@ -732,7 +777,13 @@ function save_config() {
     }
 
     let json = JSON.stringify(output_config);
-    console.log(json);
+    let json_data = new Blob([json], { type: "text/json" });
+
+    let downloader = document.getElementById('configFileDownload');
+    downloader.download = "sim_config.json";
+    downloader.href = URL.createObjectURL(json_data);
+    downloader.dispatchEvent(new MouseEvent("click"));
+    URL.revokeObjectURL(downloader.href);
 }
 
 function canvasKeyDown(event) {
@@ -770,6 +821,8 @@ function selectFile() {
     configFileSelector.click();
 }
 
+configFileSelector.addEventListener('input', onFileInput);
+
 // File selection callback
 function onFileInput(event) {
     const files = event.target.files;
@@ -782,6 +835,7 @@ function onFileInput(event) {
         // Load/parse sim recording and display first frame
         file.text().then(text => {
             config = JSON.parse(text);
+            scene.load(config);
             scene.draw();
         });
     }
