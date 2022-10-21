@@ -44,8 +44,9 @@ void to_json(nlohmann::ordered_json& json, const Config& config) {
     json["time_step"] = config.time_step;
     json["iteration_limit"] = config.iteration_limit;
     json["map_size"] = config.map_size;
-    json["start_angle"] = config.start_angle;
-    json["start_positionconfig."] = config.start_position;
+    double angle_degrees = config.start_angle * 180.0 / PI;
+    json["robot"]["angle"] = static_cast<int>(angle_degrees);
+    json["robot"]["position"] = config.start_position;
     json["waypoints"] = config.waypoints;
     json["obstacles"] = config.obstacles;
 }
@@ -55,8 +56,12 @@ void from_json(const nlohmann::ordered_json& json, Config& config) {
     config.time_step = json.value("time_step", config.time_step);
     config.iteration_limit = json.value("iteration_limit", config.iteration_limit);
     config.map_size = json.value("map_size", config.map_size);
-    config.start_angle = json.value("start_angle", config.start_angle * 180.0 / PI) * PI / 180.0;
-    config.start_position = json.value("start_position", config.start_position);
+
+    if (json.contains("robot")) {
+        config.start_angle = json["robot"].value("angle", config.start_angle * 180.0 / PI) * PI / 180.0;
+        config.start_position = json["robot"].value("position", config.start_position);
+    }
+    
     config.waypoints = json.value("waypoints", config.waypoints);
     config.obstacles = json.value("obstacles", config.obstacles);
 }
