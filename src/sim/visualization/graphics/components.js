@@ -7,6 +7,7 @@ class Robot extends Object {
         this.position = { x: 0.0, y: 0.0 };
         this.angle = 90.0;
         this.rotation_handle = new Point(scene, this, this.rotation_handle_position(), 7);
+        this.rotation_handle.set_color("hsl(240deg, 60%, 50%)");
     }
 
     load(json) {
@@ -268,7 +269,7 @@ class Obstacle extends Object {
 }
 
 class Waypoints extends Object {
-    waypoint_size = 5;
+    waypoint_size = 7;
 
     constructor(scene) {
         super(scene, "waypoints");
@@ -276,6 +277,7 @@ class Waypoints extends Object {
             new Point(scene, this, { x: 1.0, y: -1.0 }, this.waypoint_size),
             new Point(scene, this, { x: 1.0, y: 1.0 }, this.waypoint_size),
         ];
+        this.set_colors();
     }
 
     load(json) {
@@ -285,6 +287,8 @@ class Waypoints extends Object {
             let waypoint = new Point(this.scene, this, point, this.waypoint_size);
             this.waypoints.push(waypoint);
         }
+
+        this.set_colors();
     }
 
     save() {
@@ -351,6 +355,14 @@ class Waypoints extends Object {
             this.scene.apply(action);
         }
     }
+
+    set_colors() {
+        for (var i = 0; i < this.waypoints.length; i++) {
+            let hue = 240 - 100 * i / (this.waypoints.length - 1);
+            let color = `hsl(${hue}deg, 60%, 50%)`;
+            this.waypoints[i].set_color(color);
+        }
+    }
 }
 
 class ExtendObstacle extends Action {
@@ -395,10 +407,12 @@ class ExtendWaypoints extends Action {
     do() {
         super.do();
         this.waypoints.waypoints.splice(this.index, 0, this.point);
+        this.waypoints.set_colors();
     }
 
     undo() {
         super.undo();
         this.waypoints.waypoints.splice(this.index, 1);
+        this.waypoints.set_colors();
     }
 }
