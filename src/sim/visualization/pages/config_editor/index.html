@@ -24,9 +24,7 @@
         </div>
         <nav>
             <hr class="sidebar-divider" />
-            <a href="../../index.html">Home</a>
-            <hr class="sidebar-divider" />
-            <a href="./index.html" class="current">Config creator</a>
+            <a href="./index.html" class="current">Config editor</a>
             <hr class="sidebar-divider" />
             <a href="../replay/index.html">Replay tool</a>
             <hr class="sidebar-divider" />
@@ -34,7 +32,7 @@
         <div class="sidebar">
             <div class="control">
                 <span class="file-picker">
-                    <input hidden type="file" id="configFileSelector" name="configFile" accept=".json"/>
+                    <input hidden type="file" id="configFileSelector" name="configFile" accept=".json" />
                     <a hidden id="configFileDownload"></a>
                     <label class="file-name" for="configFile" id="configFileDisplay">
                         Load config file
@@ -46,11 +44,11 @@
                 <button type="button" class="btn" onclick="save_config()" id="save">Save config</button>
             </div>
             <div class="drawing-mode control-group">
-                <button type="button" class="btn" onclick="polygon_mode()" id="polygon_mode" title="Add obstacles">
-                    Add obstacles
+                <button type="button" class="btn" onclick="polygon_mode()" id="polygon_mode" title="Edit obstacles">
+                    Edit obstacles
                 </button>
-                <button type="button" class="btn" onclick="waypoint_mode()" id="waypoint_mode" title="Add waypoints">
-                    Add waypoints
+                <button type="button" class="btn" onclick="waypoint_mode()" id="waypoint_mode" title="Edit waypoints">
+                    Edit waypoints
                 </button>
             </div>
             <div class="control">
@@ -68,6 +66,8 @@
             Your browser does not support HTML5 Canvas, which is need to visualize the simulation.
         </canvas>
     </div>
+    <script src="../../graphics/scene.js"></script>
+    <script src="../../graphics/components.js"></script>
     <script src="editor.js"></script>
 </body>
 

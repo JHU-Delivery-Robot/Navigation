@@ -18,11 +18,14 @@ let timeElapsed = 0;
 let lastUpdate = null;
 let updateTimer = null;
 
-window.addEventListener('resize', resizeCanvas, false);
+let scene = new Scene(canvas, () => { });
+let robot = new Robot(scene);
+
+window.addEventListener('resize', resize_canvas, false);
 simulationFileSelector.addEventListener('input', onFileInput);
 
 // Fit canvas to initial window size
-resizeCanvas();
+resize_canvas();
 
 // Triggers file selection dialog
 function selectFile() {
@@ -41,6 +44,7 @@ function onFileInput(event) {
         // Load/parse sim recording and display first frame
         file.text().then(text => {
             simRecording = JSON.parse(text);
+            load_scene(simRecording.config);
             document.getElementById('replayPosition').max = simRecording.replay.length - 1;
             visualize();
         });
@@ -135,95 +139,47 @@ function update() {
 }
 
 // Resize canvas to fit current window
-function resizeCanvas() {
+function resize_canvas() {
     let height = window.innerHeight;
     let width = window.innerWidth - document.querySelector(".sidebar-container").getBoundingClientRect().width;
 
     canvas.width = width;
     canvas.height = height;
 
-    visualize();
-}
-
-// Get canvas x coordinate from point in sim-coordinate space
-function pointX(point) {
-    let canvasSize = Math.min(canvas.width, canvas.height);
-    let size = simRecording.config.map_size;
-    return point[0] * (canvasSize / size) + 0.5 * canvas.width;
-}
-
-// Get canvas y coordinate from point in sim-coordinate space
-function pointY(point) {
-    let canvasSize = Math.min(canvas.width, canvas.height);
-    let size = simRecording.config.map_size;
-    return 0.5 * canvas.height - point[1] * (canvasSize / size);
+    scene.draw();
 }
 
 // Visualize current tick of replay
 function visualize() {
-    drawObstacles();
-    drawWaypoints();
-
     if (simRecording.replay[currentTimeIndex]) {
-        drawRobot(simRecording.replay[currentTimeIndex]);
+        let robot_state = simRecording.replay[currentTimeIndex];
+        let angle = robot_state["angle"] * 180.0 / Math.PI;
+        let position = {
+            x: robot_state["position"][0],
+            y: robot_state["position"][1],
+        };
+
+        robot.set_position(position, angle);
     }
+
+    scene.draw();
 }
 
-function drawObstacles() {
-    let ctx = canvas.getContext('2d');
-    ctx.fillStyle = '#ddd';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = '#000';
+function load_scene(config) {
+    scene = new Scene(canvas, () => { });
+    scene.set_size(config.map_size);
 
-    simRecording.config.obstacles.forEach(obstacle => {
-        if (obstacle.length == 0) {
-            return;
-        }
+    robot = new Robot(scene);
+    robot.load(config["robot"]);
+    scene.objects.push(robot);
 
-        ctx.beginPath();
-        ctx.moveTo(pointX(obstacle[0]), pointY(obstacle[0]));
+    let waypoints = new Waypoints(scene);
+    waypoints.load(config["waypoints"]);
+    scene.objects.push(waypoints);
 
-        obstacle.forEach(point => {
-            ctx.lineTo(pointX(point), pointY(point));
-        });
-
-        ctx.closePath();
-        ctx.fill();
-    });
-}
-
-function drawWaypoints() {
-    let ctx = canvas.getContext('2d');
-    ctx.fillStyle = '#aa0099';
-
-    simRecording.config.waypoints.forEach(waypoint => {
-        ctx.beginPath();
-        ctx.arc(pointX(waypoint), pointY(waypoint), 5, 0, 2 * Math.PI, false);
-        ctx.fill();
-    });
-}
-
-function drawRobot(robot_state) {
-    let ctx = canvas.getContext('2d');
-    let canvasSize = Math.min(canvas.width, canvas.height);
-    let size = simRecording.config.map_size;
-    let scale = canvasSize / size;
-
-    ctx.save();
-
-    ctx.translate(pointX(robot_state.position), pointY(robot_state.position));
-
-    ctx.save();
-
-    ctx.rotate(-robot_state.angle);
-
-    // Body of robot
-    ctx.rect(-0.25 * scale, -0.1 * scale, 0.5 * scale, 0.2 * scale);
-    ctx.stroke();
-
-    ctx.restore();
-
-    ctx.translate(Math.cos(robot_state.angle) * 0.25 * scale, -Math.sin(robot_state.angle) * 0.25 * scale);
-
-    ctx.restore();
+    for (var i = 0; i < config.obstacles.length; i++) {
+        let obstacle = new Obstacle(scene, true, false);
+        obstacle.load(config["obstacles"][i]);
+        scene.objects.push(obstacle);
+    }
 }
