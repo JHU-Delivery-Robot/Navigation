@@ -121,13 +121,19 @@ Parameters:
 
 ## Simulator
 
-The simulation is split into two parts: a backend and a frontend. The backend runs the actual simulation and outputs a file called `sim_output.json` wherever it was run from that contains everything that happened during the simulation. The frontend is a local replay tool that can be used to replay and visualize the simulation output file. To use the frontend, open `./sim/visualization/index.html`.
+The simulation is split into two parts: a backend and a frontend. The backend runs the actual simulation and outputs a file called `sim_output.json` wherever it was run from that contains everything that happened during the simulation. The frontend is a local replay tool that can be used to replay and visualize the simulation output file. To use the frontend, open `./sim/visualization/index.html`, and go to the "Replay tool" section.
 
 To use the simulation backend, run `<build folder>/src/navigation_sim` and pass it the path of a simulation config file. A simple example is provided in `sim_config.json`, which can be run with
 ```
-> .<build folder>/src/navigation_sim robot_config.json sim_config.json sim_output/output.json
+./<build folder>/src/navigation_sim robot_config.json sim_config.json sim_output/output.json
 ```
-from within a build directory. Points are given as `[x, y]`, e.g. `[20.5, -34.23]`. Units are all in meters or seconds unless otherwise specified. Config is in JSON format, and units are implied, so don't include them with the value. All config parameters are optional, defaults are noted below.
+from within a build directory.
+
+To create or edit the simulation config, use the "Config editor" section of the simulation frontend, and either load an existing config file, or create one from scratch. To run your config, select "Save config" to download it, and run it in the simulation, and then watch the replay in the "Replay tool".
+
+### Simulation config format details
+
+Points are given as `[x, y]`, e.g. `[20.5, -34.23]`. Units are all in meters or seconds unless otherwise specified. Config is in JSON format, and units are implied, so don't include them with the value. All config parameters are optional, defaults are noted below.
 
 Simulation config parameters:
 - `end_distance` &mdash; If the robot gets within this distance of the goal position, the simulation will end. Default is 0.2 m.
@@ -135,8 +141,9 @@ Simulation config parameters:
 - `iteration_limit` &mdash; Maximum iterations simulation will run for, must be an integer. Default is 3000.
 - `map_size` &mdash; Width/height of area that the replay frontend will display, centered on `[0,0]`. Must be an integer, default is 8 m.
 - `origin` &mdash; Location to center coordinate system at. Specified as `[lat, lon]`, the default is `[39.3289, -76.6215]` which corresponds to Gilman Hall on the Johns Hopkins Campus.
-- `start_position` &mdash; The position to start the robot at. Specified as a `point`, default is `[-3.0, -2.0]`.
-- `start_angle` &mdash; Angle (measured counterclockwise from standard x-axis) to start robot at. Specified in degrees, default is 90.0&deg;.
+- `robot` &mash; initial pose of robot
+  - `position` &mdash; The position to start the robot at. Specified as a `point`, default is `[-3.0, -2.0]`.
+  - `angle` &mdash; Angle (measured counterclockwise from standard x-axis) to start robot at. Specified in degrees, default is 90.0&deg;.
 - `waypoints` &mdash; List of goal positions for robot to try to drive to, should form a rough path from `start_position` to desired location. Specified as an array of `point`, default is `[[3.5, 3.0]]` - that is, by default the robot will try to drive directly from `[-3.0, -2.0]` to `[3.5, 3.0]`.
 - `obstacles` &mdash; A polygonal obstacle, specified as a list of lists of points. Each obstacle must specify at least three points. Do not close the shape (that is, do not specify start point again at end). Default is no obstacles.
 

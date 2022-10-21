@@ -27,6 +27,7 @@ class Point extends Object {
         this.parent = parent;
         this.point = point;
         this.size = size;
+        this.color = "blue";
     }
 
     load(json) { this.point = { x: json[0], y: json[1], }; }
@@ -39,8 +40,12 @@ class Point extends Object {
         return distance <= 3 * this.scene.scale(this.size);
     }
 
+    set_color(color) {
+        this.color = color;
+    }
+
     draw(ctx) {
-        ctx.fillStyle = "blue";
+        ctx.fillStyle = this.color;
 
         ctx.beginPath();
         ctx.arc(this.point.x, this.point.y, this.scene.scale(this.size), 0, 2 * Math.PI, false);
