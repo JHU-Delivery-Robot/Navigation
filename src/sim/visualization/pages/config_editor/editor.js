@@ -84,8 +84,10 @@ function save_config() {
                 output_config["waypoints"].push(point);
             }
         } else if (object.type == "robot") {
-            output_config["robot"]["position"] = [object.position.x, object.position.y ];
-            output_config["robot"]["angle"] = object.angle;
+            output_config["robot"] = {
+                "position": [object.position.x, object.position.y],
+                "angle": object.angle,
+            }
         }
     }
 
