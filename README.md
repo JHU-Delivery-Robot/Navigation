@@ -140,6 +140,22 @@ Simulation config parameters:
 - `waypoints` &mdash; List of goal positions for robot to try to drive to, should form a rough path from `start_position` to desired location. Specified as an array of `point`, default is `[[3.5, 3.0]]` - that is, by default the robot will try to drive directly from `[-3.0, -2.0]` to `[3.5, 3.0]`.
 - `obstacles` &mdash; A polygonal obstacle, specified as a list of lists of points. Each obstacle must specify at least three points. Do not close the shape (that is, do not specify start point again at end). Default is no obstacles.
 
+## Docker
+
+Components:
+- vcpkg_build.Dockerfile encapsulates must of the expensive-to-build
+  dependencies that change infrequently. The Docker image it creates
+  could be built once and then hosted on Docker hub to speed up builds
+  for everyone.
+- Dockerfile builds the actual project code
+- docker-compose puts
+
+To build, use `docker compose build`. To run the simulation, use
+```
+> docker compose run sim <robot_config> <sim_config> <sim_output>
+```
+within the project root directory. For example, `docker compose run sim robot_config.json sim_config.json sim_output/output.json`.
+
 ## Project Structure
 
 - `src/` - All primary source

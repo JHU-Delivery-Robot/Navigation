@@ -1,0 +1,9 @@
+version: "3.9"
+
+services:
+  sim:
+    build: .
+    network_mode: "host"
+    volumes:
+      - "./:/sim"
+    working_dir: "/sim"
